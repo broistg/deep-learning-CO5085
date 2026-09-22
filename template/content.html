@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assignment 01 Report · [Course Code]</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Sticky Header -->
+  <header>
+    <a class="logo" href="index.html"><span>[Course Code]</span> — Deep Learning</a>
+    <a class="back-btn" href="index.html#assignments">← Back to Overview</a>
+  </header>
+
+  <div class="page-container">
+
+    <!-- Sub-navigation: Sibling assignments or parts -->
+    <nav class="assignment-parts" aria-label="Assignment Parts Navigation">
+      <span class="label">Assignment 01 ·</span>
+      <span class="current">Part 1: [Task A]</span>
+      <a href="#">Part 2: [Task B]</a>
+      <a href="#">Part 3: [Task C]</a>
+    </nav>
+
+    <!-- Page Hero Banner -->
+    <div class="page-tag">Assignment 01 · Technical Report</div>
+    <h1><em>[Task Name]</em><br>[Problem &amp; Benchmark Dataset]</h1>
+    
+    <div class="page-meta">
+      <div class="meta-item">
+        <span class="meta-label">Group</span>
+        <span class="meta-value">[Group Name / ID]</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Team Members</span>
+        <span class="meta-value">[Student 1] · [Student 2] · [Student 3]</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Instructor</span>
+        <span class="meta-value">[Instructor Name]</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Status</span>
+        <span class="meta-value"><span class="badge badge-done">Completed</span></span>
+      </div>
+    </div>
+
+    <!-- Quick Action Links -->
+    <div class="quick-links">
+      <a class="link-btn primary" href="https://github.com/YOUR_USERNAME/YOUR_REPO" target="_blank" rel="noopener noreferrer">↗ Source Code</a>
+      <a class="link-btn primary" href="demo.html">⚡ Live Demo</a>
+      <a class="link-btn" href="#" target="_blank" rel="noopener noreferrer">↓ Slide Deck (PDF)</a>
+      <a class="link-btn" href="#" target="_blank" rel="noopener noreferrer">🌐 Official Dataset</a>
+      <a class="link-btn" href="#" target="_blank" rel="noopener noreferrer">▶ Presentation Video</a>
+    </div>
+
+    <!-- SECTION 01: DATASET & EDA -->
+    <div class="section" id="dataset">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2>Dataset &amp; Exploratory Data Analysis</h2>
+      </div>
+      <p>
+        Describe the problem formulation and dataset characteristics. Explain the data acquisition process, 
+        number of target categories, input modalities, sample distribution, and any class imbalance or domain-specific nuances.
+      </p>
+
+      <!-- Dataset summary table -->
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Dataset Overview">
+          <thead>
+            <tr><th>Property</th><th>Specification / Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Dataset Name</td><td>[e.g. CIFAR-100 / ImageNet / Custom Dataset]</td></tr>
+            <tr><td>Total Samples</td><td>[e.g. 60,000 samples]</td></tr>
+            <tr><td>Target Classes</td><td>[e.g. 100 fine-grained categories]</td></tr>
+            <tr><td>Input Dimensionality</td><td>[e.g. 32 × 32 × 3 RGB images or Token Sequences]</td></tr>
+            <tr><td>Class Distribution</td><td>[e.g. Balanced: 500 train, 100 test per category]</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Train / Val / Test Partition -->
+      <p>
+        Explain your dataset split strategy (e.g. stratified K-fold, hold-out split, fixed random seed) 
+        and validation protocol:
+      </p>
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Dataset Splits">
+          <thead>
+            <tr><th>Split Partition</th><th>Sample Count</th><th>Percentage</th><th>Intended Role</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Training Set</td><td>40,000</td><td>80%</td><td>Parameter optimization via backpropagation</td></tr>
+            <tr><td>Validation Set</td><td>10,000</td><td>20%</td><td>Hyperparameter tuning &amp; early checkpointing</td></tr>
+            <tr><td>Held-out Test Set</td><td>10,000</td><td>Official</td><td>Final unbiased benchmark evaluation</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Dataset sample figure container -->
+      <figure class="report-figure">
+        <img src="assets/placeholder-sample.svg" alt="Dataset sample preview" loading="lazy">
+        <figcaption>Figure 1.1: Representative samples across benchmark target categories and modality variations.</figcaption>
+      </figure>
+
+      <!-- Overview feature highlights -->
+      <div class="overview-grid">
+        <div class="overview-card">
+          <div class="overview-icon">🎯</div>
+          <div>
+            <div class="overview-title">Benchmark Scope</div>
+            <div class="overview-sub">[e.g. Fine-grained Classification]</div>
+            <div class="overview-tag">Evaluated on Top-1 &amp; Top-5 Acc</div>
+          </div>
+        </div>
+
+        <div class="overview-card">
+          <div class="overview-icon">⚖️</div>
+          <div>
+            <div class="overview-title">Model Families</div>
+            <div class="overview-sub">[e.g. CNNs vs. Vision Transformers]</div>
+            <div class="overview-tag">4 distinct backbones evaluated</div>
+          </div>
+        </div>
+
+        <div class="overview-card">
+          <div class="overview-icon">📈</div>
+          <div>
+            <div class="overview-title">Training Regime</div>
+            <div class="overview-sub">[e.g. Pretrained Transfer Learning]</div>
+            <div class="overview-tag">AdamW + Cosine Annealing</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 02: MODEL ARCHITECTURES -->
+    <div class="section" id="architectures">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2>Model Architectures &amp; Backbones</h2>
+      </div>
+      <p>
+        Detail the deep learning architectures investigated in this work. Contrast structural paradigms 
+        (e.g., local inductive bias in convolutional layers versus global dynamic receptive fields in attention mechanisms).
+      </p>
+
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Model Architectures Summary">
+          <thead>
+            <tr><th>Model Name</th><th>Family</th><th>Parameters</th><th>Core Mechanism</th><th>Pretrained Weights</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>[Model Alpha: e.g. ResNet-50]</td>
+              <td><span class="badge badge-cnn">CNN</span></td>
+              <td>23.7M</td>
+              <td>Residual bottleneck skip-connections</td>
+              <td>ImageNet-1K</td>
+            </tr>
+            <tr>
+              <td>[Model Beta: e.g. EfficientNet-B3]</td>
+              <td><span class="badge badge-cnn">CNN</span></td>
+              <td>10.8M</td>
+              <td>Compound depth/width/resolution scaling</td>
+              <td>ImageNet-1K</td>
+            </tr>
+            <tr>
+              <td>[Model Gamma: e.g. Swin-Tiny]</td>
+              <td><span class="badge badge-vit">ViT</span></td>
+              <td>27.6M</td>
+              <td>Shifted window hierarchical self-attention</td>
+              <td>ImageNet-1K</td>
+            </tr>
+            <tr>
+              <td>[Model Delta: e.g. ViT-Base/16]</td>
+              <td><span class="badge badge-vit">ViT</span></td>
+              <td>85.8M</td>
+              <td>Full-patch global multi-head self-attention</td>
+              <td>ImageNet-21K</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Model Architecture Cards Grid -->
+      <div class="model-grid">
+        
+        <!-- Card 1 -->
+        <div class="model-card">
+          <div class="model-header">
+            <span class="badge badge-cnn">CNN Family</span>
+            <span class="model-params">23.7M params</span>
+          </div>
+          <div class="model-name">[ResNet-50]</div>
+          <div class="model-desc">
+            Deep residual network utilizing identity mappings to bypass vanishing gradient bottlenecks, providing steady feature representations.
+          </div>
+          <div class="model-stat">
+            <span class="stat-label">Validation Acc</span>
+            <span class="stat-value">75.8%</span>
+          </div>
+          <div class="model-stat">
+            <span class="stat-label">Test Acc (Top-1)</span>
+            <span class="stat-value">75.2%</span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="model-card">
+          <div class="model-header">
+            <span class="badge badge-cnn">CNN Family</span>
+            <span class="model-params">10.8M params</span>
+          </div>
+          <div class="model-name">[EfficientNet-B3]</div>
+          <div class="model-desc">
+            Compound-scaled convolutional network with depthwise separable convolutions and Squeeze-and-Excitation channel attention.
+          </div>
+          <div class="model-stat">
+            <span class="stat-label">Validation Acc</span>
+            <span class="stat-value">71.1%</span>
+          </div>
+          <div class="model-stat">
+            <span class="stat-label">Test Acc (Top-1)</span>
+            <span class="stat-value">70.3%</span>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="model-card">
+          <div class="model-header">
+            <span class="badge badge-vit">Transformer</span>
+            <span class="model-params">27.6M params</span>
+          </div>
+          <div class="model-name">[Swin-Tiny]</div>
+          <div class="model-desc">
+            Hierarchical Vision Transformer featuring shifted window self-attention, offering linear computational complexity with respect to image resolution.
+          </div>
+          <div class="model-stat">
+            <span class="stat-label">Validation Acc</span>
+            <span class="stat-value">86.5%</span>
+          </div>
+          <div class="model-stat">
+            <span class="stat-label">Test Acc (Top-1)</span>
+            <span class="stat-value">85.9%</span>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="model-card">
+          <div class="model-header">
+            <span class="badge badge-vit">Transformer</span>
+            <span class="model-params">85.8M params</span>
+          </div>
+          <div class="model-name">[ViT-Base/16]</div>
+          <div class="model-desc">
+            Global Vision Transformer operating directly on sequences of 16×16 image patches with class token aggregation.
+          </div>
+          <div class="model-stat">
+            <span class="stat-label">Validation Acc</span>
+            <span class="stat-value highlight">89.2%</span>
+          </div>
+          <div class="model-stat">
+            <span class="stat-label">Test Acc (Top-1)</span>
+            <span class="stat-value highlight">89.1%</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECTION 03: TRAINING CONFIGURATION -->
+    <div class="section" id="training">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2>Training Protocols &amp; Hyperparameters</h2>
+      </div>
+      <p>
+        Explain data transformations, optimization algorithms, regularization, learning rate schedulers, and compute hardware setup.
+      </p>
+
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Hyperparameters">
+          <thead>
+            <tr><th>Hyperparameter</th><th>Configuration / Value</th><th>Rationale</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Optimizer</td><td>AdamW (weight decay = 1e-4)</td><td>Decoupled weight decay prevents overfitting in deep heads</td></tr>
+            <tr><td>Head Learning Rate</td><td>1e-4</td><td>Higher adaptation rate for newly initialized classification projection</td></tr>
+            <tr><td>Backbone Learning Rate</td><td>1e-5</td><td>Conservative rate prevents catastrophic forgetting of pretrained weights</td></tr>
+            <tr><td>Batch Size</td><td>128</td><td>Optimal throughput within GPU memory limits</td></tr>
+            <tr><td>Learning Rate Scheduler</td><td>Cosine Annealing with warmup</td><td>Smooth parameter convergence without abrupt decay cliffs</td></tr>
+            <tr><td>Regularization</td><td>Label Smoothing (0.1)</td><td>Softens hard one-hot targets to calibrate confidence</td></tr>
+            <tr><td>Hardware Environment</td><td>1× NVIDIA T4 (16GB VRAM)</td><td>Consistent hardware for wall-clock benchmarks</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 04: EXPERIMENTAL RESULTS -->
+    <div class="section" id="results">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2>Quantitative Benchmark Results</h2>
+      </div>
+      <p>
+        Comparative results across all benchmarked architectures on identical validation and held-out test sets.
+      </p>
+
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Main Quantitative Results">
+          <thead>
+            <tr>
+              <th>Model Name</th>
+              <th>Family</th>
+              <th>Params</th>
+              <th>Epochs</th>
+              <th>Val Acc</th>
+              <th>Val Macro-F1</th>
+              <th>Test Acc</th>
+              <th>Test Macro-F1</th>
+              <th>Wall Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>[ResNet-50]</td>
+              <td><span class="badge badge-cnn">CNN</span></td>
+              <td>23.7M</td>
+              <td>25</td>
+              <td>75.77%</td>
+              <td>0.7546</td>
+              <td>75.15%</td>
+              <td>0.7492</td>
+              <td>2,703 s</td>
+            </tr>
+            <tr>
+              <td>[EfficientNet-B3]</td>
+              <td><span class="badge badge-cnn">CNN</span></td>
+              <td>10.8M</td>
+              <td>25</td>
+              <td>71.05%</td>
+              <td>0.7076</td>
+              <td>70.30%</td>
+              <td>0.7020</td>
+              <td>2,484 s</td>
+            </tr>
+            <tr>
+              <td>[Swin-Tiny]</td>
+              <td><span class="badge badge-vit">ViT</span></td>
+              <td>27.6M</td>
+              <td>20</td>
+              <td>86.52%</td>
+              <td>0.8644</td>
+              <td>85.92%</td>
+              <td>0.8590</td>
+              <td>2,445 s</td>
+            </tr>
+            <tr style="background: rgba(197, 68, 10, 0.04);">
+              <td><strong>[ViT-Base/16] ★</strong></td>
+              <td><span class="badge badge-vit">ViT</span></td>
+              <td>85.8M</td>
+              <td>20</td>
+              <td class="highlight"><strong>89.19%</strong></td>
+              <td class="highlight"><strong>0.8909</strong></td>
+              <td class="highlight"><strong>89.10%</strong></td>
+              <td class="highlight"><strong>0.8912</strong></td>
+              <td>5,875 s</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size: 13px; color: var(--ink3);">
+        ★ Top performing architecture across all classification metrics.
+      </p>
+    </div>
+
+    <!-- SECTION 05: ERROR ANALYSIS -->
+    <div class="section" id="analysis">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <h2>Error Analysis &amp; Diagnostic Visualizations</h2>
+      </div>
+      <p>
+        Detailed qualitative evaluation: confusion matrices, per-category error distributions, 
+        and failure mode inspections.
+      </p>
+
+      <div class="figure-grid">
+        <figure class="report-figure">
+          <img src="assets/placeholder-figure.svg" alt="Confusion Matrix" loading="lazy">
+          <figcaption>Figure 5.1: Normalized inter-class confusion matrix for model predictions on the held-out test split.</figcaption>
+        </figure>
+
+        <figure class="report-figure">
+          <img src="assets/placeholder-figure.svg" alt="Per-class accuracy distribution" loading="lazy">
+          <figcaption>Figure 5.2: Per-class accuracy distribution comparing baseline CNN against Vision Transformer.</figcaption>
+        </figure>
+      </div>
+
+      <h3 class="section-subhead">Key Findings &amp; Discussion</h3>
+      <p>
+        Discuss noticeable patterns from the plots above:
+      </p>
+      <ul style="margin-left: 20px; margin-bottom: 24px; color: var(--ink2); line-height: 1.7;">
+        <li><strong>Fine-grained Ambiguity:</strong> High intra-class confusion between visually similar subcategories.</li>
+        <li><strong>Receptive Field Impact:</strong> Vision Transformers exhibit stronger resilience to spatial scale variations.</li>
+        <li><strong>Efficiency Trade-off:</strong> Swin-Tiny achieves 96% of ViT-Base's accuracy with less than 42% of the compute time.</li>
+      </ul>
+    </div>
+
+    <!-- SECTION 06: ABLATIONS & EXTENSIONS -->
+    <div class="section" id="ablations">
+      <div class="section-header">
+        <span class="section-num">06</span>
+        <h2>Ablation Studies &amp; Extensions</h2>
+      </div>
+      <p>
+        Evaluate the impact of isolated components, such as freezing strategies, data augmentations, or loss functions:
+      </p>
+
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Ablation Experiment">
+          <thead>
+            <tr><th>Strategy / Variant</th><th>Description</th><th>Test Acc</th><th>Δ vs Baseline</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Baseline (Full Fine-tune)</td>
+              <td>All layers trained from epoch 1 with layer-wise LR</td>
+              <td>85.92%</td>
+              <td>—</td>
+              <td>Standard reference pipeline</td>
+            </tr>
+            <tr>
+              <td>Variant A (Frozen Backbone)</td>
+              <td>Backbone frozen for first 5 epochs, then unfrozen</td>
+              <td>86.20%</td>
+              <td class="highlight">+0.28%</td>
+              <td>Stabilizes initial projection head gradients</td>
+            </tr>
+            <tr>
+              <td>Variant B (No Augmentation)</td>
+              <td>Without random crops and horizontal flips</td>
+              <td>81.45%</td>
+              <td style="color: #B42318;">-4.47%</td>
+              <td>Severe overfitting observed by epoch 12</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    [Course Code] · Assignment 01 · [Group Name] &nbsp;·&nbsp;
+    <a href="index.html">← Return to Hub</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/YOUR_USERNAME/YOUR_REPO" target="_blank" rel="noopener noreferrer">GitHub Repository ↗</a>
+  </footer>
+
+</body>
+</html>
