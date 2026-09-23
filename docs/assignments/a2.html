@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assignment 02: Computer Vision Pipeline & Paper Analysis · CO5085</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+  <!-- Sticky Header -->
+  <header>
+    <a class="logo" href="../index.html"><span>CO5085:</span> Deep Learning &amp; Its Applications in Computer
+      Vision</a>
+    <a class="back-btn" href="../index.html#assignments">← Về trang tổng quan</a>
+  </header>
+
+  <div class="page-container">
+
+    <!-- Sub-navigation: Sibling assignments -->
+    <nav class="assignment-parts" aria-label="Assignment Navigation">
+      <span class="label">Assignments ·</span>
+      <a href="a1.html">A1: CNN vs. Transformer</a>
+      <span class="current">A2: CV Pipeline &amp; Paper Analysis</span>
+    </nav>
+
+    <!-- Page Hero Banner -->
+    <div class="page-tag">Assignment 02 · Technical Report Scaffold</div>
+    <h1>Computer Vision Pipeline<br>&amp; <em>Paper Critical Analysis</em></h1>
+
+    <div class="page-meta">
+      <div class="meta-item">
+        <span class="meta-label">Môn học</span>
+        <span class="meta-value">CO5085</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Nhóm</span>
+        <span class="meta-value">[Nhóm ... / Group ID]</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Thành viên phụ trách</span>
+        <span class="meta-value">Lê Tiến Đạt · Nguyễn Lê Thảo Ly</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Trạng thái</span>
+        <span class="meta-value"><span class="badge badge-todo">Upcoming</span></span>
+      </div>
+    </div>
+
+    <!-- Quick Action Links -->
+    <div class="quick-links">
+      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085" target="_blank"
+        rel="noopener noreferrer">↗ GitHub Repository</a>
+      <a class="link-btn" href="#paper">📄 Bài báo liên quan</a>
+      <a class="link-btn" href="#pipeline">🛠 Kiến trúc Pipeline</a>
+      <a class="link-btn" href="#analysis">🔍 Phân tích phê phán</a>
+    </div>
+
+    <!-- Status Banner: Upcoming -->
+    <div class="status-banner upcoming">
+      <div class="status-banner-icon">📌</div>
+      <div class="status-banner-content">
+        <h4>Đồ án sắp diễn ra (Upcoming Deliverable) <span class="badge badge-todo">Upcoming</span></h4>
+        <p>
+          Assignment 02 là đồ án thực nghiệm nâng cao kết hợp xây dựng pipeline thị giác máy tính thực tế (Detection /
+          Segmentation / Tracking) cùng việc đọc, phân tích và phản biện bài báo khoa học liên quan. Khung sườn dưới đây
+          đã sẵn sàng cho nội dung báo cáo.
+        </p>
+      </div>
+    </div>
+
+    <!-- SUB-TASK NAVIGATION -->
+    <div class="overview-grid">
+      <div class="overview-card">
+        <div class="overview-icon">🎯</div>
+        <div>
+          <div class="overview-card-title">A2.1: Đề tài &amp; Chọn bài báo</div>
+          <div class="overview-card-desc">Lựa chọn bài toán thị giác máy tính chuyên sâu (Object Detection,
+            Instance/Semantic Segmentation), bộ dữ liệu và bài báo hội nghị đỉnh cao (CVPR / ICCV / ECCV / NeurIPS).
+          </div>
+        </div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-icon">🛠</div>
+        <div>
+          <div class="overview-card-title">A2.2: Pipeline &amp; Thực nghiệm</div>
+          <div class="overview-card-desc">Xây dựng pipeline end-to-end từ tiền xử lý, mô hình đến post-processing (NMS,
+            thresholding) và tái lập thực nghiệm.</div>
+        </div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-icon">📝</div>
+        <div>
+          <div class="overview-card-title">A2.3: Báo cáo phân tích bài báo</div>
+          <div class="overview-card-desc">Phân tích chi tiết đóng góp lý thuyết, ưu nhược điểm, so sánh thực nghiệm của
+            nhóm với bài báo gốc và đề xuất cải tiến.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 01: SELECTED PAPER & TOPIC -->
+    <div class="section" id="paper">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2>A2.1: Bài báo khoa học &amp; Bài toán lựa chọn</h2>
+      </div>
+      <p>
+        Thông tin bài báo khoa học và bài toán thị giác máy tính được nhóm lựa chọn nghiên cứu:
+      </p>
+
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Selected Paper Details">
+          <thead>
+            <tr>
+              <th>Hạng mục</th>
+              <th>Nội dung chi tiết</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Bài toán (Task)</td>
+              <td>[Object Detection / Semantic Segmentation / Instance Segmentation]</td>
+            </tr>
+            <tr>
+              <td>Tên bài báo</td>
+              <td><em>[Tên bài báo khoa học được chọn]</em></td>
+            </tr>
+            <tr>
+              <td>Tác giả &amp; Năm xuất bản</td>
+              <td>[Tác giả, Hội nghị / Tạp chí: e.g. CVPR / ICCV / ECCV]</td>
+            </tr>
+            <tr>
+              <td>Link bài báo (ArXiv / DOI)</td>
+              <td><a href="#" target="_blank">[Link ArXiv]</a></td>
+            </tr>
+            <tr>
+              <td>Tập dữ liệu kiểm chứng</td>
+              <td>[e.g. MS-COCO / Pascal-VOC / Cityscapes / Custom Dataset]</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure class="report-figure">
+        <img src="../assets/placeholder-figure.svg" alt="Paper Overview Architecture" loading="lazy">
+        <figcaption>Hình 2.1: Sơ đồ kiến trúc tổng quan đề xuất từ bài báo khoa học được lựa chọn.</figcaption>
+      </figure>
+    </div>
+
+    <!-- SECTION 02: PIPELINE ARCHITECTURE -->
+    <div class="section" id="pipeline">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2>A2.2: Thiết kế &amp; Xây dựng Pipeline thực tế</h2>
+      </div>
+      <p>
+        Các thành phần cấu thành pipeline hoàn chỉnh từ dữ liệu thô đến kết quả suy luận:
+      </p>
+
+      <div class="models-grid">
+        <div class="model-card">
+          <div class="model-family">Module 1</div>
+          <div class="model-name">Data &amp; Preprocessing</div>
+          <div class="model-desc">
+            Quy trình nạp dữ liệu theo batch, chuyển đổi color space, resize tỉ lệ khung hình (letterboxing), và gán
+            nhãn bounding box / mask ground-truth.
+          </div>
+        </div>
+
+        <div class="model-card">
+          <div class="model-family">Module 2</div>
+          <div class="model-name">Backbone &amp; Head</div>
+          <div class="model-desc">
+            Mạng trích xuất đặc trưng đa quy mô (Feature Pyramid Network - FPN) kết hợp Prediction Head tính toán loss
+            phân loại và hồi quy tọa độ.
+          </div>
+        </div>
+
+        <div class="model-card">
+          <div class="model-family">Module 3</div>
+          <div class="model-name">Post-processing &amp; Eval</div>
+          <div class="model-desc">
+            Lọc hộp trùng lặp bằng Non-Maximum Suppression (NMS), tính toán chỉ số mAP@[.5:.95] hoặc mIoU tiêu chuẩn.
+          </div>
+        </div>
+      </div>
+
+      <!-- Qualitative sample grid -->
+      <figure class="report-figure" style="margin-top: 24px;">
+        <img src="../assets/placeholder-sample.svg" alt="Pipeline Output Predictions" loading="lazy">
+        <figcaption>Hình 2.2: Trực quan hóa kết quả dự đoán của pipeline trên các ảnh mẫu kiểm thử.</figcaption>
+      </figure>
+    </div>
+
+    <!-- SECTION 03: COMPARATIVE EXPERIMENTS & PAPER ANALYSIS -->
+    <div class="section" id="analysis">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2>A2.3: Báo cáo phân tích bài báo &amp; Đối chiếu thực nghiệm</h2>
+      </div>
+      <p>
+        Đối chiếu kết quả thực nghiệm đạt được bởi nhóm so với công bố trong bài báo gốc:
+      </p>
+
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Paper Analysis Benchmark Table">
+          <thead>
+            <tr>
+              <th>Phương pháp</th>
+              <th>Backbone</th>
+              <th>mAP / mIoU (Paper gốc)</th>
+              <th>mAP / mIoU (Nhóm thực nghiệm)</th>
+              <th>FPS (Inference)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Baseline từ bài báo</strong></td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><strong>Phương pháp đề xuất chính</strong></td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+            </tr>
+            <tr>
+              <td><strong>Cải tiến của nhóm (Nếu có)</strong></td>
+              <td>[Sẽ cập nhật]</td>
+              <td>—</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="margin-top: 20px;"><strong>Đánh giá phản biện &amp; Hạn chế (Critical Review):</strong></p>
+      <ul>
+        <li><strong>Đóng góp chính:</strong> [Placeholder ghi nhận điểm sáng tạo về kiến trúc hoặc hàm mất mát của tác
+          giả].</li>
+        <li><strong>Điểm còn hạn chế:</strong> [Placeholder đánh giá về chi phí tính toán, độ phức tạp khi triển khai
+          thực tế, hoặc các trường hợp góc (edge cases) chưa được giải quyết].</li>
+        <li><strong>Hướng phát triển:</strong> [Placeholder đề xuất các ý tưởng tối ưu hoặc thử nghiệm trên bài toán
+          mới].</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    CO5085 · Assignment 02 Report · [Nhóm ...] · HCMUT &nbsp;·&nbsp;
+    <a href="../index.html">Về trang chủ</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+  </footer>
+
+</body>
+
+</html>

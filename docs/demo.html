@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Model Demo · CO5085 | HCMUT</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Demo-specific micro styling */
+    .controls-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .select-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .model-select-input {
+      padding: 8px 14px;
+      font-family: inherit;
+      font-size: 13.5px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      background: #FFF;
+      color: var(--ink);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .sample-selector {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .sample-btn,
+    .text-sample-btn {
+      font-size: 12px;
+      font-family: inherit;
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--ink2);
+      transition: all var(--transition-fast);
+    }
+
+    .sample-btn:hover,
+    .text-sample-btn:hover {
+      background: var(--ink);
+      color: #FFF;
+    }
+
+    .text-input-field {
+      width: 100%;
+      height: 110px;
+      padding: 12px 16px;
+      font-family: inherit;
+      font-size: 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      background: #FFF;
+      color: var(--ink);
+      resize: vertical;
+      outline: none;
+      line-height: 1.5;
+    }
+
+    .text-input-field:focus {
+      border-color: var(--accent);
+    }
+
+    .predict-action-bar {
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Sticky Header -->
+  <header>
+    <a class="logo" href="index.html"><span>CO5085:</span> Deep Learning &amp; Its Applications in Computer Vision</a>
+    <nav class="main-nav" aria-label="Navigation">
+      <a href="index.html">← Trang chủ</a>
+      <a href="index.html#exercises">Exercises</a>
+      <a href="index.html#assignments">Assignments</a>
+      <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+    </nav>
+  </header>
+
+  <div class="demo-shell">
+
+    <!-- Hero / Intro -->
+    <div class="hero-tag">CO5085 · Interactive Evaluation</div>
+    <h1>Live <em>Inference</em> Playground</h1>
+    <p class="lead" id="task-desc">
+      Trải nghiệm trực quan mô hình học sâu với các tác vụ phân loại hình ảnh và chuỗi, hiển thị phân phối xác suất lớp
+      dự đoán (class probabilities) và ước tính độ trễ suy luận (inference latency).
+    </p>
+
+    <!-- Task Switcher Tabs -->
+    <div class="demo-tabs" role="tablist">
+      <button type="button" class="demo-tab demo-tab--active" data-tab="image">🖼 Image Classification</button>
+      <button type="button" class="demo-tab" data-tab="text">📝 Text / Sequence (E3)</button>
+      <button type="button" class="demo-tab" data-tab="multimodal">⚡ Attention / Vision (E2, A1)</button>
+    </div>
+
+    <!-- Main Interactive Card -->
+    <div class="demo-card">
+
+      <!-- Model Selection Header -->
+      <div class="controls-row">
+        <label for="model-select" class="select-label">Lựa chọn mô hình / Kiến trúc:</label>
+        <select id="model-select" class="model-select-input">
+          <option value="vit-base">[ViT-Base/16] · 85.8M (Vision Transformer)</option>
+          <option value="swin-t">[Swin-Tiny] · 27.6M (Hierarchical ViT)</option>
+          <option value="resnet50">[ResNet-50] · 23.7M (CNN Baseline)</option>
+          <option value="custom-cnn">[Custom CNN] · 1.2M (E1 Baseline)</option>
+        </select>
+      </div>
+
+      <!-- IMAGE INPUT SECTION -->
+      <div id="image-input-section">
+        <input type="file" id="file-input" accept="image/*" style="display: none;">
+
+        <!-- Drag-and-drop zone -->
+        <div class="drop-zone" id="drop-zone">
+          <div class="drop-zone-icon">📁</div>
+          <div class="drop-zone-text">Nhấp để tải ảnh lên, hoặc kéo &amp; thả file vào đây</div>
+          <div class="drop-zone-hint">PNG, JPG, hoặc WEBP (tối đa 10MB)</div>
+        </div>
+
+        <!-- Preview container -->
+        <div class="preview-container" id="preview-container">
+          <img id="preview-image" class="preview-image" src="" alt="Selected Preview">
+          <div style="margin-top: 10px;">
+            <button type="button" id="clear-preview-btn" class="sample-btn">✕ Gỡ ảnh</button>
+          </div>
+        </div>
+
+        <!-- Quick Sample Presets -->
+        <div class="sample-selector">
+          <span style="font-size: 12px; color: var(--ink3); font-weight: 500;">Ảnh mẫu thử nhanh:</span>
+          <button type="button" class="sample-btn" data-sample-url="assets/placeholder-sample.svg">Sample Image
+            1</button>
+          <button type="button" class="sample-btn" data-sample-url="assets/placeholder-figure.svg">Sample Image
+            2</button>
+        </div>
+      </div>
+
+      <!-- TEXT INPUT SECTION (Displayed on Text / Multimodal tabs) -->
+      <div id="text-input-section" style="display: none; margin-top: 16px;">
+        <label for="text-input-area" class="select-label" style="display: block; margin-bottom: 8px;">Dữ liệu chuỗi /
+          Văn bản đầu vào:</label>
+        <textarea id="text-input-area" class="text-input-field"
+          placeholder="Dán chuỗi ký tự, câu hoặc đoạn văn bản mẫu cần suy luận..."></textarea>
+
+        <!-- Text Sample Presets -->
+        <div class="sample-selector">
+          <span style="font-size: 12px; color: var(--ink3); font-weight: 500;">Đoạn mẫu:</span>
+          <button type="button" class="text-sample-btn"
+            data-text-sample="Recent breakthroughs in generative artificial intelligence demonstrate superhuman performance in zero-shot transfer learning.">AI
+            Breakthrough</button>
+          <button type="button" class="text-sample-btn"
+            data-text-sample="Deep learning models for sequence processing require robust memory cells like LSTM and GRU.">Sequence
+            Sample</button>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="predict-action-bar">
+        <button type="button" id="predict-btn" class="link-btn primary" style="font-size: 14px; padding: 9px 24px;">
+          ⚡ Chạy suy luận (Run Prediction)
+        </button>
+        <span style="font-size: 12px; color: var(--ink3);">Hỗ trợ chế độ mô phỏng client-side và kết nối API
+          backend</span>
+      </div>
+
+      <!-- PREDICTION RESULTS AREA -->
+      <div class="prediction-results" id="results-container">
+        <div class="prediction-header">
+          <h3 style="font-size: 17px;">Kết quả phân loại &amp; Xác suất lớp (Top-K)</h3>
+          <div>
+            <span style="font-size: 11px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.08em;">Độ
+              trễ:</span>
+            <span class="badge badge-vit" id="latency-badge">320 ms</span>
+          </div>
+        </div>
+
+        <!-- Top-K Probability Bars (Populated dynamically by demo.js) -->
+        <div id="topk-list"></div>
+      </div>
+
+    </div>
+
+    <!-- Developer Notes Callout -->
+    <div
+      style="background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; font-size: 13px; color: var(--ink2); line-height: 1.6; margin-top: 24px;">
+      <strong>💡 Hướng dẫn tích hợp:</strong> Playground này đang chạy ở chế độ mô phỏng phía client để demo trực tiếp
+      trên GitHub Pages. Để tích hợp mô hình PyTorch thực tế qua FastAPI hoặc Flask, mở file
+      <code>docs/js/demo.js</code> và cấu hình endpoint <code>fetch('/api/predict')</code> tương ứng.
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    CO5085 · Live Model Playground · [Nhóm ...] · HCMUT &nbsp;·&nbsp;
+    <a href="index.html">Về trang chủ</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+  </footer>
+
+  <!-- Demo Interactive Script -->
+  <script src="js/demo.js"></script>
+</body>
+
+</html>

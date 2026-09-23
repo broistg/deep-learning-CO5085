@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 04: Generative Models (VAE, GAN & Diffusion) · CO5085</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+  <!-- Sticky Header -->
+  <header>
+    <a class="logo" href="../index.html"><span>CO5085:</span> Deep Learning &amp; Its Applications in Computer
+      Vision</a>
+    <a class="back-btn" href="../index.html#exercises">← Về trang tổng quan</a>
+  </header>
+
+  <div class="page-container">
+
+    <!-- Sub-navigation: Sibling exercises -->
+    <nav class="assignment-parts" aria-label="Exercise Navigation">
+      <span class="label">Exercises ·</span>
+      <a href="e1.html">E1: Small Image Classification</a>
+      <a href="e2.html">E2: Multi-Head Attention</a>
+      <a href="e3.html">E3: Sequence Models</a>
+      <span class="current">E4: Generative Models</span>
+    </nav>
+
+    <!-- Page Hero Banner -->
+    <div class="page-tag">Exercise 04 · Technical Report Scaffold</div>
+    <h1>Mô hình học sinh<br><em>VAE, GAN &amp; Diffusion Models</em></h1>
+
+    <div class="page-meta">
+      <div class="meta-item">
+        <span class="meta-label">Môn học</span>
+        <span class="meta-value">CO5085</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Nhóm</span>
+        <span class="meta-value">[Nhóm ... / Group ID]</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Thành viên phụ trách</span>
+        <span class="meta-value">Lê Tiến Đạt · Nguyễn Lê Thảo Ly</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Trạng thái</span>
+        <span class="meta-value"><span class="badge badge-todo">Upcoming</span></span>
+      </div>
+    </div>
+
+    <!-- Quick Action Links -->
+    <div class="quick-links">
+      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085" target="_blank"
+        rel="noopener noreferrer">↗ GitHub Repository</a>
+      <a class="link-btn" href="../index.html#exercises">← Quay lại danh sách bài tập</a>
+    </div>
+
+    <!-- Status Banner: Upcoming -->
+    <div class="status-banner upcoming">
+      <div class="status-banner-icon">📌</div>
+      <div class="status-banner-content">
+        <h4>Bài tập sắp diễn ra (Upcoming Deliverable) <span class="badge badge-todo">Upcoming</span></h4>
+        <p>
+          Phần bài tập mô hình sinh (Generative Models) sẽ được thực hiện tại giai đoạn tiếp theo của môn học. Cấu trúc
+          báo cáo, bảng benchmark chỉ số và không gian trực quan hóa đã được sẵn sàng cho việc ghi nhận kết quả.
+        </p>
+      </div>
+    </div>
+
+    <!-- SECTION 01: SCOPE -->
+    <div class="section" id="scope">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2>Ba trường phái mô hình sinh (Generative Paradigms)</h2>
+      </div>
+      <p>
+        Nghiên cứu và so sánh ba phương pháp tiếp cận cốt lõi trong học sinh sâu (Deep Generative Modeling):
+      </p>
+
+      <div class="models-grid">
+        <div class="model-card">
+          <div class="model-family">Likelihood-based / Latent Variable</div>
+          <div class="model-name">Variational Autoencoder (VAE)</div>
+          <div class="model-desc">
+            Tối ưu hóa cận dưới Evidence Lower Bound (ELBO) bằng mẹo tái tham số hóa (reparameterization trick). Sinh
+            mẫu nhanh chóng nhưng ảnh sinh có xu hướng bị mờ (blurry).
+          </div>
+          <div class="model-meta">
+            <div><span class="meta-label">Đặc tính</span><span class="meta-val">Không gian latent liên tục</span></div>
+            <div><span class="meta-label">Tốc độ sinh</span><span class="meta-val">1 bước (Rất nhanh)</span></div>
+          </div>
+        </div>
+
+        <div class="model-card">
+          <div class="model-family">Adversarial Game</div>
+          <div class="model-name">Generative Adversarial Net (GAN)</div>
+          <div class="model-desc">
+            Trò chơi đối kháng Minimax giữa Generator và Discriminator. Mẫu sinh sắc nét nhưng huấn luyện nhạy cảm, dễ
+            gặp hiện tượng mode collapse hoặc mất ổn định gradient.
+          </div>
+          <div class="model-meta">
+            <div><span class="meta-label">Đặc tính</span><span class="meta-val">Mẫu sinh sắc nét</span></div>
+            <div><span class="meta-label">Tốc độ sinh</span><span class="meta-val">1 bước (Rất nhanh)</span></div>
+          </div>
+        </div>
+
+        <div class="model-card">
+          <div class="model-family">Iterative Denoising</div>
+          <div class="model-name">Diffusion Model (DDPM)</div>
+          <div class="model-desc">
+            Quy trình khuếch tán thuận thêm nhiễu Gauss và mạng U-Net học cách khử nhiễu nghịch đảo. Chất lượng ảnh vượt
+            trội, ổn định cao nhưng đòi hỏi nhiều bước lấy mẫu (sampling steps).
+          </div>
+          <div class="model-meta">
+            <div><span class="meta-label">Đặc tính</span><span class="meta-val">Chất lượng cao nhất</span></div>
+            <div><span class="meta-label">Tốc độ sinh</span><span class="meta-val">T bước (Chậm hơn)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 02: BENCHMARK PROTOCOL -->
+    <div class="section" id="benchmarks">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2>Tiêu chí đánh giá &amp; Đánh đổi chất lượng</h2>
+      </div>
+      <p>
+        So sánh định lượng và định tính giữa 3 mô hình sinh trên tập dữ liệu ảnh chuẩn:
+      </p>
+
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Generative Models Comparison Table">
+          <thead>
+            <tr>
+              <th>Mô hình</th>
+              <th>Kiến trúc mạng</th>
+              <th>Số tham số</th>
+              <th>FID Score ↓ (Dự kiến)</th>
+              <th>Thời gian sinh 1 ảnh</th>
+              <th>Độ ổn định huấn luyện</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Convolutional VAE</strong></td>
+              <td>CNN Encoder-Decoder</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>—</td>
+              <td>&lt; 5 ms</td>
+              <td>Cao (Hội tụ mượt)</td>
+            </tr>
+            <tr>
+              <td><strong>DCGAN / WGAN-GP</strong></td>
+              <td>Conv2D / TransposeConv2D</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>—</td>
+              <td>&lt; 5 ms</td>
+              <td>Trung bình (Nhạy cảm LR)</td>
+            </tr>
+            <tr>
+              <td><strong>DDPM (Diffusion)</strong></td>
+              <td>U-Net + Time Embedding</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>—</td>
+              <td>~ 200 ms (50 steps)</td>
+              <td>Rất cao (Loss ổn định)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Generated samples preview figure placeholder -->
+      <figure class="report-figure">
+        <img src="../assets/placeholder-sample.svg" alt="Generated Samples Comparison Grid" loading="lazy">
+        <figcaption>Hình 4.1: Vị trí placeholder hiển thị lưới mẫu ảnh sinh (Generated Samples Grid) từ VAE, GAN và
+          Diffusion Model.</figcaption>
+      </figure>
+    </div>
+
+    <!-- SECTION 03: LATENT SPACE -->
+    <div class="section" id="latent-space">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2>Khảo sát không gian tiềm ẩn (Latent Space)</h2>
+      </div>
+      <p>
+        Thực hiện phép nội suy tuyến tính (Spherical Linear Interpolation - Slerp) giữa các vector tiềm ẩn để kiểm tra
+        tính mượt mà của biểu diễn nội tại và khả năng khái quát hóa của bộ sinh.
+      </p>
+
+      <figure class="report-figure">
+        <img src="../assets/placeholder-figure.svg" alt="Latent Space Interpolation" loading="lazy">
+        <figcaption>Hình 4.2: Minh họa quá trình nội suy latent space chuyển dần từ đối tượng A sang đối tượng B.
+        </figcaption>
+      </figure>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    CO5085 · Exercise 04 Report · [Nhóm ...] · HCMUT &nbsp;·&nbsp;
+    <a href="../index.html">Về trang chủ</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+  </footer>
+
+</body>
+
+</html>

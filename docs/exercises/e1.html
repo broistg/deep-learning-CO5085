@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 01: Small Image Classification · CO5085</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+  <!-- Sticky Header -->
+  <header>
+    <a class="logo" href="../index.html"><span>CO5085:</span> Deep Learning &amp; Its Applications in Computer
+      Vision</a>
+    <a class="back-btn" href="../index.html#exercises">← Về trang tổng quan</a>
+  </header>
+
+  <div class="page-container">
+
+    <!-- Sub-navigation: Sibling exercises -->
+    <nav class="assignment-parts" aria-label="Exercise Navigation">
+      <span class="label">Exercises ·</span>
+      <span class="current">E1: Small Image Classification</span>
+      <a href="e2.html">E2: Multi-Head Attention</a>
+      <a href="e3.html">E3: Sequence Models</a>
+      <a href="e4.html">E4: Generative Models</a>
+    </nav>
+
+    <!-- Page Hero Banner -->
+    <div class="page-tag">Exercise 01 · Technical Report</div>
+    <h1>Phân loại tập ảnh nhỏ<br><em>Softmax Classifier, MLP &amp; CNN</em></h1>
+
+    <div class="page-meta">
+      <div class="meta-item">
+        <span class="meta-label">Môn học</span>
+        <span class="meta-value">CO5085</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Nhóm</span>
+        <span class="meta-value">[Nhóm ... / Group ID]</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Thành viên phụ trách</span>
+        <span class="meta-value">Nguyễn Lê Thảo Ly · Lê Tiến Đạt</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Trạng thái</span>
+        <span class="meta-value"><span class="badge badge-wip">Work in progress...</span></span>
+      </div>
+    </div>
+
+    <!-- Quick Action Links -->
+    <div class="quick-links">
+      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085" target="_blank"
+        rel="noopener noreferrer">↗ GitHub Repository</a>
+      <a class="link-btn primary" href="../demo.html">⚡ Live Demo</a>
+      <a class="link-btn" href="#" target="_blank" rel="noopener noreferrer">📓 Google Colab / Notebook</a>
+      <a class="link-btn" href="#results">📊 Bảng kết quả thực nghiệm</a>
+    </div>
+
+    <!-- Status Banner: Work in Progress -->
+    <div class="status-banner wip">
+      <div class="status-banner-icon">⏳</div>
+      <div class="status-banner-content">
+        <h4>Báo cáo đang thực hiện (Work in Progress) <span class="badge badge-wip">WIP</span></h4>
+        <p>
+          Nhóm đang tiến hành triển khai thực nghiệm huấn luyện và đánh giá trên các mô hình Softmax, MLP và CNN. Dưới
+          đây là khung sườn báo cáo chuẩn để cập nhật log thực nghiệm, biểu đồ loss/acc và phân tích lỗi.
+        </p>
+        <ul class="progress-checklist">
+          <li class="done">Khảo sát yêu cầu bài tập và lựa chọn tập dữ liệu (MNIST / Fashion-MNIST / CIFAR-10)</li>
+          <li class="done">Xây dựng pipeline nạp dữ liệu và tiền xử lý chuẩn hóa</li>
+          <li class="wip">Hiện thực và huấn luyện các mô hình: Softmax Classifier, MLP, CNN</li>
+          <li class="wip">So sánh độ chính xác (Accuracy), dung lượng tham số (Capacity) và thời gian huấn luyện</li>
+          <li class="todo">Trích xuất Confusion Matrix và phân tích các mẫu dự đoán sai tiêu biểu</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SECTION 01: DATASET & EDA -->
+    <div class="section" id="dataset">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2>Tập dữ liệu &amp; Khảo sát dữ liệu (EDA)</h2>
+      </div>
+      <p>
+        Khảo sát cấu trúc tập dữ liệu ảnh quy mô nhỏ được sử dụng làm benchmark cho bài tập. Phân tích số lượng mẫu, số
+        lớp đối tượng, kích thước không gian ảnh và phân bố mẫu trên từng lớp.
+      </p>
+
+      <!-- Dataset summary table -->
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Dataset Overview">
+          <thead>
+            <tr>
+              <th>Thuộc tính</th>
+              <th>Thông số kỹ thuật / Giá trị thực nghiệm</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Tập dữ liệu</td>
+              <td>[MNIST / Fashion-MNIST / CIFAR-10]</td>
+            </tr>
+            <tr>
+              <td>Tổng số lượng mẫu</td>
+              <td>[e.g. 60,000 ảnh (50,000 train / 10,000 test)]</td>
+            </tr>
+            <tr>
+              <td>Số lượng nhãn phân loại (Classes)</td>
+              <td>10 lớp phân biệt</td>
+            </tr>
+            <tr>
+              <td>Độ phân giải &amp; Số kênh (Shape)</td>
+              <td>[e.g. 28 x 28 x 1 (Grayscale) hoặc 32 x 32 x 3 (RGB)]</td>
+            </tr>
+            <tr>
+              <td>Phương pháp chuẩn hóa (Normalization)</td>
+              <td>Toàn dải [0, 1] hoặc chuẩn hóa theo Mean &amp; Std của tập train</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Dataset sample figure container -->
+      <figure class="report-figure">
+        <img src="../assets/placeholder-sample.svg" alt="Dataset sample preview" loading="lazy">
+        <figcaption>Hình 1.1: Mẫu ảnh đại diện minh họa cho 10 lớp trong tập dữ liệu thử nghiệm.</figcaption>
+      </figure>
+
+      <!-- Overview feature highlights -->
+      <div class="overview-grid">
+        <div class="overview-card">
+          <div class="overview-icon">🎯</div>
+          <div>
+            <div class="overview-card-title">Mục tiêu bài toán</div>
+            <div class="overview-card-desc">Đánh giá khả năng trích xuất đặc trưng của mạng tuyến tính, mạng MLP và mạng
+              tích chập.</div>
+          </div>
+        </div>
+        <div class="overview-card">
+          <div class="overview-icon">⚖️</div>
+          <div>
+            <div class="overview-card-title">Cân bằng dữ liệu</div>
+            <div class="overview-card-desc">Phân bố số lượng mẫu đồng đều giữa các lớp giúp giảm thiểu hiện tượng class
+              imbalance bias.</div>
+          </div>
+        </div>
+        <div class="overview-card">
+          <div class="overview-icon">🧪</div>
+          <div>
+            <div class="overview-card-title">Protocol kiểm thử</div>
+            <div class="overview-card-desc">Cố định random seed, tách train/val/test minh bạch để đảm bảo tính tái lập
+              (Reproducibility).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 02: ARCHITECTURES -->
+    <div class="section" id="architectures">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2>Kiến trúc mô hình &amp; Dung lượng (Capacity)</h2>
+      </div>
+      <p>
+        Ba kiến trúc cơ bản với các cấp độ biểu diễn đặc trưng tăng dần được hiện thực bằng PyTorch:
+      </p>
+
+      <div class="models-grid">
+        <!-- Model 1: Softmax -->
+        <div class="model-card">
+          <div class="model-family">Linear Baseline</div>
+          <div class="model-name">Softmax Classifier</div>
+          <div class="model-desc">
+            Mô hình tuyến tính một lớp kết hợp hàm kích hoạt Softmax. Dữ liệu ảnh được trải phẳng (flatten) thành vector
+            1D trước khi nhân ma trận trọng số.
+          </div>
+          <div class="model-meta">
+            <div>
+              <span class="meta-label">Số tham số</span>
+              <span class="meta-val">[e.g. ~7.8K params]</span>
+            </div>
+            <div>
+              <span class="meta-label">Inductive Bias</span>
+              <span class="meta-val">Tuyến tính thuần</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Model 2: MLP -->
+        <div class="model-card">
+          <div class="model-family">Non-Linear Deep Net</div>
+          <div class="model-name">Multi-Layer Perceptron (MLP)</div>
+          <div class="model-desc">
+            Mạng nơ-ron truyền thẳng đa tầng gồm 2-3 lớp ẩn (Hidden Layers), tích hợp hàm phi tuyến ReLU, Batch
+            Normalization và Dropout chống quá khớp.
+          </div>
+          <div class="model-meta">
+            <div>
+              <span class="meta-label">Số tham số</span>
+              <span class="meta-val">[e.g. ~200K params]</span>
+            </div>
+            <div>
+              <span class="meta-label">Inductive Bias</span>
+              <span class="meta-val">Không gian phẳng (Dense)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Model 3: CNN -->
+        <div class="model-card">
+          <div class="model-family">Spatial Feature Extractor</div>
+          <div class="model-name">Custom CNN</div>
+          <div class="model-desc">
+            Mạng tích chập với các khối Conv2D + BatchNorm + ReLU xen kẽ MaxPooling2D giúp giữ nguyên cấu trúc không
+            gian 2D và tính bất biến tịnh tiến (Translation Equivariance).
+          </div>
+          <div class="model-meta">
+            <div>
+              <span class="meta-label">Số tham số</span>
+              <span class="meta-val">[e.g. ~1.2M params]</span>
+            </div>
+            <div>
+              <span class="meta-label">Inductive Bias</span>
+              <span class="meta-val">Cục bộ &amp; Bất biến tịnh tiến</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 03: EXPERIMENTAL RESULTS -->
+    <div class="section" id="results">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2>Kết quả thực nghiệm &amp; So sánh hiệu năng</h2>
+      </div>
+      <p>
+        Bảng so sánh tổng hợp các chỉ số đánh giá chính giữa 3 mô hình trên tập kiểm thử (Held-out Test Set). Các số
+        liệu chi tiết sẽ được cập nhật hoàn chỉnh sau khi kết thúc quá trình chạy thực nghiệm.
+      </p>
+
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Benchmark Comparison Table">
+          <thead>
+            <tr>
+              <th>Kiến trúc</th>
+              <th>Số tham số</th>
+              <th>Train Accuracy</th>
+              <th>Val Accuracy</th>
+              <th>Test Accuracy</th>
+              <th>Thời gian / Epoch</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Softmax Classifier</strong></td>
+              <td>[7.8K]</td>
+              <td>[Đang cập nhật...]</td>
+              <td>[Đang cập nhật...]</td>
+              <td>[Đang cập nhật...]</td>
+              <td>[&lt; 2s]</td>
+            </tr>
+            <tr>
+              <td><strong>Multi-Layer Perceptron (MLP)</strong></td>
+              <td>[~200K]</td>
+              <td>[Đang cập nhật...]</td>
+              <td>[Đang cập nhật...]</td>
+              <td>[Đang cập nhật...]</td>
+              <td>[~5s]</td>
+            </tr>
+            <tr>
+              <td><strong>Custom CNN</strong></td>
+              <td>[~1.2M]</td>
+              <td>[Đang cập nhật...]</td>
+              <td>[Đang cập nhật...]</td>
+              <td>[Đang cập nhật...]</td>
+              <td>[~12s]</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Training Curves Placeholder -->
+      <figure class="report-figure">
+        <img src="../assets/placeholder-figure.svg" alt="Loss and Accuracy Learning Curves" loading="lazy">
+        <figcaption>Hình 1.2: Đường cong huấn luyện (Training &amp; Validation Loss / Accuracy curves) qua các epochs.
+        </figcaption>
+      </figure>
+    </div>
+
+    <!-- SECTION 04: ERROR ANALYSIS -->
+    <div class="section" id="analysis">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2>Phân tích lỗi (Error Analysis) &amp; Nhận xét</h2>
+      </div>
+      <p>
+        Phân tích ma trận nhầm lẫn (Confusion Matrix) và khảo sát các trường hợp mô hình đưa ra dự đoán sai lệch nhiều
+        nhất (Top False Predictions):
+      </p>
+
+      <!-- Confusion Matrix Placeholder -->
+      <figure class="report-figure">
+        <img src="../assets/placeholder-figure.svg" alt="Confusion Matrix" loading="lazy">
+        <figcaption>Hình 1.3: Ma trận nhầm lẫn (Confusion Matrix) trực quan hóa các cặp lớp dễ bị nhầm lẫn nhất.
+        </figcaption>
+      </figure>
+
+      <p>
+        <strong>Nhận xét sơ bộ:</strong>
+      </p>
+      <ul>
+        <li>Softmax Classifier gặp khó khăn ở các lớp có biến dạng hình học phức tạp do thiếu tính phi tuyến.</li>
+        <li>MLP cải thiện đáng kể nhờ các lớp ẩn phi tuyến nhưng dễ bị overfitting khi số chiều đặc trưng lớn và không
+          khai thác được tương quan lân cận giữa các pixel.</li>
+        <li>CNN đạt hiệu năng vượt trội nhờ khả năng chia sẻ trọng số (weight sharing) và trích xuất đặc trưng cục bộ
+          theo cấp bậc từ thô đến tinh.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    CO5085 · Exercise 01 Report · [Nhóm ...] · HCMUT &nbsp;·&nbsp;
+    <a href="../index.html">Về trang chủ</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+  </footer>
+
+</body>
+
+</html>

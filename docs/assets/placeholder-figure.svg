@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F9F7F4" />
+      <stop offset="100%" stop-color="#F0EDE8" />
+    </linearGradient>
+    <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#E2DDD5" stroke-width="1" stroke-dasharray="2,4" />
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="url(#bgGrad)" />
+  <rect width="800" height="450" fill="url(#gridPattern)" />
+  <rect x="1" y="1" width="798" height="448" fill="none" stroke="#D8D2C7" stroke-width="2" rx="10" />
+
+  <!-- Mock Chart Visual Elements -->
+  <g transform="translate(100, 70)">
+    <!-- Axes -->
+    <line x1="40" y1="260" x2="560" y2="260" stroke="#A8A49F" stroke-width="2" />
+    <line x1="40" y1="40" x2="40" y2="260" stroke="#A8A49F" stroke-width="2" />
+
+    <!-- Grid lines -->
+    <line x1="40" y1="185" x2="560" y2="185" stroke="#E8E4DD" stroke-width="1.5" />
+    <line x1="40" y1="110" x2="560" y2="110" stroke="#E8E4DD" stroke-width="1.5" />
+
+    <!-- Curve 1: Terracotta Accent -->
+    <path d="M 50 240 Q 180 210, 260 140 T 420 85 T 540 65" fill="none" stroke="#C5440A" stroke-width="3.5" stroke-linecap="round" />
+    
+    <!-- Curve 2: Coral / Ink -->
+    <path d="M 50 250 Q 180 230, 270 180 T 420 135 T 540 115" fill="none" stroke="#6B6760" stroke-width="2.5" stroke-dasharray="6,4" stroke-linecap="round" />
+
+    <!-- Data points on Curve 1 -->
+    <circle cx="50" cy="240" r="4" fill="#C5440A" />
+    <circle cx="210" cy="180" r="4" fill="#C5440A" />
+    <circle cx="340" cy="110" r="4" fill="#C5440A" />
+    <circle cx="460" cy="75" r="4" fill="#C5440A" />
+    <circle cx="540" cy="65" r="5" fill="#C5440A" stroke="#FFF" stroke-width="2" />
+  </g>
+
+  <!-- Center Badge / Placeholder Label -->
+  <rect x="250" y="355" width="300" height="42" rx="21" fill="#FFFFFF" stroke="#C5440A" stroke-width="1.5" filter="drop-shadow(0 4px 12px rgba(26,24,20,0.08))" />
+  <text x="400" y="381" text-anchor="middle" font-family="'DM Sans', -apple-system, sans-serif" font-size="14" font-weight="600" fill="#C5440A" letter-spacing="0.5">
+    📊 Figure / Plot Placeholder
+  </text>
+
+  <text x="400" y="420" text-anchor="middle" font-family="'DM Sans', -apple-system, sans-serif" font-size="12" fill="#6B6760">
+    Replace with your experiment plot, confusion matrix, or architecture diagram
+  </text>
+</svg>

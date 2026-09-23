@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CO5085: Học sâu và ứng dụng trong thị giác máy tính | HCMUT</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <!-- Top Sticky Navigation -->
+  <header>
+    <a class="logo" href="index.html"><span>CO5085:</span> Deep Learning &amp; Its Applications in Computer Vision</a>
+    <nav class="main-nav" aria-label="Main Navigation">
+      <a href="#exercises">Exercises</a>
+      <a href="#assignments">Assignments</a>
+      <a href="#members">Team</a>
+      <a href="demo.html">Live Demo</a>
+      <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="hero-tag">Học kỳ 1 (HK261) · Năm học 2025-2026</div>
+    <h1>Học sâu &amp; Ứng dụng <br><em>trong Thị giác máy tính</em></h1>
+    <p class="lead">
+      Cổng thông tin báo cáo kỹ thuật, kết quả thực nghiệm và demo mô hình cho môn học <strong>CO5085: Học sâu và ứng
+        dụng trong thị giác máy tính</strong>, Trường Đại học Bách Khoa, ĐHQG-HCM.
+    </p>
+
+    <!-- Project Metadata Cards -->
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">Môn học</span>
+        <span class="meta-value">CO5085</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Giảng viên hướng dẫn</span>
+        <span class="meta-value">TS. Lê Thành Sách và TS. Nguyễn Quốc Minh</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Nhóm thực hiện</span>
+        <span class="meta-value">[Nhóm ... / Group ID]</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Khoa / Trường</span>
+        <span class="meta-value">Khoa KH&amp;KT Máy tính · HCMUT</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Team Members Section -->
+  <section id="members">
+    <div class="section-label">Thành viên nhóm</div>
+    <div class="members-grid">
+
+      <!-- Member 1: Lê Tiến Đạt -->
+      <div class="member-card">
+        <div class="member-avatar">TĐ</div>
+        <div class="member-info">
+          <div class="member-name">Lê Tiến Đạt</div>
+          <div class="member-id">MSSV: 2310653</div>
+          <div class="member-role">GitHub Pages · E2 · E4 · A1 · A2</div>
+        </div>
+      </div>
+
+      <!-- Member 2: Nguyễn Lê Thảo Ly -->
+      <div class="member-card">
+        <div class="member-avatar">TL</div>
+        <div class="member-info">
+          <div class="member-name">Nguyễn Lê Thảo Ly</div>
+          <div class="member-id">MSSV: 2312010</div>
+          <div class="member-role">E1 · E3 · A1 · A2</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Exercises Section -->
+  <section id="exercises">
+    <div class="section-label">Bài tập thực hành (Exercises)</div>
+    <div class="assignments">
+
+      <!-- E1: Small Image Classification -->
+      <div class="assignment-card">
+        <div>
+          <div class="assignment-number">Exercise 01</div>
+          <div class="assignment-title">Small Image Classification (Softmax, MLP &amp; CNN)</div>
+          <div class="assignment-desc">
+            Phân loại trên tập dữ liệu ảnh kích thước nhỏ (MNIST / Fashion-MNIST / CIFAR-10) bằng Softmax Classifier,
+            Multi-Layer Perceptron (MLP) và Convolutional Neural Network (CNN). So sánh accuracy, model capacity, và
+            phân tích phân phối dự đoán lỗi (error analysis).
+          </div>
+          <div class="assignment-links">
+            <a class="link-btn primary" href="exercises/e1.html">📄 Báo cáo kỹ thuật (WIP)</a>
+            <a class="link-btn" href="https://github.com/broistg/deep-learning-CO5085" target="_blank"
+              rel="noopener noreferrer">↗ Source Code</a>
+          </div>
+        </div>
+        <span class="assignment-badge badge-wip">In progress...</span>
+      </div>
+
+      <!-- E2: Multi-Head Self-Attention (MSA) -->
+      <div class="assignment-card">
+        <div>
+          <div class="assignment-number">Exercise 02</div>
+          <div class="assignment-title">Multi-Head Self-Attention (MSA) from Scratch</div>
+          <div class="assignment-desc">
+            Tự hiện thực lại Multi-Head Self-Attention (MSA) từ đầu bằng PyTorch. Thử nghiệm các cơ chế tokenization
+            (patch extraction, pixel/row, CNN-stem, CLS + patches, ...) và đánh giá hiệu quả phân loại trên tập dữ liệu
+            ảnh nhỏ.
+          </div>
+          <div class="assignment-links">
+            <a class="link-btn primary" href="exercises/e2.html">📄 Báo cáo kỹ thuật (WIP)</a>
+            <a class="link-btn" href="https://github.com/broistg/deep-learning-CO5085" target="_blank"
+              rel="noopener noreferrer">↗ Source Code</a>
+          </div>
+        </div>
+        <span class="assignment-badge badge-wip">In progress...</span>
+      </div>
+
+      <!-- E3: Sequence Models -->
+      <div class="assignment-card">
+        <div>
+          <div class="assignment-number">Exercise 03</div>
+          <div class="assignment-title">Sequence Models (LSTM / GRU)</div>
+          <div class="assignment-desc">
+            Hiện thực và so sánh các mô hình xử lý chuỗi Recurrent Neural Networks (LSTM và GRU) với baseline
+            Feed-Forward / 1D-CNN trên các bài toán chuỗi thời gian hoặc phân loại tuần tự.
+          </div>
+          <div class="assignment-links">
+            <a class="link-btn" href="exercises/e3.html">📄 Khung sườn báo cáo</a>
+            <a class="link-btn" href="https://github.com/broistg/deep-learning-CO5085" target="_blank"
+              rel="noopener noreferrer">↗ Source Code</a>
+          </div>
+        </div>
+        <span class="assignment-badge badge-todo">Upcoming</span>
+      </div>
+
+      <!-- E4: Generative Models -->
+      <div class="assignment-card">
+        <div>
+          <div class="assignment-number">Exercise 04</div>
+          <div class="assignment-title">Generative Models (VAE, GAN &amp; Diffusion)</div>
+          <div class="assignment-desc">
+            Hiện thực các mô hình sinh (Variational Autoencoder, Generative Adversarial Network và Diffusion Model) trên
+            tập ảnh nhỏ. Phân tích không gian tiềm ẩn (latent space) và đánh đổi giữa chất lượng mẫu sinh và chi phí
+            tính toán.
+          </div>
+          <div class="assignment-links">
+            <a class="link-btn" href="exercises/e4.html">📄 Khung sườn báo cáo</a>
+            <a class="link-btn" href="https://github.com/broistg/deep-learning-CO5085" target="_blank"
+              rel="noopener noreferrer">↗ Source Code</a>
+          </div>
+        </div>
+        <span class="assignment-badge badge-todo">Upcoming</span>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Assignments Section -->
+  <section id="assignments">
+    <div class="section-label">Đồ án thực nghiệm (Assignments)</div>
+    <div class="assignments">
+
+      <!-- A1: CNN vs. Transformer -->
+      <div class="assignment-card">
+        <div>
+          <div class="assignment-number">Assignment 01</div>
+          <div class="assignment-title">CNN vs. Transformer on Large Dataset</div>
+          <div class="assignment-desc">
+            Nghiên cứu so sánh toàn diện giữa kiến trúc Convolutional Neural Network (CNN) và Vision Transformer (ViT)
+            trên tập dữ liệu ảnh lớn. Đánh giá đa chiều dưới các chế độ huấn luyện: From-scratch vs Pretrained, cùng các
+            kỹ thuật fine-tuning (Frozen backbone, Partial freeze, Full fine-tuning).
+          </div>
+          <div class="assignment-links">
+            <a class="link-btn" href="assignments/a1.html">📄 Khung sườn báo cáo</a>
+            <a class="link-btn" href="demo.html">⚡ Live Demo</a>
+            <a class="link-btn" href="https://github.com/broistg/deep-learning-CO5085" target="_blank"
+              rel="noopener noreferrer">↗ Source Code</a>
+          </div>
+        </div>
+        <span class="assignment-badge badge-todo">Upcoming</span>
+      </div>
+
+      <!-- A2: Computer Vision Pipeline & Paper Analysis -->
+      <div class="assignment-card">
+        <div>
+          <div class="assignment-number">Assignment 02</div>
+          <div class="assignment-title">Computer Vision Pipeline &amp; Paper Analysis</div>
+          <div class="assignment-desc">
+            Lựa chọn bài toán thị giác máy tính nâng cao (Object Detection, Semantic Segmentation, ...), xây dựng
+            pipeline hoàn chỉnh từ dữ liệu đến suy luận, và thực hiện bài báo cáo phân tích phê phán (Paper Analysis)
+            đối chiếu thực nghiệm.
+          </div>
+          <div class="assignment-links">
+            <a class="link-btn" href="assignments/a2.html">📄 Khung sườn báo cáo</a>
+            <a class="link-btn" href="https://github.com/broistg/deep-learning-CO5085" target="_blank"
+              rel="noopener noreferrer">↗ Source Code</a>
+          </div>
+        </div>
+        <span class="assignment-badge badge-todo">Upcoming</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    CO5085 · [Nhóm ...] · Trường Đại học Bách Khoa, ĐHQG-HCM &nbsp;·&nbsp;
+    <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">GitHub
+      Repository</a>
+    &nbsp;·&nbsp;
+    Giảng viên: TS. Lê Thành Sách và TS. Nguyễn Quốc Minh
+  </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 03: Sequence Models (LSTM / GRU) · CO5085</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+  <!-- Sticky Header -->
+  <header>
+    <a class="logo" href="../index.html"><span>CO5085:</span> Deep Learning &amp; Its Applications in Computer
+      Vision</a>
+    <a class="back-btn" href="../index.html#exercises">← Về trang tổng quan</a>
+  </header>
+
+  <div class="page-container">
+
+    <!-- Sub-navigation: Sibling exercises -->
+    <nav class="assignment-parts" aria-label="Exercise Navigation">
+      <span class="label">Exercises ·</span>
+      <a href="e1.html">E1: Small Image Classification</a>
+      <a href="e2.html">E2: Multi-Head Attention</a>
+      <span class="current">E3: Sequence Models</span>
+      <a href="e4.html">E4: Generative Models</a>
+    </nav>
+
+    <!-- Page Hero Banner -->
+    <div class="page-tag">Exercise 03 · Technical Report Scaffold</div>
+    <h1>Mô hình xử lý chuỗi<br><em>LSTM, GRU &amp; Feed-Forward / 1D-CNN Baseline</em></h1>
+
+    <div class="page-meta">
+      <div class="meta-item">
+        <span class="meta-label">Môn học</span>
+        <span class="meta-value">CO5085</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Nhóm</span>
+        <span class="meta-value">[Nhóm ... / Group ID]</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Thành viên phụ trách</span>
+        <span class="meta-value">Nguyễn Lê Thảo Ly · Lê Tiến Đạt</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Trạng thái</span>
+        <span class="meta-value"><span class="badge badge-todo">Upcoming</span></span>
+      </div>
+    </div>
+
+    <!-- Quick Action Links -->
+    <div class="quick-links">
+      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085" target="_blank"
+        rel="noopener noreferrer">↗ GitHub Repository</a>
+      <a class="link-btn" href="../index.html#exercises">← Quay lại danh sách bài tập</a>
+    </div>
+
+    <!-- Status Banner: Upcoming -->
+    <div class="status-banner upcoming">
+      <div class="status-banner-icon">📌</div>
+      <div class="status-banner-content">
+        <h4>Bài tập sắp diễn ra (Upcoming Deliverable) <span class="badge badge-todo">Upcoming</span></h4>
+        <p>
+          Bài tập này dự kiến sẽ bắt đầu sau khi hoàn thành phần E1 và E2. Khung sườn kỹ thuật dưới đây đã được định
+          hình sẵn để nhóm cập nhật mã nguồn, bảng thống kê và biểu đồ huấn luyện ngay khi bắt đầu thực nghiệm.
+        </p>
+      </div>
+    </div>
+
+    <!-- SECTION 01: PROBLEM SCOPE -->
+    <div class="section" id="scope">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2>Mục tiêu &amp; Bài toán dự kiến</h2>
+      </div>
+      <p>
+        Mục tiêu của bài tập là hiện thực, đánh giá và đối chiếu các mô hình nơ-ron tuần hoàn (Recurrent Neural
+        Networks) trên bài toán xử lý chuỗi:
+      </p>
+      <ul>
+        <li>So sánh khả năng ghi nhớ dài hạn (Long-term dependencies) giữa LSTM và GRU.</li>
+        <li>Khảo sát hiện tượng suy giảm gradient (Vanishing Gradients) qua các bước thời gian (time steps).</li>
+        <li>Đối chiếu hiệu năng tính toán và tốc độ hội tụ với baseline Feed-Forward hoặc mạng tích chập 1 chiều
+          (1D-CNN).</li>
+      </ul>
+
+      <div class="overview-grid">
+        <div class="overview-card">
+          <div class="overview-icon">🔄</div>
+          <div>
+            <div class="overview-card-title">Cơ chế Cổng (Gating)</div>
+            <div class="overview-card-desc">Cổng quên (forget gate), cổng vào (input gate) và cổng ra (output gate) giúp
+              kiểm soát luồng thông tin qua các bước thời gian.</div>
+          </div>
+        </div>
+        <div class="overview-card">
+          <div class="overview-icon">⚡</div>
+          <div>
+            <div class="overview-card-title">GRU vs. LSTM</div>
+            <div class="overview-card-desc">GRU tối giản trạng thái ô nhớ với 2 cổng (reset &amp; update), giúp giảm số
+              lượng tham số và tăng tốc độ huấn luyện.</div>
+          </div>
+        </div>
+        <div class="overview-card">
+          <div class="overview-icon">📊</div>
+          <div>
+            <div class="overview-card-title">Chỉ số đánh giá</div>
+            <div class="overview-card-desc">Đánh giá trên độ chính xác dự đoán chuỗi, F1-score và thời gian suy luận
+              trên mỗi batch dữ liệu.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 02: PLANNED ARCHITECTURES -->
+    <div class="section" id="architectures">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2>Kiến trúc dự kiến đánh giá</h2>
+      </div>
+
+      <div class="models-grid">
+        <div class="model-card">
+          <div class="model-family">Recurrent Network</div>
+          <div class="model-name">Long Short-Term Memory (LSTM)</div>
+          <div class="model-desc">
+            Kiến trúc kinh điển với ô nhớ (cell state) riêng biệt và ba cơ chế cổng độc lập giúp giảm thiểu triệt để
+            hiện tượng vanishing gradient.
+          </div>
+          <div class="model-meta">
+            <div><span class="meta-label">Số cổng</span><span class="meta-val">3 cổng</span></div>
+            <div><span class="meta-label">Dung lượng tham số</span><span class="meta-val">[Sẽ cập nhật]</span></div>
+          </div>
+        </div>
+
+        <div class="model-card">
+          <div class="model-family">Recurrent Network</div>
+          <div class="model-name">Gated Recurrent Unit (GRU)</div>
+          <div class="model-desc">
+            Biến thể rút gọn gộp cell state và hidden state, chỉ sử dụng cổng reset và cổng update, đem lại tốc độ thực
+            thi nhanh hơn.
+          </div>
+          <div class="model-meta">
+            <div><span class="meta-label">Số cổng</span><span class="meta-val">2 cổng</span></div>
+            <div><span class="meta-label">Dung lượng tham số</span><span class="meta-val">[Sẽ cập nhật]</span></div>
+          </div>
+        </div>
+
+        <div class="model-card">
+          <div class="model-family">Temporal Convolution</div>
+          <div class="model-name">1D-CNN Baseline</div>
+          <div class="model-desc">
+            Baseline mạng tích chập 1 chiều quét qua trục thời gian để so sánh khả năng tính toán song song hóa so với
+            kiến trúc tuần hoàn.
+          </div>
+          <div class="model-meta">
+            <div><span class="meta-label">Cơ chế</span><span class="meta-val">Song song hóa</span></div>
+            <div><span class="meta-label">Dung lượng tham số</span><span class="meta-val">[Sẽ cập nhật]</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 03: PLACEHOLDER RESULTS -->
+    <div class="section" id="results">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2>Bảng kết quả thử nghiệm dự kiến</h2>
+      </div>
+      <p>
+        Bảng theo dõi các chỉ số thực nghiệm chuẩn bị cho quá trình huấn luyện:
+      </p>
+
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Upcoming Sequence Results Table">
+          <thead>
+            <tr>
+              <th>Mô hình</th>
+              <th>Số lượng Hidden Units</th>
+              <th>Số lượng tham số</th>
+              <th>Validation Loss</th>
+              <th>Độ chính xác / Macro F1</th>
+              <th>Thời gian chạy (Giây/Epoch)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Feed-Forward / 1D-CNN Baseline</strong></td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><strong>Standard LSTM</strong></td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><strong>Bidirectional LSTM (Bi-LSTM)</strong></td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><strong>Gated Recurrent Unit (GRU)</strong></td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Figure placeholder -->
+      <figure class="report-figure">
+        <img src="../assets/placeholder-figure.svg" alt="Convergence Curves Placeholder" loading="lazy">
+        <figcaption>Hình 3.1: Vị trí placeholder hiển thị biểu đồ huấn luyện và phân tích vanishing gradient khi bài tập
+          bắt đầu.</figcaption>
+      </figure>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    CO5085 · Exercise 03 Report · [Nhóm ...] · HCMUT &nbsp;·&nbsp;
+    <a href="../index.html">Về trang chủ</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+  </footer>
+
+</body>
+
+</html>

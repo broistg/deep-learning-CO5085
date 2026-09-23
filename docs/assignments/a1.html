@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assignment 01: CNN vs. Transformer on Large Dataset · CO5085</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+  <!-- Sticky Header -->
+  <header>
+    <a class="logo" href="../index.html"><span>CO5085:</span> Deep Learning &amp; Its Applications in Computer
+      Vision</a>
+    <a class="back-btn" href="../index.html#assignments">← Về trang tổng quan</a>
+  </header>
+
+  <div class="page-container">
+
+    <!-- Sub-navigation: Sibling assignments -->
+    <nav class="assignment-parts" aria-label="Assignment Navigation">
+      <span class="label">Assignments ·</span>
+      <span class="current">A1: CNN vs. Transformer</span>
+      <a href="a2.html">A2: CV Pipeline &amp; Paper Analysis</a>
+    </nav>
+
+    <!-- Page Hero Banner -->
+    <div class="page-tag">Assignment 01 · Technical Report Scaffold</div>
+    <h1>So sánh CNN &amp; Vision Transformer<br><em>trên tập dữ liệu ảnh quy mô lớn</em></h1>
+
+    <div class="page-meta">
+      <div class="meta-item">
+        <span class="meta-label">Môn học</span>
+        <span class="meta-value">CO5085</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Nhóm</span>
+        <span class="meta-value">[Nhóm ... / Group ID]</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Thành viên phụ trách</span>
+        <span class="meta-value">Lê Tiến Đạt · Nguyễn Lê Thảo Ly</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Trạng thái</span>
+        <span class="meta-value"><span class="badge badge-todo">Upcoming</span></span>
+      </div>
+    </div>
+
+    <!-- Quick Action Links -->
+    <div class="quick-links">
+      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085" target="_blank"
+        rel="noopener noreferrer">↗ GitHub Repository</a>
+      <a class="link-btn primary" href="../demo.html">⚡ Live Demo</a>
+      <a class="link-btn" href="#protocol">📋 Quy trình thực nghiệm</a>
+      <a class="link-btn" href="#benchmarks">📊 Bảng kết quả dự kiến</a>
+    </div>
+
+    <!-- Status Banner: Upcoming -->
+    <div class="status-banner upcoming">
+      <div class="status-banner-icon">📌</div>
+      <div class="status-banner-content">
+        <h4>Đồ án sắp diễn ra (Upcoming Deliverable) <span class="badge badge-todo">Upcoming</span></h4>
+        <p>
+          Assignment 01 tập trung vào việc so sánh chuyên sâu giữa hai trường phái kiến trúc kinh điển trong Computer
+          Vision: Convolutional Neural Networks (ResNet / ConvNeXt / EfficientNet) và Vision Transformers (ViT / Swin
+          Transformer). Khung sườn kỹ thuật dưới đây đã được cấu trúc sẵn để cập nhật kết quả thực nghiệm.
+        </p>
+      </div>
+    </div>
+
+    <!-- SUB-TASK NAVIGATION -->
+    <div class="overview-grid">
+      <div class="overview-card">
+        <div class="overview-icon">📁</div>
+        <div>
+          <div class="overview-card-title">A1.1: Dataset &amp; Protocol</div>
+          <div class="overview-card-desc">Lựa chọn tập dữ liệu ảnh lớn (ImageNet-1K sub, Tiny-ImageNet, Food-101, v.v.)
+            và thiết lập chuẩn đánh giá thực nghiệm.</div>
+        </div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-icon">⚙️</div>
+        <div>
+          <div class="overview-card-title">A1.2: From-scratch vs Pretrained</div>
+          <div class="overview-card-desc">So sánh hiệu năng khi huấn luyện từ đầu so với tận dụng trọng số tiền huấn
+            luyện (Transfer Learning).</div>
+        </div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-icon">❄️</div>
+        <div>
+          <div class="overview-card-title">A1.3: Fine-tuning Strategies</div>
+          <div class="overview-card-desc">Đánh giá 3 chế độ: Đóng băng hoàn toàn (Frozen), Đóng băng một phần (Partial
+            freeze) và Tinh chỉnh toàn bộ (Full fine-tuning).</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 01: DATASET SELECTION & PROTOCOL -->
+    <div class="section" id="protocol">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2>A1.1: Tập dữ liệu &amp; Quy trình thực nghiệm</h2>
+      </div>
+      <p>
+        Mô tả chi tiết tập dữ liệu ảnh lớn được lựa chọn cho đồ án và quy trình phân chia dữ liệu, tiền xử lý và tăng
+        cường dữ liệu (Data Augmentation):
+      </p>
+
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="A1 Dataset Specifications">
+          <thead>
+            <tr>
+              <th>Thông số</th>
+              <th>Mô tả / Giá trị dự kiến</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Tập dữ liệu lựa chọn</td>
+              <td>[Tiny-ImageNet / ImageNet-100 / Food-101 / Standford Cars]</td>
+            </tr>
+            <tr>
+              <td>Kích thước tập huấn luyện</td>
+              <td>[e.g. ~100,000 ảnh]</td>
+            </tr>
+            <tr>
+              <td>Kích thước tập kiểm thử</td>
+              <td>[e.g. ~10,000 ảnh]</td>
+            </tr>
+            <tr>
+              <td>Số lượng lớp (Classes)</td>
+              <td>[e.g. 100 - 200 lớp]</td>
+            </tr>
+            <tr>
+              <td>Chiến lược tăng cường dữ liệu</td>
+              <td>RandAugment, Mixup, CutMix, Random Horizontal Flip, ColorJitter</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure class="report-figure">
+        <img src="../assets/placeholder-sample.svg" alt="Large Dataset Samples" loading="lazy">
+        <figcaption>Hình 1.1: Mẫu ảnh từ tập dữ liệu lớn với các kỹ thuật tăng cường dữ liệu (Data Augmentation).
+        </figcaption>
+      </figure>
+    </div>
+
+    <!-- SECTION 02: MODELS TO COMPARE -->
+    <div class="section" id="models">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2>Các mô hình CNN &amp; Transformer đối đầu</h2>
+      </div>
+      <p>
+        Lựa chọn các đại diện tiêu biểu từ hai họ kiến trúc có cùng quy mô tham số và chi phí tính toán (FLOPs) tương
+        đương:
+      </p>
+
+      <div class="models-grid">
+        <!-- CNN 1 -->
+        <div class="model-card">
+          <div class="model-family"><span class="badge badge-cnn">CNN Family</span></div>
+          <div class="model-name">ResNet-50 / ConvNeXt-T</div>
+          <div class="model-desc">
+            Kiến trúc tích chập chuẩn mực với kết nối tắt (Residual Connections) và inductive bias không gian mạnh mẽ.
+          </div>
+          <div class="model-meta">
+            <div><span class="meta-label">Số tham số</span><span class="meta-val">~25M - 28M</span></div>
+            <div><span class="meta-label">FLOPs</span><span class="meta-val">~4.1 GFLOPs</span></div>
+          </div>
+        </div>
+
+        <!-- ViT 1 -->
+        <div class="model-card">
+          <div class="model-family"><span class="badge badge-vit">Vision Transformer</span></div>
+          <div class="model-name">ViT-Base/16 / Swin-T</div>
+          <div class="model-desc">
+            Kiến trúc thuần chú ý toàn cục hoặc cửa sổ trượt (shifted window), khả năng mô hình hóa quan hệ tầm xa mạnh
+            khi có dữ liệu lớn.
+          </div>
+          <div class="model-meta">
+            <div><span class="meta-label">Số tham số</span><span class="meta-val">~28M - 86M</span></div>
+            <div><span class="meta-label">FLOPs</span><span class="meta-val">~4.5 - 17.6 GFLOPs</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 03: BENCHMARKS & ABLATIONS -->
+    <div class="section" id="benchmarks">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2>A1.2: Bảng so sánh kết quả thực nghiệm dự kiến</h2>
+      </div>
+      <p>
+        Bảng so sánh chéo đa chế độ huấn luyện giữa CNN và Vision Transformer:
+      </p>
+
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="CNN vs ViT Benchmark Table">
+          <thead>
+            <tr>
+              <th>Mô hình</th>
+              <th>Chế độ huấn luyện</th>
+              <th>Trọng số khởi tạo</th>
+              <th>Top-1 Accuracy</th>
+              <th>Top-5 Accuracy</th>
+              <th>GPU Memory (MB)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-cnn">ResNet-50</span></td>
+              <td>From-scratch</td>
+              <td>Random Init</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-cnn">ResNet-50</span></td>
+              <td>Linear Probing (Frozen)</td>
+              <td>ImageNet-1K Pretrained</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-cnn">ResNet-50</span></td>
+              <td>Full Fine-tuning</td>
+              <td>ImageNet-1K Pretrained</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-vit">ViT / Swin-T</span></td>
+              <td>From-scratch</td>
+              <td>Random Init</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-vit">ViT / Swin-T</span></td>
+              <td>Linear Probing (Frozen)</td>
+              <td>ImageNet-1K Pretrained</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-vit">ViT / Swin-T</span></td>
+              <td>Full Fine-tuning</td>
+              <td>ImageNet-1K Pretrained</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure class="report-figure">
+        <img src="../assets/placeholder-figure.svg" alt="Fine-tuning curves comparison" loading="lazy">
+        <figcaption>Hình 1.2: Vị trí placeholder hiển thị biểu đồ so sánh độ chính xác và tốc độ thích ứng giữa các
+          chiến lược fine-tuning.</figcaption>
+      </figure>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    CO5085 · Assignment 01 Report · [Nhóm ...] · HCMUT &nbsp;·&nbsp;
+    <a href="../index.html">Về trang chủ</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+  </footer>
+
+</body>
+
+</html>

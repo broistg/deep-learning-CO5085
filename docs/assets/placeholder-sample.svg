@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" width="100%" height="100%">
+  <defs>
+    <linearGradient id="sampleBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F9F7F4" />
+      <stop offset="100%" stop-color="#ECE8E1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="300" fill="url(#sampleBg)" rx="12" />
+  <rect x="1" y="1" width="598" height="298" fill="none" stroke="#D8D2C7" stroke-width="1.5" rx="11" />
+
+  <!-- 4 Sample Thumbnails Grid -->
+  <g transform="translate(60, 45)">
+    <!-- Thumb 1 -->
+    <rect x="0" y="0" width="100" height="100" rx="8" fill="#FFF" stroke="#DDD7CD" />
+    <circle cx="50" cy="45" r="22" fill="#E8593C" opacity="0.85" />
+    <path d="M 30 75 L 70 75" stroke="#1A1814" stroke-width="2" stroke-linecap="round" opacity="0.3" />
+    <text x="50" y="125" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="12" fill="#6B6760" font-weight="500">Sample 01</text>
+
+    <!-- Thumb 2 -->
+    <rect x="125" y="0" width="100" height="100" rx="8" fill="#FFF" stroke="#DDD7CD" />
+    <polygon points="175,22 198,68 152,68" fill="#C5440A" opacity="0.85" />
+    <path d="M 155 75 L 195 75" stroke="#1A1814" stroke-width="2" stroke-linecap="round" opacity="0.3" />
+    <text x="175" y="125" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="12" fill="#6B6760" font-weight="500">Sample 02</text>
+
+    <!-- Thumb 3 -->
+    <rect x="250" y="0" width="100" height="100" rx="8" fill="#FFF" stroke="#DDD7CD" />
+    <rect x="272" y="22" width="56" height="46" rx="4" fill="#3C3489" opacity="0.8" />
+    <path d="M 280 75 L 320 75" stroke="#1A1814" stroke-width="2" stroke-linecap="round" opacity="0.3" />
+    <text x="300" y="125" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="12" fill="#6B6760" font-weight="500">Sample 03</text>
+
+    <!-- Thumb 4 -->
+    <rect x="375" y="0" width="100" height="100" rx="8" fill="#FFF" stroke="#DDD7CD" />
+    <circle cx="425" cy="45" r="24" fill="#085041" opacity="0.8" />
+    <path d="M 405 75 L 445 75" stroke="#1A1814" stroke-width="2" stroke-linecap="round" opacity="0.3" />
+    <text x="425" y="125" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="12" fill="#6B6760" font-weight="500">Sample 04</text>
+  </g>
+
+  <!-- Descriptive tag -->
+  <rect x="180" y="215" width="240" height="34" rx="17" fill="#FFFFFF" stroke="#C5440A" stroke-width="1.2" filter="drop-shadow(0 2px 8px rgba(26,24,20,0.06))" />
+  <text x="300" y="237" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="13" font-weight="600" fill="#C5440A">
+    🖼 Dataset Sample Grid
+  </text>
+  <text x="300" y="272" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="11.5" fill="#A8A49F">
+    Replace with your dataset inspection or batch samples
+  </text>
+</svg>

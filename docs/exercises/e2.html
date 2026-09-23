@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 02: Multi-Head Self-Attention (MSA) · CO5085</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+  <!-- Sticky Header -->
+  <header>
+    <a class="logo" href="../index.html"><span>CO5085:</span> Deep Learning &amp; Its Applications in Computer
+      Vision</a>
+    <a class="back-btn" href="../index.html#exercises">← Về trang tổng quan</a>
+  </header>
+
+  <div class="page-container">
+
+    <!-- Sub-navigation: Sibling exercises -->
+    <nav class="assignment-parts" aria-label="Exercise Navigation">
+      <span class="label">Exercises ·</span>
+      <a href="e1.html">E1: Small Image Classification</a>
+      <span class="current">E2: Multi-Head Attention</span>
+      <a href="e3.html">E3: Sequence Models</a>
+      <a href="e4.html">E4: Generative Models</a>
+    </nav>
+
+    <!-- Page Hero Banner -->
+    <div class="page-tag">Exercise 02 · Technical Report</div>
+    <h1>Multi-Head Self-Attention (MSA)<br><em>Hiện thực từ đầu &amp; Cơ chế Tokenization</em></h1>
+
+    <div class="page-meta">
+      <div class="meta-item">
+        <span class="meta-label">Môn học</span>
+        <span class="meta-value">CO5085</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Nhóm</span>
+        <span class="meta-value">[Nhóm ... / Group ID]</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Thành viên phụ trách</span>
+        <span class="meta-value">Lê Tiến Đạt · Nguyễn Lê Thảo Ly</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Trạng thái</span>
+        <span class="meta-value"><span class="badge badge-wip">Work in progress...</span></span>
+      </div>
+    </div>
+
+    <!-- Quick Action Links -->
+    <div class="quick-links">
+      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085" target="_blank"
+        rel="noopener noreferrer">↗ GitHub Repository</a>
+      <a class="link-btn primary" href="../demo.html">⚡ Live Demo</a>
+      <a class="link-btn" href="#" target="_blank" rel="noopener noreferrer">📓 Notebook MSA PyTorch</a>
+      <a href="#tokenization" class="link-btn">🧩 Các phương pháp Tokenization</a>
+    </div>
+
+    <!-- Status Banner: Work in Progress -->
+    <div class="status-banner wip">
+      <div class="status-banner-icon">⏳</div>
+      <div class="status-banner-content">
+        <h4>Báo cáo đang thực hiện (Work in Progress) <span class="badge badge-wip">WIP</span></h4>
+        <p>
+          Mô-đun Multi-Head Self-Attention (MSA) và các kỹ thuật tokenization từ ảnh đang được hiện thực thuần bằng
+          PyTorch (không dùng module có sẵn <code>nn.MultiheadAttention</code>). Dưới đây là khung sườn báo cáo thực
+          nghiệm.
+        </p>
+        <ul class="progress-checklist">
+          <li class="done">Xây dựng công thức toán học và thiết kế lớp PyTorch cho Scaled Dot-Product Attention</li>
+          <li class="done">Thiết kế module MultiHeadAttention đa đầu chiếu với các ma trận W_q, W_k, W_v, W_o</li>
+          <li class="wip">Hiện thực các cơ chế tokenization: Patch extraction, Row/Pixel tokens, CNN-stem, CLS token
+          </li>
+          <li class="wip">Huấn luyện mô hình Transformer phân loại trên tập dữ liệu ảnh chuẩn và log kết quả</li>
+          <li class="todo">Trích xuất bản đồ tương tác chú ý (Attention Heatmaps) và đánh giá độ phức tạp tính toán</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SECTION 01: MATHEMATICAL FORMULATION -->
+    <div class="section" id="formulation">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2>Công thức toán học &amp; Cấu trúc Self-Attention</h2>
+      </div>
+      <p>
+        Cơ chế Self-Attention cho phép các vector đặc trưng trong chuỗi tự tương tác và tính toán trọng số quan hệ theo
+        ngữ cảnh. Đối với mỗi token, ta tính toán 3 vector: <strong>Query ($Q$)</strong>, <strong>Key ($K$)</strong>, và
+        <strong>Value ($V$)</strong>.
+      </p>
+
+      <div
+        style="background: var(--bg2); border-left: 3px solid var(--accent); padding: 16px 20px; border-radius: 4px; font-family: monospace; font-size: 14px; margin: 16px 0 24px;">
+        Attention(Q, K, V) = softmax( (Q · K^T) / sqrt(d_k) ) · V<br><br>
+        MultiHead(Q, K, V) = Concat(head_1, ..., head_h) · W^O<br>
+        với head_i = Attention(Q · W_i^Q, K · W_i^K, V · W_i^V)
+      </div>
+
+      <div class="overview-grid">
+        <div class="overview-card">
+          <div class="overview-icon">📐</div>
+          <div>
+            <div class="overview-card-title">Scaled Scaling Factor</div>
+            <div class="overview-card-desc">Thừa số chia $\sqrt{d_k}$ ngăn chặn tích vô hướng quá lớn làm bão hòa
+              gradient tại hàm softmax.</div>
+          </div>
+        </div>
+        <div class="overview-card">
+          <div class="overview-icon">🔀</div>
+          <div>
+            <div class="overview-card-title">Multi-Head Projection</div>
+            <div class="overview-card-desc">Cho phép mô hình đồng thời quan sát thông tin tại các không gian biểu diễn
+              con khác nhau.</div>
+          </div>
+        </div>
+        <div class="overview-card">
+          <div class="overview-icon">⚡</div>
+          <div>
+            <div class="overview-card-title">Độ phức tạp O(N²)</div>
+            <div class="overview-card-desc">Chi phí tính toán và bộ nhớ tăng theo bình phương độ dài chuỗi token $N$,
+              đòi hỏi tối ưu patch size.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 02: TOKENIZATION MECHANISMS -->
+    <div class="section" id="tokenization">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2>Các cơ chế Tokenization từ ảnh 2D</h2>
+      </div>
+      <p>
+        Hình ảnh là tín hiệu 2D có tính liên tục cao. Để đưa vào Transformer, ảnh cần được chia nhỏ thành chuỗi token
+        $1D$. Chúng tôi thử nghiệm và so sánh 4 chiến lược biến đổi:
+      </p>
+
+      <div class="models-grid">
+        <div class="model-card">
+          <div class="model-family">Patch Tokenizer (ViT)</div>
+          <div class="model-name">Patch Extraction (P x P)</div>
+          <div class="model-desc">
+            Chia ảnh thành các mảnh kích thước $4 \times 4$ hoặc $8 \times 8$, trải phẳng và chiếu tuyến tính sang
+            vector chiều $D$ (tương đương Conv2D stride = kernel_size = $P$).
+          </div>
+          <div class="model-meta">
+            <div><span class="meta-label">Độ dài chuỗi N</span><span class="meta-val">(H·W) / P²</span></div>
+            <div><span class="meta-label">Bảo tồn cục bộ</span><span class="meta-val">Trung bình</span></div>
+          </div>
+        </div>
+
+        <div class="model-card">
+          <div class="model-family">Row / Pixel Sequence</div>
+          <div class="model-name">Row-by-Row Scan</div>
+          <div class="model-desc">
+            Xem mỗi hàng pixel là một token đặc trưng theo thứ tự thời gian quét raster. Phù hợp với ảnh kích thước rất
+            nhỏ nhưng chuỗi sẽ dài khi độ phân giải tăng.
+          </div>
+          <div class="model-meta">
+            <div><span class="meta-label">Độ dài chuỗi N</span><span class="meta-val">H hàng</span></div>
+            <div><span class="meta-label">Bảo tồn cục bộ</span><span class="meta-val">Thấp</span></div>
+          </div>
+        </div>
+
+        <div class="model-card">
+          <div class="model-family">Hybrid Architecture</div>
+          <div class="model-name">CNN-Stem Features</div>
+          <div class="model-desc">
+            Sử dụng 1-2 lớp tích chập nhẹ ban đầu để giảm độ phân giải và trích xuất đặc trưng biên cạnh sơ bộ trước khi
+            đưa ma trận feature map vào làm token.
+          </div>
+          <div class="model-meta">
+            <div><span class="meta-label">Độ dài chuỗi N</span><span class="meta-val">H' x W'</span></div>
+            <div><span class="meta-label">Bảo tồn cục bộ</span><span class="meta-val">Rất cao</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tokenization figure -->
+      <figure class="report-figure" style="margin-top: 24px;">
+        <img src="../assets/placeholder-figure.svg" alt="Tokenization Mechanisms Diagram" loading="lazy">
+        <figcaption>Hình 2.1: Sơ đồ trực quan hóa các phương pháp chuyển đổi ảnh 2D thành chuỗi token đầu vào cho
+          Self-Attention.</figcaption>
+      </figure>
+    </div>
+
+    <!-- SECTION 03: EXPERIMENTAL RESULTS -->
+    <div class="section" id="results">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2>Kết quả thực nghiệm &amp; Bảng so sánh</h2>
+      </div>
+      <p>
+        Đánh giá độ chính xác phân loại của mô hình Vision Transformer tự hiện thực với các cấu hình tokenization khác
+        nhau trên cùng tập ảnh:
+      </p>
+
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Tokenization Experiment Results">
+          <thead>
+            <tr>
+              <th>Cơ chế Tokenization</th>
+              <th>Số lượng Token (N)</th>
+              <th>Số Head ($h$)</th>
+              <th>Dung lượng tham số</th>
+              <th>Test Accuracy (%)</th>
+              <th>Inference Latency</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Patch (4x4) + CLS token</strong></td>
+              <td>[e.g. 49 + 1]</td>
+              <td>4</td>
+              <td>[Đang cập nhật...]</td>
+              <td>[Đang cập nhật...]</td>
+              <td>[Đang cập nhật...]</td>
+            </tr>
+            <tr>
+              <td><strong>Patch (8x8) + CLS token</strong></td>
+              <td>[e.g. 16 + 1]</td>
+              <td>4</td>
+              <td>[Đang cập nhật...]</td>
+              <td>[Đang cập nhật...]</td>
+              <td>[Đang cập nhật...]</td>
+            </tr>
+            <tr>
+              <td><strong>CNN-Stem Hybrid</strong></td>
+              <td>[e.g. 64 + 1]</td>
+              <td>4</td>
+              <td>[Đang cập nhật...]</td>
+              <td>[Đang cập nhật...]</td>
+              <td>[Đang cập nhật...]</td>
+            </tr>
+            <tr>
+              <td><strong>Row Tokenization</strong></td>
+              <td>[e.g. 28 + 1]</td>
+              <td>4</td>
+              <td>[Đang cập nhật...]</td>
+              <td>[Đang cập nhật...]</td>
+              <td>[Đang cập nhật...]</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Training curve figure -->
+      <figure class="report-figure">
+        <img src="../assets/placeholder-figure.svg" alt="Attention Convergence Comparison" loading="lazy">
+        <figcaption>Hình 2.2: So sánh tốc độ hội tụ (Loss curve) giữa các cơ chế tokenization qua từng epoch.
+        </figcaption>
+      </figure>
+    </div>
+
+    <!-- SECTION 04: ATTENTION MAPS -->
+    <div class="section" id="visualizations">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2>Trực quan hóa bản đồ chú ý (Attention Maps)</h2>
+      </div>
+      <p>
+        Trích xuất trọng số tương tác giữa CLS token và các patch token trong ảnh. Điều này giúp kiểm chứng xem các
+        attention head đã thực sự học được cách tập trung vào vùng đối tượng chính hay chưa.
+      </p>
+
+      <figure class="report-figure">
+        <img src="../assets/placeholder-sample.svg" alt="Attention Rollout Heatmaps" loading="lazy">
+        <figcaption>Hình 2.3: Bản đồ nhiệt Attention Rollout minh họa vùng tập trung của các attention head khác nhau
+          trên ảnh kiểm thử.</figcaption>
+      </figure>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    CO5085 · Exercise 02 Report · [Nhóm ...] · HCMUT &nbsp;·&nbsp;
+    <a href="../index.html">Về trang chủ</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+  </footer>
+
+</body>
+
+</html>
