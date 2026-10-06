@@ -60,22 +60,22 @@
 
     <!-- Quick Action Links -->
     <div class="quick-links">
-      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085" target="_blank"
-        rel="noopener noreferrer">↗ GitHub Repository</a>
+      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085/tree/main/A1" target="_blank"
+        rel="noopener noreferrer">↗ Mã nguồn A1</a>
+      <a class="link-btn primary" href="../reports/assignment1.pdf" target="_blank" rel="noopener noreferrer">📄 Báo cáo PDF A1</a>
       <a class="link-btn primary" href="../demo.html">⚡ Live Demo</a>
       <a class="link-btn" href="#protocol">📋 Quy trình thực nghiệm</a>
       <a class="link-btn" href="#benchmarks">📊 Bảng kết quả dự kiến</a>
+      <a class="link-btn" href="#discussion">💡 Thảo luận &amp; Phân tích</a>
     </div>
 
     <!-- Status Banner: Upcoming -->
     <div class="status-banner upcoming">
       <div class="status-banner-icon">📌</div>
       <div class="status-banner-content">
-        <h4>Đồ án sắp diễn ra (Upcoming Deliverable) <span class="badge badge-todo">Upcoming</span></h4>
+        <h4>Bài tập lớn A1 (Chiếm 30% coursework) <span class="badge badge-todo">Upcoming</span></h4>
         <p>
-          Assignment 01 tập trung vào việc so sánh chuyên sâu giữa hai trường phái kiến trúc kinh điển trong Computer
-          Vision: Convolutional Neural Networks (ResNet / ConvNeXt / EfficientNet) và Vision Transformers (ViT / Swin
-          Transformer). Khung sườn kỹ thuật dưới đây đã được cấu trúc sẵn để cập nhật kết quả thực nghiệm.
+          So sánh CNN và Vision Transformer trên tập dữ liệu ảnh lớn với các chế độ huấn luyện: From-scratch vs. Pretrained, và 3 kiểu đóng băng (Freeze toàn bộ, Freeze một phần, Full fine-tuning).
         </p>
       </div>
     </div>
@@ -85,25 +85,22 @@
       <div class="overview-card">
         <div class="overview-icon">📁</div>
         <div>
-          <div class="overview-card-title">A1.1: Dataset &amp; Protocol</div>
-          <div class="overview-card-desc">Lựa chọn tập dữ liệu ảnh lớn (ImageNet-1K sub, Tiny-ImageNet, Food-101, v.v.)
-            và thiết lập chuẩn đánh giá thực nghiệm.</div>
+          <div class="overview-card-title">Mốc A1.1: Dataset &amp; Protocol</div>
+          <div class="overview-card-desc"><strong>Hạn: 26/10/2026 (W8)</strong> · Khóa tập ảnh lớn, mô tả split/augmentation, liệt kê CNN/ViT sẽ dùng, kế hoạch pretrain &amp; freeze (chưa cần số liệu cuối).</div>
         </div>
       </div>
       <div class="overview-card">
         <div class="overview-icon">⚙️</div>
         <div>
-          <div class="overview-card-title">A1.2: From-scratch vs Pretrained</div>
-          <div class="overview-card-desc">So sánh hiệu năng khi huấn luyện từ đầu so với tận dụng trọng số tiền huấn
-            luyện (Transfer Learning).</div>
+          <div class="overview-card-title">Mốc A1.2: So sánh cuối</div>
+          <div class="overview-card-desc"><strong>Hạn: 09/11/2026 (W10)</strong> · Đủ thí nghiệm CNN vs Transformer, from-scratch vs pretrained, 3 chế độ freeze, bảng + biểu đồ, thảo luận, code tái lập được.</div>
         </div>
       </div>
       <div class="overview-card">
-        <div class="overview-icon">❄️</div>
+        <div class="overview-icon">🌐</div>
         <div>
-          <div class="overview-card-title">A1.3: Fine-tuning Strategies</div>
-          <div class="overview-card-desc">Đánh giá 3 chế độ: Đóng băng hoàn toàn (Frozen), Đóng băng một phần (Partial
-            freeze) và Tinh chỉnh toàn bộ (Full fine-tuning).</div>
+          <div class="overview-card-title">Khung trang Web</div>
+          <div class="overview-card-desc"><strong>Hạn: 19/10/2026 (W7)</strong> · Hoàn thiện khung landing page GitHub Pages cho toàn bộ nhóm và mục A1.</div>
         </div>
       </div>
     </div>
@@ -130,11 +127,11 @@
           <tbody>
             <tr>
               <td>Tập dữ liệu lựa chọn</td>
-              <td>[Tiny-ImageNet / ImageNet-100 / Food-101 / Standford Cars]</td>
+              <td>[Tiny-ImageNet / ImageNet-100 / Food-101 / Standford Cars / CIFAR-100] (Không dùng MNIST/CIFAR-10)</td>
             </tr>
             <tr>
               <td>Kích thước tập huấn luyện</td>
-              <td>[e.g. ~100,000 ảnh]</td>
+              <td>[e.g. Vài chục nghìn ảnh trở lên]</td>
             </tr>
             <tr>
               <td>Kích thước tập kiểm thử</td>
@@ -142,7 +139,7 @@
             </tr>
             <tr>
               <td>Số lượng lớp (Classes)</td>
-              <td>[e.g. 100 - 200 lớp]</td>
+              <td>[Ưu tiên ≥ 10 lớp]</td>
             </tr>
             <tr>
               <td>Chiến lược tăng cường dữ liệu</td>
@@ -204,69 +201,103 @@
     <div class="section" id="benchmarks">
       <div class="section-header">
         <span class="section-num">03</span>
-        <h2>A1.2: Bảng so sánh kết quả thực nghiệm dự kiến</h2>
+        <h2>A1.2: Bảng so sánh kết quả thực nghiệm</h2>
       </div>
       <p>
-        Bảng so sánh chéo đa chế độ huấn luyện giữa CNN và Vision Transformer:
+        Bảng so sánh chéo giữa CNN và Vision Transformer dưới tất cả các chế độ: From-scratch vs Pretrained, và 3 kiểu đóng băng (Backbone Frozen, Partial Freeze, Full Fine-tuning):
       </p>
 
       <div class="results-table-wrapper">
         <table class="results-table" aria-label="CNN vs ViT Benchmark Table">
           <thead>
             <tr>
-              <th>Mô hình</th>
+              <th>Họ mô hình</th>
+              <th>Kiến trúc</th>
               <th>Chế độ huấn luyện</th>
               <th>Trọng số khởi tạo</th>
-              <th>Top-1 Accuracy</th>
-              <th>Top-5 Accuracy</th>
-              <th>GPU Memory (MB)</th>
+              <th>Tham số Trainable</th>
+              <th>Top-1 Acc (%)</th>
+              <th>Top-5 Acc (%)</th>
+              <th>GPU Mem (MB)</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><span class="badge badge-cnn">ResNet-50</span></td>
+              <td><span class="badge badge-cnn">CNN</span></td>
+              <td>ResNet-50</td>
               <td>From-scratch</td>
               <td>Random Init</td>
+              <td>100%</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
             </tr>
             <tr>
-              <td><span class="badge badge-cnn">ResNet-50</span></td>
-              <td>Linear Probing (Frozen)</td>
-              <td>ImageNet-1K Pretrained</td>
+              <td><span class="badge badge-cnn">CNN</span></td>
+              <td>ResNet-50</td>
+              <td>Linear Probing (Backbone Frozen)</td>
+              <td>ImageNet Pretrained</td>
+              <td>~0.5% (Head only)</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
             </tr>
             <tr>
-              <td><span class="badge badge-cnn">ResNet-50</span></td>
+              <td><span class="badge badge-cnn">CNN</span></td>
+              <td>ResNet-50</td>
+              <td>Partial Freeze (Đóng băng vài block đầu)</td>
+              <td>ImageNet Pretrained</td>
+              <td>~40-60%</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-cnn">CNN</span></td>
+              <td>ResNet-50</td>
               <td>Full Fine-tuning</td>
-              <td>ImageNet-1K Pretrained</td>
+              <td>ImageNet Pretrained</td>
+              <td>100%</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
             </tr>
             <tr>
-              <td><span class="badge badge-vit">ViT / Swin-T</span></td>
+              <td><span class="badge badge-vit">Transformer</span></td>
+              <td>ViT / Swin-T</td>
               <td>From-scratch</td>
               <td>Random Init</td>
+              <td>100%</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
             </tr>
             <tr>
-              <td><span class="badge badge-vit">ViT / Swin-T</span></td>
-              <td>Linear Probing (Frozen)</td>
-              <td>ImageNet-1K Pretrained</td>
+              <td><span class="badge badge-vit">Transformer</span></td>
+              <td>ViT / Swin-T</td>
+              <td>Linear Probing (Backbone Frozen)</td>
+              <td>ImageNet Pretrained</td>
+              <td>~0.3% (Head only)</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
             </tr>
             <tr>
-              <td><span class="badge badge-vit">ViT / Swin-T</span></td>
+              <td><span class="badge badge-vit">Transformer</span></td>
+              <td>ViT / Swin-T</td>
+              <td>Partial Freeze (Đóng băng vài layer đầu)</td>
+              <td>ImageNet Pretrained</td>
+              <td>~40-60%</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-vit">Transformer</span></td>
+              <td>ViT / Swin-T</td>
               <td>Full Fine-tuning</td>
-              <td>ImageNet-1K Pretrained</td>
+              <td>ImageNet Pretrained</td>
+              <td>100%</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
@@ -277,9 +308,25 @@
 
       <figure class="report-figure">
         <img src="../assets/placeholder-figure.svg" alt="Fine-tuning curves comparison" loading="lazy">
-        <figcaption>Hình 1.2: Vị trí placeholder hiển thị biểu đồ so sánh độ chính xác và tốc độ thích ứng giữa các
-          chiến lược fine-tuning.</figcaption>
+        <figcaption>Hình 1.2: Biểu đồ so sánh độ chính xác và tốc độ thích ứng giữa các chiến lược huấn luyện (From-scratch, Freeze, Partial Freeze, Full Fine-tuning).</figcaption>
       </figure>
+    </div>
+
+    <!-- SECTION 04: DISCUSSION & ANALYSIS -->
+    <div class="section" id="discussion">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2>Thảo luận chuyên sâu &amp; Phân tích lỗi</h2>
+      </div>
+      <p>
+        Các nội dung phân tích bắt buộc theo yêu cầu đặc tả (Specs Mục 4 &amp; 7.1.2):
+      </p>
+      <ul>
+        <li><strong>Khi nào chiến lược Freeze có lợi?</strong> Đánh đổi giữa chi phí tính toán, nguy cơ overfitting khi dữ liệu ít và độ chính xác phân loại.</li>
+        <li><strong>Khi nào ViT cần Pretrain?</strong> Khảo sát ảnh hưởng của Inductive Bias: Tại sao ViT khó hội tụ từ đầu khi dữ liệu kích thước vừa phải và sự bứt phá khi được nạp pre-trained weights.</li>
+        <li><strong>Chi phí tài nguyên:</strong> So sánh số lượng tham số trainable, dung lượng bộ nhớ GPU (VRAM), và thời gian huấn luyện / suy luận giữa CNN và Transformer.</li>
+        <li><strong>Phân tích lỗi (Error Analysis):</strong> Trích xuất Confusion Matrix, so sánh các ca dự đoán sai tiêu biểu của CNN so với ViT.</li>
+      </ul>
     </div>
 
   </div>

@@ -60,22 +60,22 @@
 
     <!-- Quick Action Links -->
     <div class="quick-links">
-      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085" target="_blank"
-        rel="noopener noreferrer">↗ GitHub Repository</a>
+      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085/tree/main/A2" target="_blank"
+        rel="noopener noreferrer">↗ Mã nguồn A2</a>
+      <a class="link-btn primary" href="../reports/assignment2.pdf" target="_blank" rel="noopener noreferrer">📄 Báo cáo PDF A2</a>
+      <a class="link-btn primary" href="#" target="_blank" rel="noopener noreferrer">🎬 Video Demo &amp; Thuyết trình</a>
       <a class="link-btn" href="#paper">📄 Bài báo liên quan</a>
       <a class="link-btn" href="#pipeline">🛠 Kiến trúc Pipeline</a>
-      <a class="link-btn" href="#analysis">🔍 Phân tích phê phán</a>
+      <a class="link-btn" href="#analysis">🔍 So sánh &amp; Phân tích</a>
     </div>
 
     <!-- Status Banner: Upcoming -->
     <div class="status-banner upcoming">
       <div class="status-banner-icon">📌</div>
       <div class="status-banner-content">
-        <h4>Đồ án sắp diễn ra (Upcoming Deliverable) <span class="badge badge-todo">Upcoming</span></h4>
+        <h4>Bài tập lớn A2 (Chiếm 30% coursework) <span class="badge badge-todo">Upcoming</span></h4>
         <p>
-          Assignment 02 là bài tập lớn nâng cao kết hợp xây dựng pipeline thị giác máy tính thực tế (Detection /
-          Segmentation / Tracking) cùng việc đọc, phân tích và phản biện bài báo khoa học liên quan. Khung sườn dưới đây
-          đã sẵn sàng cho nội dung báo cáo.
+          Xây dựng pipeline thị giác máy tính chạy được (so sánh ít nhất 2 phương pháp/biến thể) kết hợp đọc, phân tích và phản biện chuyên sâu một bài báo khoa học liên quan.
         </p>
       </div>
     </div>
@@ -85,26 +85,22 @@
       <div class="overview-card">
         <div class="overview-icon">🎯</div>
         <div>
-          <div class="overview-card-title">A2.1: Đề tài &amp; Chọn bài báo</div>
-          <div class="overview-card-desc">Lựa chọn bài toán thị giác máy tính chuyên sâu (Object Detection,
-            Instance/Semantic Segmentation), bộ dữ liệu và bài báo hội nghị đỉnh cao (CVPR / ICCV / ECCV / NeurIPS).
-          </div>
+          <div class="overview-card-title">Mốc A2.1: Khóa Đề tài &amp; Paper</div>
+          <div class="overview-card-desc"><strong>Hạn: 02/11/2026 (W9)</strong> · Khóa chủ đề CV, citation paper (CVPR/ICCV/ECCV/...), mô tả tập dữ liệu &amp; metric, kế hoạch pipeline (chưa cần kết quả cuối).</div>
         </div>
       </div>
       <div class="overview-card">
         <div class="overview-icon">🛠</div>
         <div>
-          <div class="overview-card-title">A2.2: Pipeline &amp; Thực nghiệm</div>
-          <div class="overview-card-desc">Xây dựng pipeline end-to-end từ tiền xử lý, mô hình đến post-processing (NMS,
-            thresholding) và tái lập thực nghiệm.</div>
+          <div class="overview-card-title">Mốc A2.2: Pipeline &amp; Paper Report</div>
+          <div class="overview-card-desc"><strong>Hạn: 16/11/2026 (W11)</strong> · Pipeline chạy được, so sánh ≥ 2 biến thể, phân tích paper đầy đủ (phương pháp, thí nghiệm, hạn chế, đối chiếu), số liệu và thảo luận.</div>
         </div>
       </div>
       <div class="overview-card">
-        <div class="overview-icon">📝</div>
+        <div class="overview-icon">🌐</div>
         <div>
-          <div class="overview-card-title">A2.3: Báo cáo phân tích bài báo</div>
-          <div class="overview-card-desc">Phân tích chi tiết đóng góp lý thuyết, ưu nhược điểm, so sánh thực nghiệm của
-            nhóm với bài báo gốc và đề xuất cải tiến.</div>
+          <div class="overview-card-title">Khung trang Web</div>
+          <div class="overview-card-desc"><strong>Hạn: 19/10/2026 (W7)</strong> · Hoàn thiện khung landing page GitHub Pages có mục A2 (tiêu đề, dataset, mô hình, paper).</div>
         </div>
       </div>
     </div>
@@ -207,10 +203,50 @@
     <div class="section" id="analysis">
       <div class="section-header">
         <span class="section-num">03</span>
-        <h2>A2.3: Báo cáo phân tích bài báo &amp; Đối chiếu thực nghiệm</h2>
+        <h2>A2.2: So sánh Pipeline &amp; Phân tích Paper</h2>
       </div>
+
+      <h3>3.1. So sánh các biến thể trong Pipeline của nhóm</h3>
       <p>
-        Đối chiếu kết quả thực nghiệm đạt được bởi nhóm so với công bố trong bài báo gốc:
+        Quy định bắt buộc (Specs Mục 4.1): Triển khai ít nhất một pipeline chạy được và so sánh ít nhất hai phương pháp hoặc hai biến thể (kiến trúc, backbone, pretrained vs scratch, hàm loss, v.v.):
+      </p>
+
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Pipeline Variants Comparison Table">
+          <thead>
+            <tr>
+              <th>Biến thể Pipeline</th>
+              <th>Kiến trúc / Backbone</th>
+              <th>Cơ chế Huấn luyện &amp; Loss</th>
+              <th>Tham số</th>
+              <th>Metric chính (mAP / mIoU / FID)</th>
+              <th>Tốc độ suy luận (FPS)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Biến thể 1 (Phương pháp cơ sở)</strong></td>
+              <td>[e.g. YOLO / Faster R-CNN / DeepLabv3]</td>
+              <td>[Loss chuẩn]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+            </tr>
+            <tr>
+              <td><strong>Biến thể 2 (Phương pháp đối chiếu)</strong></td>
+              <td>[e.g. DETR / Mask R-CNN / SegFormer]</td>
+              <td>[Loss cải tiến / Backbone khác]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="margin-top: 28px;">3.2. Đối chiếu thực nghiệm với bài báo khoa học gốc</h3>
+      <p>
+        Bảng so sánh kết quả thực nghiệm đạt được bởi nhóm so với số liệu công bố trong bài báo gốc:
       </p>
 
       <div class="results-table-wrapper">
@@ -219,8 +255,8 @@
             <tr>
               <th>Phương pháp</th>
               <th>Backbone</th>
-              <th>mAP / mIoU (Paper gốc)</th>
-              <th>mAP / mIoU (Nhóm thực nghiệm)</th>
+              <th>Metric (Công bố trong Paper gốc)</th>
+              <th>Metric (Nhóm tự tái hiện)</th>
               <th>FPS (Inference)</th>
             </tr>
           </thead>
@@ -250,14 +286,15 @@
         </table>
       </div>
 
-      <p style="margin-top: 20px;"><strong>Đánh giá phản biện &amp; Hạn chế (Critical Review):</strong></p>
+      <h3 style="margin-top: 28px;">3.3. Báo cáo phân tích phê phán bài báo (Paper Critical Analysis)</h3>
+      <p>
+        Phân tích chi tiết 4 nội dung bắt buộc theo yêu cầu đặc tả (Specs Mục 4.2):
+      </p>
       <ul>
-        <li><strong>Đóng góp chính:</strong> [Placeholder ghi nhận điểm sáng tạo về kiến trúc hoặc hàm mất mát của tác
-          giả].</li>
-        <li><strong>Điểm còn hạn chế:</strong> [Placeholder đánh giá về chi phí tính toán, độ phức tạp khi triển khai
-          thực tế, hoặc các trường hợp góc (edge cases) chưa được giải quyết].</li>
-        <li><strong>Hướng phát triển:</strong> [Placeholder đề xuất các ý tưởng tối ưu hoặc thử nghiệm trên bài toán
-          mới].</li>
+        <li><strong>Tóm tắt phương pháp:</strong> Ý tưởng cốt lõi, kiến trúc mạng, hàm mất mát (loss function), và các giả thiết tiên nghiệm của tác giả (không chép lại abstract).</li>
+        <li><strong>Tóm tắt thí nghiệm của paper:</strong> Bộ dữ liệu kiểm chứng, các độ đo (metrics) được áp dụng, và kết luận rút ra từ bài báo.</li>
+        <li><strong>Hạn chế của bài báo (Limitations):</strong> Rào cản về dữ liệu, chi phí tính toán phần cứng, các trường hợp lỗi (failure cases), và giả thiết nào không còn đúng khi áp dụng trên tập dữ liệu của nhóm.</li>
+        <li><strong>Đối chiếu với pipeline của nhóm:</strong> Nhóm đã tái hiện được những gì, điểm khác biệt trong quá trình cài đặt thực tế, và bài học rút ra cho pipeline.</li>
       </ul>
     </div>
 

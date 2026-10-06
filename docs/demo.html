@@ -123,9 +123,9 @@
 
     <!-- Task Switcher Tabs -->
     <div class="demo-tabs" role="tablist">
-      <button type="button" class="demo-tab demo-tab--active" data-tab="image">🖼 Image Classification</button>
-      <button type="button" class="demo-tab" data-tab="text">📝 Text / Sequence (E3)</button>
-      <button type="button" class="demo-tab" data-tab="multimodal">⚡ Attention / Vision (E2, A1)</button>
+      <button type="button" class="demo-tab demo-tab--active" data-tab="image">🖼 Phân loại ảnh (E1 / A1)</button>
+      <button type="button" class="demo-tab" data-tab="sequence">🔄 Chuỗi ảnh (E3: LSTM / GRU)</button>
+      <button type="button" class="demo-tab" data-tab="attention">⚡ Cơ chế chú ý (E2: MSA)</button>
     </div>
 
     <!-- Main Interactive Card -->
@@ -135,10 +135,12 @@
       <div class="controls-row">
         <label for="model-select" class="select-label">Lựa chọn mô hình / Kiến trúc:</label>
         <select id="model-select" class="model-select-input">
-          <option value="vit-base">[ViT-Base/16] · 85.8M (Vision Transformer)</option>
-          <option value="swin-t">[Swin-Tiny] · 27.6M (Hierarchical ViT)</option>
-          <option value="resnet50">[ResNet-50] · 23.7M (CNN Baseline)</option>
+          <!-- Populated dynamically by demo.js based on tab -->
+          <option value="vit-base">[ViT-Base/16] · 85.8M (Vision Transformer - A1)</option>
+          <option value="resnet50">[ResNet-50] · 23.7M (CNN Backbone - A1)</option>
           <option value="custom-cnn">[Custom CNN] · 1.2M (E1 Baseline)</option>
+          <option value="mlp">[MLP Classifier] · 0.2M (E1)</option>
+          <option value="softmax">[Softmax Linear] · 7.8K (E1)</option>
         </select>
       </div>
 
@@ -164,29 +166,17 @@
         <!-- Quick Sample Presets -->
         <div class="sample-selector">
           <span style="font-size: 12px; color: var(--ink3); font-weight: 500;">Ảnh mẫu thử nhanh:</span>
-          <button type="button" class="sample-btn" data-sample-url="assets/placeholder-sample.svg">Sample Image
-            1</button>
-          <button type="button" class="sample-btn" data-sample-url="assets/placeholder-figure.svg">Sample Image
-            2</button>
+          <button type="button" class="sample-btn" data-sample-url="assets/placeholder-sample.svg">Sample Image 1</button>
+          <button type="button" class="sample-btn" data-sample-url="assets/placeholder-figure.svg">Sample Image 2</button>
         </div>
       </div>
 
-      <!-- TEXT INPUT SECTION (Displayed on Text / Multimodal tabs) -->
-      <div id="text-input-section" style="display: none; margin-top: 16px;">
-        <label for="text-input-area" class="select-label" style="display: block; margin-bottom: 8px;">Dữ liệu chuỗi /
-          Văn bản đầu vào:</label>
-        <textarea id="text-input-area" class="text-input-field"
-          placeholder="Dán chuỗi ký tự, câu hoặc đoạn văn bản mẫu cần suy luận..."></textarea>
-
-        <!-- Text Sample Presets -->
-        <div class="sample-selector">
-          <span style="font-size: 12px; color: var(--ink3); font-weight: 500;">Đoạn mẫu:</span>
-          <button type="button" class="text-sample-btn"
-            data-text-sample="Recent breakthroughs in generative artificial intelligence demonstrate superhuman performance in zero-shot transfer learning.">AI
-            Breakthrough</button>
-          <button type="button" class="text-sample-btn"
-            data-text-sample="Deep learning models for sequence processing require robust memory cells like LSTM and GRU.">Sequence
-            Sample</button>
+      <!-- SEQUENCE CONFIG SECTION (Displayed on Sequence E3 tab) -->
+      <div id="sequence-config-section" style="display: none; margin-top: 16px; padding: 12px 16px; background: var(--bg2); border-radius: var(--radius-sm); border: 1px solid var(--border);">
+        <span class="select-label" style="display: block; margin-bottom: 6px;">Cơ chế chuyển đổi ảnh thành chuỗi (Image to Sequence Tokenizer):</span>
+        <div style="font-size: 13px; color: var(--ink2);">
+          • <strong>Row-by-Row Scan:</strong> Xem mỗi hàng pixel là 1 bước thời gian $T$, vector chiều $W \times C$ làm đầu vào cho LSTM/GRU.<br>
+          • <strong>Patch Sequence:</strong> Chia ảnh thành dãy $N$ patches tuần tự làm chuỗi vector đưa vào tế bào nhớ.
         </div>
       </div>
 

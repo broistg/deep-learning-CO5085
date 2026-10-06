@@ -34,7 +34,6 @@
       <span class="current">E1: Small Image Classification</span>
       <a href="e2.html">E2: Multi-Head Attention</a>
       <a href="e3.html">E3: Sequence Models</a>
-      <a href="e4.html">E4: Generative Models</a>
     </nav>
 
     <!-- Page Hero Banner -->
@@ -62,8 +61,10 @@
 
     <!-- Quick Action Links -->
     <div class="quick-links">
-      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085" target="_blank"
-        rel="noopener noreferrer">↗ GitHub Repository</a>
+      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085/tree/main/E1" target="_blank"
+        rel="noopener noreferrer">↗ Mã nguồn E1</a>
+      <a class="link-btn primary" href="../reports/exercises.pdf" target="_blank" rel="noopener noreferrer">📄 Báo cáo
+        PDF (E1-E3)</a>
       <a class="link-btn primary" href="../demo.html">⚡ Live Demo</a>
       <a class="link-btn" href="#" target="_blank" rel="noopener noreferrer">📓 Google Colab / Notebook</a>
       <a class="link-btn" href="#results">📊 Bảng kết quả thực nghiệm</a>
@@ -73,15 +74,17 @@
     <div class="status-banner wip">
       <div class="status-banner-icon">⏳</div>
       <div class="status-banner-content">
-        <h4>Báo cáo đang thực hiện (Work in Progress) <span class="badge badge-wip">WIP</span></h4>
+        <h4>Báo cáo đang thực hiện (Work in Progress) · Hạn nộp: 02/11/2026 (W9) <span
+            class="badge badge-wip">WIP</span></h4>
         <p>
-          Nhóm đang tiến hành triển khai thực nghiệm huấn luyện và đánh giá trên các mô hình Softmax, MLP và CNN. Dưới
-          đây là khung sườn báo cáo chuẩn để cập nhật log thực nghiệm, biểu đồ loss/acc và phân tích lỗi.
+          Triển khai và so sánh ba mô hình phân loại trên cùng tập ảnh nhỏ (dùng chung cho cả E1-E3). Vòng lặp huấn
+          luyện tự viết bằng PyTorch (forward → loss → backward() → optimizer.step()), không dùng API cấp cao.
         </p>
         <ul class="progress-checklist">
           <li class="done">Khảo sát yêu cầu bài tập và lựa chọn tập dữ liệu (MNIST / Fashion-MNIST / CIFAR-10)</li>
           <li class="done">Xây dựng pipeline nạp dữ liệu và tiền xử lý chuẩn hóa</li>
-          <li class="wip">Hiện thực và huấn luyện các mô hình: Softmax Classifier, MLP, CNN</li>
+          <li class="wip">Hiện thực và huấn luyện các mô hình: Softmax Classifier, MLP, CNN với custom training loop
+          </li>
           <li class="wip">So sánh độ chính xác (Accuracy), dung lượng tham số (Capacity) và thời gian huấn luyện</li>
           <li class="todo">Trích xuất Confusion Matrix và phân tích các mẫu dự đoán sai tiêu biểu</li>
         </ul>

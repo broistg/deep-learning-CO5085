@@ -34,7 +34,6 @@
       <a href="e1.html">E1: Small Image Classification</a>
       <span class="current">E2: Multi-Head Attention</span>
       <a href="e3.html">E3: Sequence Models</a>
-      <a href="e4.html">E4: Generative Models</a>
     </nav>
 
     <!-- Page Hero Banner -->
@@ -62,8 +61,10 @@
 
     <!-- Quick Action Links -->
     <div class="quick-links">
-      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085" target="_blank"
-        rel="noopener noreferrer">↗ GitHub Repository</a>
+      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085/tree/main/E2" target="_blank"
+        rel="noopener noreferrer">↗ Mã nguồn E2</a>
+      <a class="link-btn primary" href="../reports/exercises.pdf" target="_blank" rel="noopener noreferrer">📄 Báo cáo
+        PDF (E1-E3)</a>
       <a class="link-btn primary" href="../demo.html">⚡ Live Demo</a>
       <a class="link-btn" href="#" target="_blank" rel="noopener noreferrer">📓 Notebook MSA PyTorch</a>
       <a href="#tokenization" class="link-btn">🧩 Các phương pháp Tokenization</a>
@@ -73,18 +74,20 @@
     <div class="status-banner wip">
       <div class="status-banner-icon">⏳</div>
       <div class="status-banner-content">
-        <h4>Báo cáo đang thực hiện (Work in Progress) <span class="badge badge-wip">WIP</span></h4>
+        <h4>Báo cáo đang thực hiện (Work in Progress) · Hạn nộp: 02/11/2026 (W9) <span
+            class="badge badge-wip">WIP</span></h4>
         <p>
-          Mô-đun Multi-Head Self-Attention (MSA) và các kỹ thuật tokenization từ ảnh đang được hiện thực thuần bằng
-          PyTorch (không dùng module có sẵn <code>nn.MultiheadAttention</code>). Dưới đây là khung sườn báo cáo thực
-          nghiệm.
+          Bài tập yêu cầu tự hiện thực mô-đun Multi-Head Self-Attention (MSA) từ đầu bằng các phép toán cơ bản của
+          PyTorch, đồng thời đối chiếu với bản chuẩn <code>nn.MultiheadAttention</code> (hoặc
+          <code>TransformerEncoderLayer</code>) trên cùng cơ chế tokenization và cùng tập ảnh nhỏ của E1.
         </p>
         <ul class="progress-checklist">
           <li class="done">Xây dựng công thức toán học và thiết kế lớp PyTorch cho Scaled Dot-Product Attention</li>
-          <li class="done">Thiết kế module MultiHeadAttention đa đầu chiếu với các ma trận W_q, W_k, W_v, W_o</li>
-          <li class="wip">Hiện thực các cơ chế tokenization: Patch extraction, Row/Pixel tokens, CNN-stem, CLS token
-          </li>
-          <li class="wip">Huấn luyện mô hình Transformer phân loại trên tập dữ liệu ảnh chuẩn và log kết quả</li>
+          <li class="done">Thiết kế module MultiHeadAttention tự viết (W_q, W_k, W_v, W_o ghép head từ đầu)</li>
+          <li class="wip">Thiết kế mô hình đối chiếu sử dụng <code>nn.MultiheadAttention</code> của PyTorch</li>
+          <li class="wip">Hiện thực các cơ chế tokenization (≥ 2 cách): Patch extraction, Row/Pixel tokens, CNN-stem,
+            CLS token</li>
+          <li class="wip">Huấn luyện, đánh giá: (i) MSA tự viết vs. MSA PyTorch; (ii) So sánh các cách tokenize</li>
           <li class="todo">Trích xuất bản đồ tương tác chú ý (Attention Heatmaps) và đánh giá độ phức tạp tính toán</li>
         </ul>
       </div>
@@ -203,9 +206,51 @@
         <span class="section-num">03</span>
         <h2>Kết quả thực nghiệm &amp; Bảng so sánh</h2>
       </div>
+
+      <h3>3.1. Đối chiếu: MSA tự viết vs. MSA PyTorch (cùng cơ chế Tokenize)</h3>
       <p>
-        Đánh giá độ chính xác phân loại của mô hình Vision Transformer tự hiện thực với các cấu hình tokenization khác
-        nhau trên cùng tập ảnh:
+        So sánh giữa bản Multi-Head Self-Attention tự hiện thực từ các phép toán cơ bản và module chuẩn
+        <code>nn.MultiheadAttention</code> của PyTorch trên cùng một cơ chế trích xuất token (ví dụ: Patch 4×4 + CLS
+        token):
+      </p>
+
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="MSA Implementation Comparison Table">
+          <thead>
+            <tr>
+              <th>Triển khai MSA</th>
+              <th>Cơ chế Tokenize</th>
+              <th>Số Head ($h$)</th>
+              <th>Số tham số</th>
+              <th>Test Accuracy (%)</th>
+              <th>Thời gian Huấn luyện / Epoch</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>MSA tự viết (From Scratch)</strong></td>
+              <td>Patch (4×4) + CLS</td>
+              <td>4</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+            </tr>
+            <tr>
+              <td><strong>MSA PyTorch (nn.MultiheadAttention)</strong></td>
+              <td>Patch (4×4) + CLS</td>
+              <td>4</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="margin-top: 28px;">3.2. So sánh các cơ chế Tokenization khác nhau</h3>
+      <p>
+        Đánh giá độ chính xác phân loại và độ trễ tính toán khi áp dụng các chiến lược trích xuất token khác nhau từ ảnh
+        2D:
       </p>
 
       <div class="results-table-wrapper">
@@ -213,16 +258,16 @@
           <thead>
             <tr>
               <th>Cơ chế Tokenization</th>
-              <th>Số lượng Token (N)</th>
+              <th>Số lượng Token ($N$)</th>
               <th>Số Head ($h$)</th>
               <th>Dung lượng tham số</th>
               <th>Test Accuracy (%)</th>
-              <th>Inference Latency</th>
+              <th>Thời gian Huấn luyện / Epoch</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><strong>Patch (4x4) + CLS token</strong></td>
+              <td><strong>Patch (4×4) + CLS token</strong></td>
               <td>[e.g. 49 + 1]</td>
               <td>4</td>
               <td>[Đang cập nhật...]</td>
@@ -230,7 +275,7 @@
               <td>[Đang cập nhật...]</td>
             </tr>
             <tr>
-              <td><strong>Patch (8x8) + CLS token</strong></td>
+              <td><strong>Patch (8×8) + CLS token</strong></td>
               <td>[e.g. 16 + 1]</td>
               <td>4</td>
               <td>[Đang cập nhật...]</td>

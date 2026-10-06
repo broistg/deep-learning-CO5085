@@ -32,6 +32,41 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentFile = null;
   let currentTab = 'image';
 
+  const modelConfigs = {
+    image: [
+      { value: 'vit-base', label: '[ViT-Base/16] · 85.8M (Vision Transformer - A1)' },
+      { value: 'resnet50', label: '[ResNet-50] · 23.7M (CNN Backbone - A1)' },
+      { value: 'custom-cnn', label: '[Custom CNN] · 1.2M (E1 Baseline)' },
+      { value: 'mlp', label: '[MLP Classifier] · 0.2M (E1)' },
+      { value: 'softmax', label: '[Softmax Linear] · 7.8K (E1)' }
+    ],
+    sequence: [
+      { value: 'lstm-row', label: '[Image-LSTM (Row Scan)] · 28 timesteps (E3)' },
+      { value: 'gru-row', label: '[Image-GRU (Row Scan)] · 28 timesteps (E3)' },
+      { value: 'lstm-patch', label: '[Image-LSTM (Patch Seq)] · 16 patches (E3)' },
+      { value: 'gru-patch', label: '[Image-GRU (Patch Seq)] · 16 patches (E3)' },
+      { value: 'e1-baseline-cnn', label: '[E1 CNN Baseline] · Đối chứng không hồi quy' }
+    ],
+    attention: [
+      { value: 'scratch-msa-patch4', label: '[Scratch MSA (Patch 4×4)] · Tự viết từ đầu (E2)' },
+      { value: 'pytorch-msa-patch4', label: '[PyTorch nn.MultiheadAttention] · Đối chứng chuẩn (E2)' },
+      { value: 'scratch-msa-stem', label: '[Scratch MSA (CNN-Stem)] · Đặc trưng lai (E2)' },
+      { value: 'scratch-msa-row', label: '[Scratch MSA (Row Tokens)] · Quét theo hàng (E2)' }
+    ]
+  };
+
+  function updateModelOptions(tabKey) {
+    if (!modelSelect) return;
+    modelSelect.innerHTML = '';
+    const options = modelConfigs[tabKey] || modelConfigs.image;
+    options.forEach(opt => {
+      const optionElem = document.createElement('option');
+      optionElem.value = opt.value;
+      optionElem.textContent = opt.label;
+      modelSelect.appendChild(optionElem);
+    });
+  }
+
   // --- 1. Tab Switching ---
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
@@ -39,22 +74,23 @@ document.addEventListener('DOMContentLoaded', () => {
       tab.classList.add('demo-tab--active');
       currentTab = tab.dataset.tab;
 
+      const seqConfig = document.getElementById('sequence-config-section');
+
       if (currentTab === 'image') {
-        taskTitle.textContent = 'Image Classification Task';
-        taskDesc.textContent = 'Upload an image or select a sample below to inspect predictions.';
-        document.getElementById('image-input-section').style.display = 'block';
-        document.getElementById('text-input-section').style.display = 'none';
-      } else if (currentTab === 'text') {
-        taskTitle.textContent = 'Text Classification / NLP Task';
-        taskDesc.textContent = 'Enter text below or pick a sample headline to evaluate sentiment or topic.';
-        document.getElementById('image-input-section').style.display = 'none';
-        document.getElementById('text-input-section').style.display = 'block';
+        if (taskTitle) taskTitle.textContent = 'Phân loại ảnh chuẩn (E1 / A1)';
+        if (taskDesc) taskDesc.textContent = 'Tải ảnh lên hoặc chọn mẫu để đánh giá dự đoán từ Softmax, MLP, CNN hoặc Vision Transformer.';
+        if (seqConfig) seqConfig.style.display = 'none';
+      } else if (currentTab === 'sequence') {
+        if (taskTitle) taskTitle.textContent = 'Mô hình hóa ảnh thành chuỗi (E3: LSTM / GRU)';
+        if (taskDesc) taskDesc.textContent = 'Biến đổi ảnh thành chuỗi bước thời gian (quét từng hàng pixel hoặc dãy patch) và phân loại bằng RNN.';
+        if (seqConfig) seqConfig.style.display = 'block';
       } else {
-        taskTitle.textContent = 'Multimodal / Custom Task';
-        taskDesc.textContent = 'Combine image and textual prompt to evaluate multimodal representations.';
-        document.getElementById('image-input-section').style.display = 'block';
-        document.getElementById('text-input-section').style.display = 'block';
+        if (taskTitle) taskTitle.textContent = 'Cơ chế chú ý Multi-Head Self-Attention (E2)';
+        if (taskDesc) taskDesc.textContent = 'Đối chiếu giữa module Self-Attention tự viết từ đầu và PyTorch nn.MultiheadAttention trên các cách tokenize ảnh.';
+        if (seqConfig) seqConfig.style.display = 'none';
       }
+
+      updateModelOptions(currentTab);
 
       // Hide previous results on tab switch
       resultsContainer.classList.remove('visible');
@@ -91,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function handleFile(file) {
     if (!file.type.startsWith('image/')) {
-      alert('Please upload a valid image file (PNG, JPG, WEBP).');
+      alert('Vui lòng chọn file hình ảnh hợp lệ (PNG, JPG, WEBP).');
       return;
     }
     currentFile = file;
@@ -126,82 +162,50 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Text sample buttons
-  const textSampleButtons = document.querySelectorAll('.text-sample-btn');
-  const textInputArea = document.getElementById('text-input-area');
-  textSampleButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (textInputArea) {
-        textInputArea.value = btn.dataset.textSample;
-      }
-    });
-  });
-
   // --- 4. Prediction Execution (Simulated or Real API) ---
   if (predictBtn) {
     predictBtn.addEventListener('click', async () => {
-      // Validate input based on active tab
-      if (currentTab === 'image' && !currentFile && previewContainer.style.display === 'none') {
-        alert('Please select or upload an image first!');
-        return;
-      }
-
-      if (currentTab === 'text' && (!textInputArea || !textInputArea.value.trim())) {
-        alert('Please input some text or click a sample headline!');
+      if (!currentFile && previewContainer.style.display === 'none') {
+        alert('Vui lòng chọn hoặc tải lên một hình ảnh trước khi chạy suy luận!');
         return;
       }
 
       // UI Loading state
       predictBtn.disabled = true;
-      predictBtn.textContent = 'Running Inference...';
+      predictBtn.textContent = 'Đang chạy suy luận...';
       const startTime = performance.now();
 
       try {
-        /**
-         * =========================================================================
-         * BACKEND INTEGRATION NOTE:
-         * To connect to your FastAPI / Flask backend, replace the mock block below:
-         * 
-         * const formData = new FormData();
-         * formData.append('file', currentFile);
-         * formData.append('model', modelSelect.value);
-         * const response = await fetch('http://localhost:8000/api/predict', {
-         *   method: 'POST',
-         *   body: formData
-         * });
-         * const data = await response.json();
-         * renderResults(data.predictions, data.latency_ms);
-         * =========================================================================
-         */
-
-        // Simulated network latency (250ms - 450ms)
-        await new Promise(resolve => setTimeout(resolve, 320));
+        // Simulated network latency (180ms - 350ms)
+        await new Promise(resolve => setTimeout(resolve, 280));
         const endTime = performance.now();
         const latency = Math.round(endTime - startTime);
 
         // Generate mock predictions according to task
         let mockPredictions = [];
-        if (currentTab === 'image') {
+        if (currentTab === 'sequence') {
           mockPredictions = [
-            { label: 'Pine Tree', confidence: 0.842 },
-            { label: 'Oak Tree', confidence: 0.089 },
-            { label: 'Willow', confidence: 0.035 },
-            { label: 'Palm Tree', confidence: 0.021 },
-            { label: 'Maple', confidence: 0.013 }
+            { label: 'Chữ số 7 (Lớp 7)', confidence: 0.892 },
+            { label: 'Chữ số 2 (Lớp 2)', confidence: 0.054 },
+            { label: 'Chữ số 1 (Lớp 1)', confidence: 0.031 },
+            { label: 'Chữ số 9 (Lớp 9)', confidence: 0.015 },
+            { label: 'Chữ số 3 (Lớp 3)', confidence: 0.008 }
           ];
-        } else if (currentTab === 'text') {
+        } else if (currentTab === 'attention') {
           mockPredictions = [
-            { label: 'Technology / AI', confidence: 0.912 },
-            { label: 'Business & Finance', confidence: 0.054 },
-            { label: 'Science & Education', confidence: 0.022 },
-            { label: 'Politics', confidence: 0.008 },
-            { label: 'Entertainment', confidence: 0.004 }
+            { label: 'Áo thun (T-shirt/Top)', confidence: 0.865 },
+            { label: 'Áo sơ mi (Shirt)', confidence: 0.078 },
+            { label: 'Áo khoác (Coat)', confidence: 0.032 },
+            { label: 'Đầm (Dress)', confidence: 0.015 },
+            { label: 'Áo len (Pullover)', confidence: 0.010 }
           ];
         } else {
           mockPredictions = [
-            { label: 'High Alignment (Image + Text)', confidence: 0.785 },
-            { label: 'Moderate Context Overlap', confidence: 0.162 },
-            { label: 'Unrelated Modalities', confidence: 0.053 }
+            { label: 'Máy bay (Airplane)', confidence: 0.912 },
+            { label: 'Chim (Bird)', confidence: 0.045 },
+            { label: 'Tàu thủy (Ship)', confidence: 0.024 },
+            { label: 'Ô tô (Automobile)', confidence: 0.011 },
+            { label: 'Ngựa (Horse)', confidence: 0.008 }
           ];
         }
 
@@ -209,10 +213,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       } catch (err) {
         console.error('Inference error:', err);
-        alert('Inference error. Check console for details.');
+        alert('Có lỗi xảy ra trong quá trình suy luận. Xem console để biết chi tiết.');
       } finally {
         predictBtn.disabled = false;
-        predictBtn.textContent = '⚡ Run Prediction';
+        predictBtn.textContent = '⚡ Chạy suy luận (Run Prediction)';
       }
     });
   }

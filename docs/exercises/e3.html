@@ -33,13 +33,12 @@
       <span class="label">Exercises ·</span>
       <a href="e1.html">E1: Small Image Classification</a>
       <a href="e2.html">E2: Multi-Head Attention</a>
-      <span class="current">E3: Sequence Models</span>
-      <a href="e4.html">E4: Generative Models</a>
+      <span class="current">E3: LSTM / GRU trên chuỗi ảnh</span>
     </nav>
 
     <!-- Page Hero Banner -->
     <div class="page-tag">Exercise 03 · Technical Report Scaffold</div>
-    <h1>Mô hình xử lý chuỗi<br><em>LSTM, GRU &amp; Feed-Forward / 1D-CNN Baseline</em></h1>
+    <h1>Mô hình hóa ảnh như dữ liệu chuỗi<br><em>LSTM, GRU &amp; Baseline không hồi quy (MLP / CNN từ E1)</em></h1>
 
     <div class="page-meta">
       <div class="meta-item">
@@ -62,8 +61,10 @@
 
     <!-- Quick Action Links -->
     <div class="quick-links">
-      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085" target="_blank"
-        rel="noopener noreferrer">↗ GitHub Repository</a>
+      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085/tree/main/E3" target="_blank"
+        rel="noopener noreferrer">↗ Mã nguồn E3</a>
+      <a class="link-btn primary" href="../reports/exercises.pdf" target="_blank" rel="noopener noreferrer">📄 Báo cáo
+        PDF (E1-E3)</a>
       <a class="link-btn" href="../index.html#exercises">← Quay lại danh sách bài tập</a>
     </div>
 
@@ -71,10 +72,11 @@
     <div class="status-banner upcoming">
       <div class="status-banner-icon">📌</div>
       <div class="status-banner-content">
-        <h4>Bài tập sắp diễn ra (Upcoming Deliverable) <span class="badge badge-todo">Upcoming</span></h4>
+        <h4>Bài tập sắp diễn ra (Upcoming Deliverable) · Hạn nộp: 09/11/2026 (W10) <span
+            class="badge badge-todo">Upcoming</span></h4>
         <p>
-          Bài tập này dự kiến sẽ bắt đầu sau khi hoàn thành phần E1 và E2. Khung sườn kỹ thuật dưới đây đã được định
-          hình sẵn để nhóm cập nhật mã nguồn, bảng thống kê và biểu đồ huấn luyện ngay khi bắt đầu thực nghiệm.
+          Bài tập này áp dụng mô hình tuần hoàn (LSTM, GRU) trên <strong>cùng tập ảnh nhỏ đã chọn ở E1 và E2</strong>,
+          biến đổi ảnh 2D thành chuỗi thời gian 1D và so sánh trực tiếp với baseline không hồi quy (MLP / CNN từ E1).
         </p>
       </div>
     </div>
@@ -83,17 +85,26 @@
     <div class="section" id="scope">
       <div class="section-header">
         <span class="section-num">01</span>
-        <h2>Mục tiêu &amp; Bài toán dự kiến</h2>
+        <h2>Mục tiêu &amp; Biểu diễn ảnh thành chuỗi</h2>
       </div>
       <p>
-        Mục tiêu của bài tập là hiện thực, đánh giá và đối chiếu các mô hình nơ-ron tuần hoàn (Recurrent Neural
-        Networks) trên bài toán xử lý chuỗi:
+        Mục tiêu của bài tập là mô hình hóa hình ảnh dưới dạng chuỗi dữ liệu tuần tự và phân loại bằng các mạng nơ-ron
+        tuần hoàn (Recurrent Neural Networks), sau đó so sánh hiệu quả với các mô hình không hồi quy:
       </p>
       <ul>
-        <li>So sánh khả năng ghi nhớ dài hạn (Long-term dependencies) giữa LSTM và GRU.</li>
-        <li>Khảo sát hiện tượng suy giảm gradient (Vanishing Gradients) qua các bước thời gian (time steps).</li>
-        <li>Đối chiếu hiệu năng tính toán và tốc độ hội tụ với baseline Feed-Forward hoặc mạng tích chập 1 chiều
-          (1D-CNN).</li>
+        <li><strong>Tập dữ liệu:</strong> Sử dụng cùng tập ảnh nhỏ đã thống nhất cho E1 và E2 (MNIST / Fashion-MNIST /
+          CIFAR-10) để bảo đảm tính đối chứng công bằng.</li>
+        <li><strong>Chiến lược tuần tự hóa ảnh (Image to Sequence):</strong> Thử nghiệm ít nhất hai cách biểu diễn hoặc
+          so sánh LSTM vs. GRU trên cùng một cách biểu diễn:
+          <ul>
+            <li><em>Quét theo hàng hoặc cột (Row/Column Scan):</em> Ví dụ với ảnh 28 × 28, mỗi hàng được xem là 1 bước
+              thời gian (Sequence Length = 28, Input Dim = 28).</li>
+            <li><em>Chuỗi patch/block:</em> Cắt ảnh thành các patch tuần tự theo hàng hoặc cột làm chuỗi vector.</li>
+            <li><em>Cách khác:</em> Mô tả chi tiết phương pháp chuyển đổi trong báo cáo.</li>
+          </ul>
+        </li>
+        <li><strong>Baseline không hồi quy:</strong> Sử dụng trực tiếp MLP và/hoặc CNN đã xây dựng từ E1 (dùng lại
+          checkpoint hoặc huấn luyện lại cùng split dữ liệu).</li>
       </ul>
 
       <div class="overview-grid">
@@ -101,24 +112,24 @@
           <div class="overview-icon">🔄</div>
           <div>
             <div class="overview-card-title">Cơ chế Cổng (Gating)</div>
-            <div class="overview-card-desc">Cổng quên (forget gate), cổng vào (input gate) và cổng ra (output gate) giúp
-              kiểm soát luồng thông tin qua các bước thời gian.</div>
+            <div class="overview-card-desc">LSTM (3 cổng: forget, input, output) và GRU (2 cổng: reset, update) kiểm
+              soát dòng thông tin qua từng hàng/bước quét ảnh.</div>
           </div>
         </div>
         <div class="overview-card">
           <div class="overview-icon">⚡</div>
           <div>
-            <div class="overview-card-title">GRU vs. LSTM</div>
-            <div class="overview-card-desc">GRU tối giản trạng thái ô nhớ với 2 cổng (reset &amp; update), giúp giảm số
-              lượng tham số và tăng tốc độ huấn luyện.</div>
+            <div class="overview-card-title">LSTM vs. GRU</div>
+            <div class="overview-card-desc">Đối chiếu tốc độ thực thi, khả năng lưu giữ phụ thuộc không gian/thời gian
+              và dung lượng tham số trên cùng cách biểu diễn.</div>
           </div>
         </div>
         <div class="overview-card">
           <div class="overview-icon">📊</div>
           <div>
-            <div class="overview-card-title">Chỉ số đánh giá</div>
-            <div class="overview-card-desc">Đánh giá trên độ chính xác dự đoán chuỗi, F1-score và thời gian suy luận
-              trên mỗi batch dữ liệu.</div>
+            <div class="overview-card-title">So sánh với Baseline E1</div>
+            <div class="overview-card-desc">Đánh giá độ chính xác, số lượng tham số, và khả năng bắt phụ thuộc không
+              gian giữa RNN và mô hình CNN/MLP không hồi quy.</div>
           </div>
         </div>
       </div>
@@ -128,46 +139,46 @@
     <div class="section" id="architectures">
       <div class="section-header">
         <span class="section-num">02</span>
-        <h2>Kiến trúc dự kiến đánh giá</h2>
+        <h2>Kiến trúc tuần hoàn &amp; Baseline không hồi quy</h2>
       </div>
 
       <div class="models-grid">
         <div class="model-card">
-          <div class="model-family">Recurrent Network</div>
-          <div class="model-name">Long Short-Term Memory (LSTM)</div>
+          <div class="model-family">Recurrent Network (PyTorch)</div>
+          <div class="model-name">Image LSTM Classifier</div>
           <div class="model-desc">
-            Kiến trúc kinh điển với ô nhớ (cell state) riêng biệt và ba cơ chế cổng độc lập giúp giảm thiểu triệt để
-            hiện tượng vanishing gradient.
+            Sử dụng <code>nn.LSTM</code> nhận chuỗi các vector hàng/patch của ảnh. Hidden state cuối cùng (hoặc pooling)
+            đưa qua fully-connected classifier head để dự đoán nhãn.
           </div>
           <div class="model-meta">
-            <div><span class="meta-label">Số cổng</span><span class="meta-val">3 cổng</span></div>
+            <div><span class="meta-label">Cơ chế</span><span class="meta-val">Cell + Hidden State</span></div>
             <div><span class="meta-label">Dung lượng tham số</span><span class="meta-val">[Sẽ cập nhật]</span></div>
           </div>
         </div>
 
         <div class="model-card">
-          <div class="model-family">Recurrent Network</div>
-          <div class="model-name">Gated Recurrent Unit (GRU)</div>
+          <div class="model-family">Recurrent Network (PyTorch)</div>
+          <div class="model-name">Image GRU Classifier</div>
           <div class="model-desc">
-            Biến thể rút gọn gộp cell state và hidden state, chỉ sử dụng cổng reset và cổng update, đem lại tốc độ thực
-            thi nhanh hơn.
+            Sử dụng <code>nn.GRU</code> với cấu trúc gọn hơn (chỉ có reset và update gate), giúp giảm thời gian huấn
+            luyện trên chuỗi bước quét ảnh mà vẫn giữ được ngữ cảnh dài.
           </div>
           <div class="model-meta">
-            <div><span class="meta-label">Số cổng</span><span class="meta-val">2 cổng</span></div>
+            <div><span class="meta-label">Cơ chế</span><span class="meta-val">2 Gated States</span></div>
             <div><span class="meta-label">Dung lượng tham số</span><span class="meta-val">[Sẽ cập nhật]</span></div>
           </div>
         </div>
 
         <div class="model-card">
-          <div class="model-family">Temporal Convolution</div>
-          <div class="model-name">1D-CNN Baseline</div>
+          <div class="model-family">Non-recurrent Baseline (E1)</div>
+          <div class="model-name">CNN / MLP Baseline</div>
           <div class="model-desc">
-            Baseline mạng tích chập 1 chiều quét qua trục thời gian để so sánh khả năng tính toán song song hóa so với
-            kiến trúc tuần hoàn.
+            Mô hình CNN hoặc MLP từ bài tập E1 (cùng tập dữ liệu và split), làm hệ quy chiếu đánh giá ưu/nhược điểm của
+            cách tiếp cận tuần hoàn so với xử lý 2D song song.
           </div>
           <div class="model-meta">
-            <div><span class="meta-label">Cơ chế</span><span class="meta-val">Song song hóa</span></div>
-            <div><span class="meta-label">Dung lượng tham số</span><span class="meta-val">[Sẽ cập nhật]</span></div>
+            <div><span class="meta-label">Nguồn</span><span class="meta-val">Checkpoint từ E1</span></div>
+            <div><span class="meta-label">Dung lượng tham số</span><span class="meta-val">[Từ E1]</span></div>
           </div>
         </div>
       </div>
@@ -180,7 +191,8 @@
         <h2>Bảng kết quả thử nghiệm dự kiến</h2>
       </div>
       <p>
-        Bảng theo dõi các chỉ số thực nghiệm chuẩn bị cho quá trình huấn luyện:
+        Bảng theo dõi các chỉ số thực nghiệm đối chiếu giữa các mô hình tuần hoàn (LSTM, GRU) và baseline không hồi quy
+        từ E1:
       </p>
 
       <div class="results-table-wrapper">
@@ -188,43 +200,59 @@
           <thead>
             <tr>
               <th>Mô hình</th>
-              <th>Số lượng Hidden Units</th>
-              <th>Số lượng tham số</th>
-              <th>Validation Loss</th>
-              <th>Độ chính xác / Macro F1</th>
+              <th>Cách biểu diễn chuỗi ảnh</th>
+              <th>Độ dài chuỗi (T) × Kích thước đặc trưng (D)</th>
+              <th>Số tham số</th>
+              <th>Test Accuracy (%)</th>
               <th>Thời gian chạy (Giây/Epoch)</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><strong>Feed-Forward / 1D-CNN Baseline</strong></td>
+              <td><strong>Baseline MLP (từ E1)</strong></td>
+              <td>Vector phẳng (Flatten 1D)</td>
+              <td>1 × (H·W·C)</td>
+              <td>[Từ E1]</td>
+              <td>[Từ E1]</td>
+              <td>[Từ E1]</td>
+            </tr>
+            <tr>
+              <td><strong>Baseline CNN (từ E1)</strong></td>
+              <td>Không gian 2D nguyên bản</td>
+              <td>H × W × C</td>
+              <td>[Từ E1]</td>
+              <td>[Từ E1]</td>
+              <td>[Từ E1]</td>
+            </tr>
+            <tr>
+              <td><strong>LSTM (Row-by-Row)</strong></td>
+              <td>Mỗi hàng pixel là 1 bước thời gian</td>
+              <td>H bước × (W·C)</td>
               <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>—</td>
               <td>—</td>
               <td>—</td>
             </tr>
             <tr>
-              <td><strong>Standard LSTM</strong></td>
+              <td><strong>GRU (Row-by-Row)</strong></td>
+              <td>Mỗi hàng pixel là 1 bước thời gian</td>
+              <td>H bước × (W·C)</td>
               <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>—</td>
               <td>—</td>
               <td>—</td>
             </tr>
             <tr>
-              <td><strong>Bidirectional LSTM (Bi-LSTM)</strong></td>
+              <td><strong>LSTM (Patch Sequence)</strong></td>
+              <td>Dãy patch theo thứ tự hàng/cột</td>
+              <td>N_patches × D_patch</td>
               <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>—</td>
               <td>—</td>
               <td>—</td>
             </tr>
             <tr>
-              <td><strong>Gated Recurrent Unit (GRU)</strong></td>
+              <td><strong>GRU (Patch Sequence)</strong></td>
+              <td>Dãy patch theo thứ tự hàng/cột</td>
+              <td>N_patches × D_patch</td>
               <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>—</td>
               <td>—</td>
               <td>—</td>
             </tr>
@@ -235,8 +263,8 @@
       <!-- Figure placeholder -->
       <figure class="report-figure">
         <img src="../assets/placeholder-figure.svg" alt="Convergence Curves Placeholder" loading="lazy">
-        <figcaption>Hình 3.1: Vị trí placeholder hiển thị biểu đồ huấn luyện và phân tích vanishing gradient khi bài tập
-          bắt đầu.</figcaption>
+        <figcaption>Hình 3.1: Đường cong huấn luyện loss-accuracy và so sánh khả năng bắt phụ thuộc theo thứ tự quét của
+          LSTM/GRU so với baseline CNN.</figcaption>
       </figure>
     </div>
 
