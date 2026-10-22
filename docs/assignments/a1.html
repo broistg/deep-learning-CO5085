@@ -62,11 +62,15 @@
     <div class="quick-links">
       <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085/tree/main/A1" target="_blank"
         rel="noopener noreferrer">↗ Mã nguồn A1</a>
-      <a class="link-btn primary" href="../reports/assignment1.pdf" target="_blank" rel="noopener noreferrer">📄 Báo cáo PDF A1</a>
+      <a class="link-btn primary" href="../reports/assignment1.pdf" target="_blank" rel="noopener noreferrer">📄 Báo cáo
+        PDF A1</a>
       <a class="link-btn primary" href="../demo.html">⚡ Live Demo</a>
       <a class="link-btn" href="#protocol">📋 Quy trình thực nghiệm</a>
+      <a class="link-btn" href="#training-plan">🧪 Kế hoạch huấn luyện</a>
       <a class="link-btn" href="#benchmarks">📊 Bảng kết quả dự kiến</a>
       <a class="link-btn" href="#discussion">💡 Thảo luận &amp; Phân tích</a>
+      <a class="link-btn" href="#reproducibility">♻️ Tái lập thí nghiệm</a>
+      <a class="link-btn" href="#references">📚 Tài liệu tham khảo</a>
     </div>
 
     <!-- Status Banner: Upcoming -->
@@ -75,7 +79,8 @@
       <div class="status-banner-content">
         <h4>Bài tập lớn A1 (Chiếm 30% coursework) <span class="badge badge-todo">Upcoming</span></h4>
         <p>
-          So sánh CNN và Vision Transformer trên tập dữ liệu ảnh lớn với các chế độ huấn luyện: From-scratch vs. Pretrained, và 3 kiểu đóng băng (Freeze toàn bộ, Freeze một phần, Full fine-tuning).
+          So sánh CNN và Vision Transformer trên tập dữ liệu ảnh lớn với các chế độ huấn luyện: From-scratch vs.
+          Pretrained, và 3 kiểu đóng băng (Freeze toàn bộ, Freeze một phần, Full fine-tuning).
         </p>
       </div>
     </div>
@@ -85,22 +90,25 @@
       <div class="overview-card">
         <div class="overview-icon">📁</div>
         <div>
-          <div class="overview-card-title">Mốc A1.1: Dataset &amp; Protocol</div>
-          <div class="overview-card-desc"><strong>Hạn: 26/10/2026 (W8)</strong> · Khóa tập ảnh lớn, mô tả split/augmentation, liệt kê CNN/ViT sẽ dùng, kế hoạch pretrain &amp; freeze (chưa cần số liệu cuối).</div>
+          <div class="overview-title">Mốc A1.1: Dataset &amp; Protocol</div>
+          <div class="overview-sub"><strong>Hạn: 26/10/2026 (W8)</strong> · Khóa tập ảnh lớn, mô tả split/augmentation,
+            liệt kê CNN/ViT sẽ dùng, kế hoạch pretrain &amp; freeze (chưa cần số liệu cuối).</div>
         </div>
       </div>
       <div class="overview-card">
         <div class="overview-icon">⚙️</div>
         <div>
-          <div class="overview-card-title">Mốc A1.2: So sánh cuối</div>
-          <div class="overview-card-desc"><strong>Hạn: 09/11/2026 (W10)</strong> · Đủ thí nghiệm CNN vs Transformer, from-scratch vs pretrained, 3 chế độ freeze, bảng + biểu đồ, thảo luận, code tái lập được.</div>
+          <div class="overview-title">Mốc A1.2: So sánh cuối</div>
+          <div class="overview-sub"><strong>Hạn: 09/11/2026 (W10)</strong> · Đủ thí nghiệm CNN vs Transformer,
+            from-scratch vs pretrained, 3 chế độ freeze, bảng + biểu đồ, thảo luận, code tái lập được.</div>
         </div>
       </div>
       <div class="overview-card">
         <div class="overview-icon">🌐</div>
         <div>
-          <div class="overview-card-title">Khung trang Web</div>
-          <div class="overview-card-desc"><strong>Hạn: 19/10/2026 (W7)</strong> · Hoàn thiện khung landing page GitHub Pages cho toàn bộ nhóm và mục A1.</div>
+          <div class="overview-title">Khung trang Web</div>
+          <div class="overview-sub"><strong>Hạn: 19/10/2026 (W7)</strong> · Hoàn thiện khung landing page GitHub Pages
+            cho toàn bộ nhóm và mục A1.</div>
         </div>
       </div>
     </div>
@@ -112,8 +120,9 @@
         <h2>A1.1: Tập dữ liệu &amp; Quy trình thực nghiệm</h2>
       </div>
       <p>
-        Mô tả chi tiết tập dữ liệu ảnh lớn được lựa chọn cho đồ án và quy trình phân chia dữ liệu, tiền xử lý và tăng
-        cường dữ liệu (Data Augmentation):
+        Nhóm chọn <strong>Food-101</strong> [1] và dùng <strong>toàn bộ tập dữ liệu</strong> (không lấy subset). Dưới
+        đây là mô tả
+        tập dữ liệu, giấy phép, cách chia, tiền xử lý và tăng cường dữ liệu.
       </p>
 
       <div class="results-table-wrapper">
@@ -121,29 +130,119 @@
           <thead>
             <tr>
               <th>Thông số</th>
-              <th>Mô tả / Giá trị dự kiến</th>
+              <th>Mô tả / Giá trị</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>Tập dữ liệu lựa chọn</td>
-              <td>[Tiny-ImageNet / ImageNet-100 / Food-101 / Standford Cars / CIFAR-100] (Không dùng MNIST/CIFAR-10)</td>
+              <td>
+                Food-101 (Bossard, Guillaumin, Van Gool, ECCV 2014) [1]: ảnh món ăn, 101 lớp. Không thuộc nhóm bị loại
+                (MNIST / Fashion-MNIST / CIFAR-10).
+                Trang chủ: <a href="https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/" target="_blank"
+                  rel="noopener noreferrer">data.vision.ee.ethz.ch/cvl/datasets_extra/food-101</a>
+                · Bản trên Hugging Face: <a href="https://huggingface.co/datasets/ethz/food101" target="_blank"
+                  rel="noopener noreferrer">ethz/food101</a>.
+              </td>
             </tr>
             <tr>
-              <td>Kích thước tập huấn luyện</td>
-              <td>[e.g. Vài chục nghìn ảnh trở lên]</td>
+              <td>Nguồn &amp; giấy phép</td>
+              <td>
+                Giấy phép: <strong>chưa rõ</strong>. Dataset card trên Hugging Face ghi license là “unknown” [16]; phần
+                Licensing Information nêu ảnh đến từ
+                Foodspotting, không thuộc sở hữu của ETH Zürich, và mọi việc sử dụng vượt quá “scientific fair use” phải
+                được thỏa thuận với chủ sở hữu ảnh
+                theo điều khoản của Foodspotting [16]. Theo bản lưu trữ ngày 23/12/2017 của điều khoản Foodspotting
+                (hiệu lực từ 17/10/2012) [17], người đóng góp
+                giữ bản quyền nội dung, Foodspotting được cấp quyền sử dụng rộng (gồm quyền cấp phép lại), còn việc bên
+                thứ ba sử dụng nội dung cần văn bản
+                cho phép của Foodspotting hoặc chủ sở hữu.
+                Vì nhóm chưa kiểm chứng độc lập phạm vi giấy phép áp dụng cho bản phân phối Food-101 và cho cách sử dụng
+                của nhóm, tập dữ liệu
+                <strong>không</strong> được coi là tài nguyên mở cho việc sử dụng và phân phối không hạn chế. Nhóm chỉ
+                dùng dữ liệu cho mục đích học tập và nghiên cứu
+                trong bài tập lớn của môn học, và <strong>không công bố</strong> ảnh gốc, ảnh đã resize, ảnh đã tăng
+                cường/làm nhiễu, hay bất kỳ cache nào chứa ảnh
+                (các bản này được sinh lại bằng mã nguồn với seed cố định). Nhóm công bố mã nguồn, cấu hình, trọng số mô
+                hình và logits dự đoán (không chứa ảnh).
+                Báo cáo công khai chỉ chèn một số ít ảnh minh họa cỡ nhỏ khi cần trình bày kết quả phân tích. Mọi hình
+                thức phân phối công khai khác sẽ chỉ được xem xét sau khi làm rõ điều kiện cấp phép.
+                Nguồn: [1], [16], [17].
+              </td>
             </tr>
             <tr>
-              <td>Kích thước tập kiểm thử</td>
-              <td>[e.g. ~10,000 ảnh]</td>
+              <td>Lý do chọn</td>
+              <td>
+                <ul>
+                  <li>101 lớp phân loại mịn (fine-grained) với ~75 nghìn ảnh huấn luyện: lớn và khó hơn E1, đủ để khác
+                    biệt
+                    CNN vs ViT và tác dụng của pretrain/freeze có ý nghĩa (Mục 3 đặc tả).</li>
+                  <li>Ảnh tự nhiên thu thập từ Foodspotting, không phải từ ImageNet. Tuy nhiên nhóm <em>chưa kiểm chứng
+                      độc lập</em>
+                    mức độ trùng lặp ở cấp ảnh giữa Food-101 và dữ liệu pretrain (ImageNet-1k), nên không khẳng định mô
+                    hình pretrained
+                    chưa từng thấy ảnh kiểm thử. ImageNet-1k có một số lớp liên quan đến món ăn, vì vậy lợi thế của
+                    pretrain có thể một
+                    phần đến từ sự gần gũi về miền dữ liệu; đây là một hạn chế được nêu ở Mục 05.</li>
+                  <li>Các lớp cân bằng tuyệt đối (mỗi lớp 1,000 ảnh), nên so sánh không bị nhiễu bởi mất cân bằng lớp.
+                  </li>
+                  <li>Cạnh dài tối đa 512 px: phù hợp đầu vào 224×224, chi phí tải và tiền xử lý thấp trên Colab.</li>
+                  <li>Tập test do tác giả rà soát nhãn thủ công nên đánh giá đáng tin cậy; tập train có nhiễu nhãn tự
+                    nhiên
+                    tạo bối cảnh thực tế cho phần phân tích lỗi.</li>
+                </ul>
+              </td>
             </tr>
             <tr>
               <td>Số lượng lớp (Classes)</td>
-              <td>[Ưu tiên ≥ 10 lớp]</td>
+              <td>101</td>
             </tr>
             <tr>
-              <td>Chiến lược tăng cường dữ liệu</td>
-              <td>RandAugment, Mixup, CutMix, Random Horizontal Flip, ColorJitter</td>
+              <td>Kích thước tập huấn luyện</td>
+              <td>70,700 ảnh (700 ảnh/lớp)</td>
+            </tr>
+            <tr>
+              <td>Kích thước tập validation</td>
+              <td>5,050 ảnh (50 ảnh/lớp), tách phân tầng (stratified) từ tập train chính thức</td>
+            </tr>
+            <tr>
+              <td>Kích thước tập kiểm thử</td>
+              <td>25,250 ảnh (250 ảnh/lớp), tập test chính thức, giữ nguyên, không dùng khi huấn luyện hay chọn siêu
+                tham số</td>
+            </tr>
+            <tr>
+              <td>Cách chia dữ liệu</td>
+              <td>
+                Tập train chính thức (750 ảnh/lớp) được chia thành 700 ảnh train + 50 ảnh validation mỗi lớp bằng seed
+                42; danh sách
+                lưu trong <code>split.json</code> (SHA-256, 16 ký tự đầu: <code>75ed81bfe380c089</code>) và được commit
+                vào repo.
+                Validation chỉ dùng để chọn learning rate và để fit temperature (hiệu chỉnh độ tin cậy). Mọi con số báo
+                cáo cuối
+                cùng là trên tập test, ở epoch cuối cùng của mỗi lần chạy (không chọn checkpoint tốt nhất theo val).
+              </td>
+            </tr>
+            <tr>
+              <td>Tiền xử lý &amp; tăng cường dữ liệu</td>
+              <td>
+                Resize offline một lần về cạnh ngắn 256 px; khi train: RandomResizedCrop 224, lật ngang, RandAugment,
+                Mixup/CutMix
+                và label smoothing; khi đánh giá: Resize 256 → CenterCrop 224. Một công thức duy nhất cho mọi mô hình và
+                mọi chế độ.
+                <strong>Toàn bộ tham số chính xác</strong> (thư viện, nội suy, xác suất, loss, lịch LR) nằm ở bảng “Công
+                thức huấn
+                luyện chi tiết” tại Mục 03.
+              </td>
+            </tr>
+            <tr>
+              <td>Lưu ý về chất lượng nhãn</td>
+              <td>
+                Theo tác giả [1], nhãn train được gán tự động theo phân loại món của Foodspotting và cố ý không làm
+                sạch, nên có nhiễu nhãn;
+                nhãn test đã được rà soát thủ công. Hệ quả: độ chính xác tối đa đạt được bị giới hạn, và validation (lấy
+                từ phần train nhiễu)
+                chỉ dùng để chọn siêu tham số.
+              </td>
             </tr>
           </tbody>
         </table>
@@ -163,62 +262,416 @@
         <h2>Các mô hình CNN &amp; Transformer đối đầu</h2>
       </div>
       <p>
-        Lựa chọn các đại diện tiêu biểu từ hai họ kiến trúc có cùng quy mô tham số và chi phí tính toán (FLOPs) tương
-        đương:
+        Hai họ kiến trúc được so sánh ở cùng quy mô tham số và chi phí tính toán, đều dùng trọng số pretrained
+        ImageNet-1k từ thư viện
+        <code>timm</code> [7] (cùng dữ liệu pretrain). Cặp 1 là cam kết; cặp 2 là mở rộng, chạy nếu còn tài nguyên tính
+        toán.
+        Chi phí tính toán được báo cáo bằng <strong>GMACs</strong> (1 MAC = 1 phép nhân-cộng), đo bằng <em>một</em> công
+        cụ và <em>một</em>
+        quy ước cho cả bốn kiến trúc: <code>torch.utils.flop_counter.FlopCounterMode</code>, một lượt forward với đầu
+        vào 1×3×224×224 và
+        đầu ra 101 lớp, tắt fused attention để các phép nhân ma trận của attention được đếm; chỉ đếm phép nhân ma
+        trận/tích chập
+        (không đếm element-wise, softmax, chuẩn hóa); FlopCounterMode tính 1 MAC = 2 FLOPs nên GMACs = GFLOPs/2. Đối
+        chiếu bằng
+        <code>fvcore</code> cho 4.111 / 4.608 / 4.470 / 4.509 GMACs (ResNet-50 / DeiT-S / ConvNeXt-T / Swin-T), cao hơn
+        0.2–0.6% so với FlopCounterMode (có thể do fvcore đếm thêm một số phép chuẩn hóa và pooling). Các con số “FLOPs”
+        trong bài báo gốc thực chất là MACs, và chỉ dùng để kiểm tra thô, không thay thế kết quả đo.
       </p>
 
       <div class="models-grid">
         <!-- CNN 1 -->
         <div class="model-card">
-          <div class="model-family"><span class="badge badge-cnn">CNN Family</span></div>
-          <div class="model-name">ResNet-50 / ConvNeXt-T</div>
+          <div class="model-family"><span class="badge badge-cnn">CNN Family · Cặp 1</span></div>
+          <div class="model-name">ResNet-50 [2]</div>
           <div class="model-desc">
             Kiến trúc tích chập chuẩn mực với kết nối tắt (Residual Connections) và inductive bias không gian mạnh mẽ.
+            Trọng số <code>resnet50.a1_in1k</code> (công thức huấn luyện “ResNet strikes back” [3]).
           </div>
           <div class="model-meta">
-            <div><span class="meta-label">Số tham số</span><span class="meta-val">~25M - 28M</span></div>
-            <div><span class="meta-label">FLOPs</span><span class="meta-val">~4.1 GFLOPs</span></div>
+            <div><span class="meta-label">Số tham số</span><span class="meta-val">23.7M (đầu ra 101 lớp)</span></div>
+            <div><span class="meta-label">GMACs</span><span class="meta-val">4.087</span></div>
           </div>
         </div>
 
         <!-- ViT 1 -->
         <div class="model-card">
-          <div class="model-family"><span class="badge badge-vit">Vision Transformer</span></div>
-          <div class="model-name">ViT-Base/16 / Swin-T</div>
+          <div class="model-family"><span class="badge badge-vit">Vision Transformer · Cặp 1</span></div>
+          <div class="model-name">DeiT-Small/16 [4]</div>
           <div class="model-desc">
-            Kiến trúc thuần chú ý toàn cục hoặc cửa sổ trượt (shifted window), khả năng mô hình hóa quan hệ tầm xa mạnh
-            khi có dữ liệu lớn.
+            Transformer thuần chú ý toàn cục trên các patch 16×16. Trọng số <code>deit_small_patch16_224.fb_in1k</code>.
           </div>
           <div class="model-meta">
-            <div><span class="meta-label">Số tham số</span><span class="meta-val">~28M - 86M</span></div>
-            <div><span class="meta-label">FLOPs</span><span class="meta-val">~4.5 - 17.6 GFLOPs</span></div>
+            <div><span class="meta-label">Số tham số</span><span class="meta-val">21.7M (đầu ra 101 lớp)</span></div>
+            <div><span class="meta-label">GMACs</span><span class="meta-val">4.599</span></div>
+          </div>
+        </div>
+
+        <!-- CNN 2 -->
+        <div class="model-card">
+          <div class="model-family"><span class="badge badge-cnn">CNN Family · Cặp 2 (mở rộng)</span></div>
+          <div class="model-name">ConvNeXt-Tiny [5]</div>
+          <div class="model-desc">
+            CNN hiện đại, thiết kế lại theo hướng của Transformer. Dùng để kiểm tra khác biệt do “họ kiến trúc” hay do
+            “đời thiết kế/công thức huấn luyện”. Trọng số <code>convnext_tiny.fb_in1k</code>.
+          </div>
+          <div class="model-meta">
+            <div><span class="meta-label">Số tham số</span><span class="meta-val">27.9M (đầu ra 101 lớp)</span></div>
+            <div><span class="meta-label">GMACs</span><span class="meta-val">4.455</span></div>
+          </div>
+        </div>
+
+        <!-- ViT 2 -->
+        <div class="model-card">
+          <div class="model-family"><span class="badge badge-vit">Vision Transformer · Cặp 2 (mở rộng)</span></div>
+          <div class="model-name">Swin-Tiny [6]</div>
+          <div class="model-desc">
+            Transformer phân cấp với cửa sổ trượt (shifted window). Trọng số
+            <code>swin_tiny_patch4_window7_224.ms_in1k</code>.
+          </div>
+          <div class="model-meta">
+            <div><span class="meta-label">Số tham số</span><span class="meta-val">27.6M (đầu ra 101 lớp)</span></div>
+            <div><span class="meta-label">GMACs</span><span class="meta-val">4.490</span></div>
           </div>
         </div>
       </div>
+
+      <p>
+        <strong>Vì sao không dùng ViT-Base/16 (~86M tham số):</strong> so sánh với ResNet-50 sẽ lẫn lộn ảnh hưởng của
+        kiến trúc với
+        ảnh hưởng của quy mô mô hình, đồng thời chi phí huấn luyện cao hơn nhiều. <strong>Lưu ý khi diễn giải:</strong>
+        các trọng số
+        pretrained của hai họ được huấn luyện bằng các công thức khác nhau (ví dụ ResNet-50 “a1” dùng recipe huấn luyện
+        mạnh [3]),
+        nên một phần khác biệt có thể đến từ recipe pretrain; nhóm sẽ nêu rõ điều này khi thảo luận.
+      </p>
     </div>
 
-    <!-- SECTION 03: BENCHMARKS & ABLATIONS -->
-    <div class="section" id="benchmarks">
+    <!-- SECTION 03: TRAINING PLAN -->
+    <div class="section" id="training-plan">
       <div class="section-header">
         <span class="section-num">03</span>
-        <h2>A1.2: Bảng so sánh kết quả thực nghiệm</h2>
+        <h2>Kế hoạch huấn luyện (from-scratch / pretrained / freeze)</h2>
       </div>
       <p>
-        Bảng so sánh chéo giữa CNN và Vision Transformer dưới tất cả các chế độ: From-scratch vs Pretrained, và 3 kiểu đóng băng (Backbone Frozen, Partial Freeze, Full Fine-tuning):
+        Với mỗi mô hình ở cặp 1, nhóm chạy 4 cấu hình (tổng 8 cấu hình lõi) trên cùng một split. Tỷ lệ tham số trainable
+        dưới đây
+        đã được đo trên mô hình thực (đầu ra 101 lớp).
       </p>
 
       <div class="results-table-wrapper">
-        <table class="results-table" aria-label="CNN vs ViT Benchmark Table">
+        <table class="results-table" aria-label="Training configurations">
+          <thead>
+            <tr>
+              <th>Chế độ</th>
+              <th>Khởi tạo</th>
+              <th>ResNet-50: phần được huấn luyện</th>
+              <th>DeiT-S: phần được huấn luyện</th>
+              <th>Epoch</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>From-scratch</td>
+              <td>Ngẫu nhiên</td>
+              <td>Toàn bộ (100%)</td>
+              <td>Toàn bộ (100%)</td>
+              <td>40</td>
+            </tr>
+            <tr>
+              <td>Freeze toàn bộ backbone (Linear probing)</td>
+              <td>ImageNet-1k</td>
+              <td>Chỉ lớp phân loại (0.9%)</td>
+              <td>Chỉ lớp phân loại (0.2%)</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <td>Freeze một phần</td>
+              <td>ImageNet-1k</td>
+              <td>layer4 + head (64.0%); đóng băng stem → layer3</td>
+              <td>Block 7–12 + norm + head (49.2%); đóng băng patch embedding và block 1–6</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <td>Full fine-tuning</td>
+              <td>ImageNet-1k</td>
+              <td>Toàn bộ (100%)</td>
+              <td>Toàn bộ (100%)</td>
+              <td>10</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Công thức huấn luyện chi tiết (để tái lập)</h3>
+      <p>
+        Một công thức duy nhất cho mọi mô hình và chế độ, để chênh lệch kết quả quy được cho kiến trúc/chế độ huấn
+        luyện. Cùng các giá trị
+        này nằm trong các file cấu hình YAML được commit vào repo.
+      </p>
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Detailed training recipe">
+          <thead>
+            <tr>
+              <th>Hạng mục</th>
+              <th>Giá trị chính xác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Phần mềm</td>
+              <td>Python 3.13, PyTorch 2.11.0, torchvision 0.26.0, timm 1.0.30. Phiên bản Pillow và NumPy được ghi vào
+                <code>results/*.json</code> của mỗi lần chạy.</td>
+            </tr>
+            <tr>
+              <td>Resize offline</td>
+              <td>Pillow: cạnh ngắn → 256 px (chỉ thu nhỏ, không phóng to), nội suy BICUBIC, lưu JPEG chất lượng 90.
+              </td>
+            </tr>
+            <tr>
+              <td>Biến đổi khi train (theo thứ tự)</td>
+              <td>
+                (1) <code>RandomResizedCrop(224, scale=(0.25, 1.0), ratio=(3/4, 4/3))</code>, nội suy BILINEAR;
+                <code>scale</code> khác mặc định (0.08, 1.0).<br>
+                (2) <code>RandomHorizontalFlip(p=0.5)</code>.<br>
+                (3)
+                <code>RandAugment(num_ops=2, magnitude=9, num_magnitude_bins=31, interpolation=NEAREST, fill=None)</code>
+                của torchvision [10].<br>
+                (4) <code>PILToTensor</code> (uint8).<br>
+                (5) Trên GPU: chuẩn hóa mean (0.485, 0.456, 0.406), std (0.229, 0.224, 0.225).<br>
+                (6) Mixup/CutMix (dòng dưới).
+              </td>
+            </tr>
+            <tr>
+              <td>Độ mạnh của RandAugment</td>
+              <td>
+                Mỗi ảnh nhận 2 phép chọn ngẫu nhiên có hoàn lại trong 14 phép, luôn được áp dụng, dấu của phép có dấu
+                được chọn ngẫu nhiên.
+                Chỉ số <code>magnitude=9</code> trên 31 mức tương ứng 9/30 = 30% biên độ tối đa của mỗi phép (ví dụ xoay
+                ±9°, shear ±0.09,
+                độ sáng/màu/tương phản ±0.27). Mức này <em>nhẹ hơn nhiều</em> so với “rand-m9” trong timm/DeiT (9/10 =
+                90% biên độ).
+                Nhóm giữ cấu hình này, giống nhau cho mọi mô hình, và không tinh chỉnh.
+              </td>
+            </tr>
+            <tr>
+              <td>Mixup / CutMix</td>
+              <td>
+                <code>timm.data.Mixup(mixup_alpha=0.8, cutmix_alpha=1.0, cutmix_minmax=None, prob=1.0, switch_prob=0.5, mode='batch',
+                correct_lam=True, label_smoothing=0.1, num_classes=101)</code> [8][9].
+                Mỗi batch (<code>prob=1.0</code>) nhận <em>đúng một</em> trong hai: Mixup với xác suất 0.5 (λ ~
+                Beta(0.8, 0.8)), hoặc CutMix với xác suất
+                0.5 (λ ~ Beta(1, 1), sau đó λ được hiệu chỉnh theo diện tích hộp thực tế sau khi cắt biên). Hai phương
+                pháp loại trừ nhau trong cùng
+                một batch. Mỗi mẫu được ghép với mẫu đối xứng trong batch (đảo thứ tự batch); batch 64 (chẵn),
+                <code>drop_last=True</code>.
+                Việc chọn phương pháp và λ dùng bộ sinh số ngẫu nhiên toàn cục của NumPy trong tiến trình chính, nên
+                được seed và được lưu/khôi phục cùng checkpoint.
+              </td>
+            </tr>
+            <tr>
+              <td>Nhãn mềm &amp; loss</td>
+              <td>
+                Nhãn đích y = λ·y<sub>s</sub>(a) + (1−λ)·y<sub>s</sub>(b), với y<sub>s</sub>(c) = (1−ε)·onehot(c) +
+                ε/101, ε = 0.1 [11].
+                Label smoothing được áp dụng <strong>một lần duy nhất, bên trong Mixup</strong>. Loss huấn luyện là
+                soft-target cross-entropy
+                −Σ y·log softmax(logit), tính ở fp32, và <strong>không</strong> truyền thêm tham số label smoothing vào
+                hàm loss. Khi đánh giá
+                (val/test) dùng cross-entropy với nhãn cứng, không smoothing; NLL và ECE tính trên nhãn cứng.
+              </td>
+            </tr>
+            <tr>
+              <td>Biến đổi khi đánh giá</td>
+              <td><code>Resize(256)</code> (BILINEAR) → <code>CenterCrop(224)</code> → chuẩn hóa mean/std ImageNet; cùng
+                một phép cho cả bốn mô hình.</td>
+            </tr>
+            <tr>
+              <td>Tối ưu hóa</td>
+              <td>
+                AdamW [12] (β = (0.9, 0.999), ε = 1e-8), weight decay 0.05 chỉ cho tham số từ 2 chiều trở lên (không áp
+                dụng cho bias và tham số chuẩn hóa);
+                không gradient clipping; không EMA; <code>drop_rate=0</code> và <code>drop_path_rate=0</code> được đặt
+                tường minh cho mọi mô hình
+                (không dùng giá trị mặc định riêng của từng mô hình). Mixed precision fp16 với GradScaler động. Phần bị
+                đóng băng đặt ở chế độ eval
+                (BatchNorm không cập nhật thống kê).
+              </td>
+            </tr>
+            <tr>
+              <td>Lịch learning rate</td>
+              <td>
+                Theo từng iteration: warmup tuyến tính từ 1% LR đỉnh lên LR đỉnh trong 5% tổng số bước đầu (0.5 epoch
+                với 10 epoch, 2 epoch với 40 epoch),
+                sau đó giảm cosine tới 1% LR đỉnh ở bước cuối. Cùng hình dạng lịch cho lượt quét LR và các lần chạy
+                chính.
+              </td>
+            </tr>
+            <tr>
+              <td>Batch &amp; dữ liệu</td>
+              <td>Batch 64, <code>drop_last=True</code>, 2 worker, xáo trộn mỗi epoch. Thứ tự dữ liệu và ngẫu nhiên của
+                augmentation sinh từ generator seed theo (seed, epoch).</td>
+            </tr>
+            <tr>
+              <td>Seed &amp; tái lập</td>
+              <td>
+                Seed 0/1/2 (lượt quét LR dùng seed 0). Trạng thái RNG của Python, NumPy, PyTorch, CUDA cùng GradScaler,
+                optimizer, scheduler được lưu
+                trong checkpoint mỗi epoch; khôi phục RNG cho kết quả trùng khớp từng bit trên mô hình thử (khi bật chế
+                độ xác định). Với huấn luyện
+                thật, <code>cudnn.benchmark</code> được bật để nhanh hơn, nên kết quả không bảo đảm trùng từng bit giữa
+                các lần chạy hoặc giữa các loại
+                GPU; sai khác được ước lượng từ 3 seed.
+              </td>
+            </tr>
+            <tr>
+              <td>Epoch báo cáo</td>
+              <td>Epoch cuối cùng; không chọn checkpoint theo validation.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Quét learning rate</h3>
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Learning rate sweep">
+          <thead>
+            <tr>
+              <th>Nhóm chế độ (mỗi mô hình)</th>
+              <th>Lưới LR đỉnh</th>
+              <th>Áp dụng cho</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Freeze toàn bộ backbone</td>
+              <td>{3e-4, 1e-3, 3e-3}</td>
+              <td>Linear probing</td>
+            </tr>
+            <tr>
+              <td>Fine-tune (quét bằng full fine-tuning)</td>
+              <td>{3e-5, 1e-4, 3e-4}</td>
+              <td>Freeze một phần và full fine-tuning dùng chung một LR</td>
+            </tr>
+            <tr>
+              <td>From-scratch</td>
+              <td>{1e-4, 3e-4, 1e-3}</td>
+              <td>From-scratch</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ul>
+        <li>Mỗi LR chạy 3 epoch trên 20% tập train (140 ảnh/lớp, cân bằng lớp, cố định bằng seed 42), seed 0, đánh giá
+          trên toàn bộ validation 5,050 ảnh.</li>
+        <li><strong>Tiêu chí chọn:</strong> top-1 trên validation ở <em>epoch cuối (epoch 3)</em> của lượt quét; nếu
+          hòa, chọn NLL validation thấp hơn.</li>
+        <li><strong>Quy tắc biên:</strong> nếu LR tốt nhất nằm ở biên lưới, mở rộng thêm một mức (nhân/chia 3) về phía
+          đó và chạy lại riêng mức đó.</li>
+        <li><strong>Hạn chế:</strong> lượt quét ngắn (3 epoch, 20% dữ liệu) có thể thiên về LR lớn hơn mức tối ưu của
+          lần chạy dài, nhất là với from-scratch;
+          kết quả LR được xem là lựa chọn thực dụng, không phải tối ưu hóa toàn cục.</li>
+        <li>Số epoch cố định từ trước (cosine schedule phụ thuộc tổng số epoch). From-scratch 40 epoch có thể chưa đủ để
+          ViT hội tụ hoàn toàn; đây là hạn chế được nêu ở Mục 05.</li>
+      </ul>
+
+      <p><strong>Các thí nghiệm bổ sung</strong> (sắp theo thứ tự ưu tiên; chi phí tính bằng GPU-giờ Tesla T4 trên Colab
+        miễn phí,
+        ước tính từ tốc độ đo end-to-end):</p>
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Experiment budget">
+          <thead>
+            <tr>
+              <th>Mức</th>
+              <th>Thí nghiệm</th>
+              <th>Trả lời câu hỏi nào</th>
+              <th>GPU-giờ (T4)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cam kết</td>
+              <td>Quét LR (chạy đầu tiên)</td>
+              <td>So sánh công bằng giữa các kiến trúc</td>
+              <td>~0.8</td>
+            </tr>
+            <tr>
+              <td>Cam kết</td>
+              <td>8 cấu hình lõi, 1 seed (6 pretrained × 10 epoch + 2 scratch × 40 epoch)</td>
+              <td>Các so sánh bắt buộc của đặc tả</td>
+              <td>~9.6</td>
+            </tr>
+            <tr>
+              <td>Cam kết</td>
+              <td>Ablation theo kích thước dữ liệu: 10% / 25% / 50% train (cân bằng lớp, lồng nhau) × {scratch 40 epoch,
+                full fine-tune 10 epoch} × 2 mô hình</td>
+              <td>Khi nào ViT cần pretrain</td>
+              <td>~6.4</td>
+            </tr>
+            <tr>
+              <td>Cam kết</td>
+              <td>Thêm 2 seed cho 6 cấu hình pretrained (tổng 3 seed)</td>
+              <td>Phương sai và độ tin cậy của số liệu</td>
+              <td>~7.8</td>
+            </tr>
+            <tr>
+              <td>Mở rộng 1</td>
+              <td>ConvNeXt-T vs Swin-T, 3 chế độ pretrained</td>
+              <td>Khác biệt do họ kiến trúc hay do đời thiết kế</td>
+              <td>~4.7</td>
+            </tr>
+            <tr>
+              <td>Mở rộng 2</td>
+              <td>DeiT-S from-scratch 100 epoch (đối chứng bất đối xứng)</td>
+              <td>Khoảng cách của ViT có do huấn luyện quá ngắn không</td>
+              <td>~7.3</td>
+            </tr>
+            <tr>
+              <td>Mở rộng 3</td>
+              <td>ConvNeXt-T và Swin-T from-scratch 40 epoch</td>
+              <td>Lặp lại so sánh scratch với cặp 2</td>
+              <td>~8.4</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Tổng phần cam kết khoảng <strong>24.6 GPU-giờ</strong> (dự trù thêm ~25% cho khởi động lại phiên và lỗi, khoảng
+        30 giờ thực tế).
+        Các mức mở rộng chỉ chạy khi còn hạn mức Colab, theo đúng thứ tự trên; mỗi mức độc lập nên việc dừng sớm vẫn cho
+        báo cáo hoàn chỉnh. Số liệu thời gian/bộ nhớ so sánh giữa các kiến trúc lấy từ một lần đo kiểm soát trên một
+        loại GPU duy nhất
+        (xem Mục 04), vì thời gian chạy thực trên Colab bị giới hạn bởi bộ nạp dữ liệu trên 2 nhân CPU và GPU Colab có
+        thể khác nhau giữa các phiên.
+      </p>
+    </div>
+
+    <!-- SECTION 04: BENCHMARKS & ABLATIONS -->
+    <div class="section" id="benchmarks">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2>A1.2: Bảng so sánh kết quả thực nghiệm</h2>
+      </div>
+      <p>
+        Bảng so sánh chéo giữa CNN và Vision Transformer dưới tất cả các chế độ: From-scratch vs Pretrained, và 3 kiểu
+        đóng băng (Backbone Frozen, Partial Freeze, Full Fine-tuning). Số liệu sẽ được cập nhật ở mốc A1.2
+        (mean ± std trên 3 seed cho các cấu hình pretrained; scratch 1 seed). Kết quả được tách thành ba bảng: độ chính
+        xác, chi phí huấn luyện và chi phí suy luận.
+      </p>
+
+      <h3>Bảng 4a: Độ chính xác (tập test, 25,250 ảnh)</h3>
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="CNN vs ViT Accuracy Table">
           <thead>
             <tr>
               <th>Họ mô hình</th>
               <th>Kiến trúc</th>
               <th>Chế độ huấn luyện</th>
               <th>Trọng số khởi tạo</th>
-              <th>Tham số Trainable</th>
+              <th>Tham số trainable</th>
               <th>Top-1 Acc (%)</th>
               <th>Top-5 Acc (%)</th>
-              <th>GPU Mem (MB)</th>
+              <th>Macro-F1 (%)</th>
             </tr>
           </thead>
           <tbody>
@@ -237,7 +690,7 @@
               <td>ResNet-50</td>
               <td>Linear Probing (Backbone Frozen)</td>
               <td>ImageNet Pretrained</td>
-              <td>~0.5% (Head only)</td>
+              <td>0.9% (Head only)</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
@@ -245,9 +698,9 @@
             <tr>
               <td><span class="badge badge-cnn">CNN</span></td>
               <td>ResNet-50</td>
-              <td>Partial Freeze (Đóng băng vài block đầu)</td>
+              <td>Partial Freeze (layer4 + head)</td>
               <td>ImageNet Pretrained</td>
-              <td>~40-60%</td>
+              <td>64.0%</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
@@ -264,7 +717,7 @@
             </tr>
             <tr>
               <td><span class="badge badge-vit">Transformer</span></td>
-              <td>ViT / Swin-T</td>
+              <td>DeiT-S</td>
               <td>From-scratch</td>
               <td>Random Init</td>
               <td>100%</td>
@@ -274,27 +727,27 @@
             </tr>
             <tr>
               <td><span class="badge badge-vit">Transformer</span></td>
-              <td>ViT / Swin-T</td>
+              <td>DeiT-S</td>
               <td>Linear Probing (Backbone Frozen)</td>
               <td>ImageNet Pretrained</td>
-              <td>~0.3% (Head only)</td>
+              <td>0.2% (Head only)</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
             </tr>
             <tr>
               <td><span class="badge badge-vit">Transformer</span></td>
-              <td>ViT / Swin-T</td>
-              <td>Partial Freeze (Đóng băng vài layer đầu)</td>
+              <td>DeiT-S</td>
+              <td>Partial Freeze (block 7–12 + head)</td>
               <td>ImageNet Pretrained</td>
-              <td>~40-60%</td>
+              <td>49.2%</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
               <td>[Sẽ cập nhật]</td>
             </tr>
             <tr>
               <td><span class="badge badge-vit">Transformer</span></td>
-              <td>ViT / Swin-T</td>
+              <td>DeiT-S</td>
               <td>Full Fine-tuning</td>
               <td>ImageNet Pretrained</td>
               <td>100%</td>
@@ -306,27 +759,370 @@
         </table>
       </div>
 
+      <h3>Bảng 4b: Chi phí huấn luyện</h3>
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Training cost table">
+          <thead>
+            <tr>
+              <th>Kiến trúc</th>
+              <th>Chế độ</th>
+              <th>Tham số trainable (M / %)</th>
+              <th>Epoch</th>
+              <th>Thời gian/epoch, chỉ GPU (s)</th>
+              <th>Thời gian/epoch, đo thực trên Colab (phút)</th>
+              <th>Tổng thời gian huấn luyện (giờ)</th>
+              <th>Peak GPU memory khi huấn luyện (MB)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ResNet-50</td>
+              <td>From-scratch</td>
+              <td>23.71 / 100%</td>
+              <td>40</td>
+              <td>205.0</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>3,206</td>
+            </tr>
+            <tr>
+              <td>ResNet-50</td>
+              <td>Linear probing</td>
+              <td>0.21 / 0.9%</td>
+              <td>10</td>
+              <td>70.8</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>517</td>
+            </tr>
+            <tr>
+              <td>ResNet-50</td>
+              <td>Partial freeze</td>
+              <td>15.17 / 64.0%</td>
+              <td>10</td>
+              <td>87.6</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>692</td>
+            </tr>
+            <tr>
+              <td>ResNet-50</td>
+              <td>Full fine-tuning</td>
+              <td>23.71 / 100%</td>
+              <td>10</td>
+              <td>205.0</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>3,206</td>
+            </tr>
+            <tr>
+              <td>DeiT-S</td>
+              <td>From-scratch</td>
+              <td>21.70 / 100%</td>
+              <td>40</td>
+              <td>197.3</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>2,550</td>
+            </tr>
+            <tr>
+              <td>DeiT-S</td>
+              <td>Linear probing</td>
+              <td>0.04 / 0.2%</td>
+              <td>10</td>
+              <td>60.0</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>333</td>
+            </tr>
+            <tr>
+              <td>DeiT-S</td>
+              <td>Partial freeze</td>
+              <td>10.69 / 49.2%</td>
+              <td>10</td>
+              <td>126.1</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>1,383</td>
+            </tr>
+            <tr>
+              <td>DeiT-S</td>
+              <td>Full fine-tuning</td>
+              <td>21.70 / 100%</td>
+              <td>10</td>
+              <td>197.3</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>[Sẽ cập nhật]</td>
+              <td>2,550</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <strong>Cách đo.</strong> <em>Thời gian/epoch, chỉ GPU</em> = 70,700 ảnh / tốc độ huấn luyện đo được (img/s) với
+        batch 64, AMP fp16, AdamW,
+        batch tổng hợp đặt sẵn trên GPU (không có bộ nạp dữ liệu), một loại GPU duy nhất trong cùng một phiên; đây là
+        cột dùng để so sánh các kiến trúc
+        và chế độ freeze. <em>Thời gian/epoch, đo thực trên Colab</em> là thời gian thực của mỗi epoch trong lần huấn
+        luyện thật (huấn luyện + validation),
+        bị giới hạn bởi bộ nạp dữ liệu trên 2 nhân CPU nên các chế độ freeze gần như không nhanh hơn trên cột này; ghi
+        kèm loại GPU của phiên.
+        <em>Tổng thời gian huấn luyện</em> = tổng thời gian các epoch, không tính thời gian chờ giữa các phiên hoặc khởi
+        động lại.
+        <em>Peak GPU memory</em> = <code>torch.cuda.max_memory_allocated</code> (trọng số, activation, gradient và trạng
+        thái optimizer).
+      </p>
+
+      <h3>Bảng 4c: Chi phí suy luận (chỉ phụ thuộc kiến trúc)</h3>
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Inference cost table">
+          <thead>
+            <tr>
+              <th>Kiến trúc</th>
+              <th>Tổng tham số (M)</th>
+              <th>GMACs</th>
+              <th>Throughput, batch 128 (img/s)</th>
+              <th>Latency, batch 1: median / p95 (ms)</th>
+              <th>Peak GPU memory khi suy luận, batch 1 / 128 (MB)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ResNet-50</td>
+              <td>23.71</td>
+              <td>4.087</td>
+              <td>950.7</td>
+              <td>7.21 / 8.63</td>
+              <td>170 / 871</td>
+            </tr>
+            <tr>
+              <td>DeiT-S</td>
+              <td>21.70</td>
+              <td>4.599</td>
+              <td>1,102.8</td>
+              <td>14.47 / 19.64</td>
+              <td>152 / 518</td>
+            </tr>
+            <tr>
+              <td>ConvNeXt-T (mở rộng)</td>
+              <td>27.90</td>
+              <td>4.455</td>
+              <td>658.7</td>
+              <td>14.08 / 18.26</td>
+              <td>183 / 1,278</td>
+            </tr>
+            <tr>
+              <td>Swin-T (mở rộng)</td>
+              <td>27.60</td>
+              <td>4.490</td>
+              <td>444.9</td>
+              <td>23.59 / 29.03</td>
+              <td>187 / 1,766</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <strong>Cách đo.</strong> AMP fp16, <code>torch.inference_mode</code>, batch 1 và 128, đồng bộ CUDA quanh mỗi
+        lần gọi; latency là median (và p95) thời gian của một lần
+        gọi, throughput = batch / latency median. GMACs theo quy ước ở Mục 02. Tất cả số liệu chi phí được đo bằng cùng
+        một script (<code>cost_bench.py</code>), cùng một phiên trên Tesla T4 (PyTorch 2.11.0+cu130, timm 1.0.30). Đây
+        là lần đo thứ hai (cùng phiên có cross-check bằng fvcore); lần đo thứ nhất cho kết quả lệch tới khoảng 7% (ví dụ
+        latency batch 1 của DeiT-S 13.51 ms so với 14.47 ms), nên chênh lệch giữa hai mô hình nhỏ hơn mức này (ví dụ
+        DeiT-S và ConvNeXt-T ở batch 1) không được coi là có ý nghĩa. Số liệu ở bảng này và các cột “chỉ GPU”,
+        trainable, peak memory của Bảng 4b là kết quả đo thật; các ô còn lại sẽ được điền sau khi chạy huấn luyện.
+        Latency batch 1 bị chi phối bởi chi phí khởi chạy kernel (ResNet-50 có GMACs xấp xỉ DeiT-S nhưng latency batch 1
+        khoảng một nửa), nên không tỷ lệ với GMACs; ở batch lớn, throughput phản ánh tải tính toán rõ hơn. Số liệu
+        from-scratch dùng cùng chi phí mỗi bước với full fine-tuning.
+      </p>
+
       <figure class="report-figure">
         <img src="../assets/placeholder-figure.svg" alt="Fine-tuning curves comparison" loading="lazy">
-        <figcaption>Hình 1.2: Biểu đồ so sánh độ chính xác và tốc độ thích ứng giữa các chiến lược huấn luyện (From-scratch, Freeze, Partial Freeze, Full Fine-tuning).</figcaption>
+        <figcaption>Hình 1.2: Biểu đồ so sánh độ chính xác và tốc độ thích ứng giữa các chiến lược huấn luyện
+          (From-scratch, Freeze, Partial Freeze, Full Fine-tuning).</figcaption>
       </figure>
     </div>
 
-    <!-- SECTION 04: DISCUSSION & ANALYSIS -->
+    <!-- SECTION 05: DISCUSSION & ANALYSIS -->
     <div class="section" id="discussion">
       <div class="section-header">
-        <span class="section-num">04</span>
+        <span class="section-num">05</span>
         <h2>Thảo luận chuyên sâu &amp; Phân tích lỗi</h2>
       </div>
       <p>
         Các nội dung phân tích bắt buộc theo yêu cầu đặc tả (Specs Mục 4 &amp; 7.1.2):
       </p>
       <ul>
-        <li><strong>Khi nào chiến lược Freeze có lợi?</strong> Đánh đổi giữa chi phí tính toán, nguy cơ overfitting khi dữ liệu ít và độ chính xác phân loại.</li>
-        <li><strong>Khi nào ViT cần Pretrain?</strong> Khảo sát ảnh hưởng của Inductive Bias: Tại sao ViT khó hội tụ từ đầu khi dữ liệu kích thước vừa phải và sự bứt phá khi được nạp pre-trained weights.</li>
-        <li><strong>Chi phí tài nguyên:</strong> So sánh số lượng tham số trainable, dung lượng bộ nhớ GPU (VRAM), và thời gian huấn luyện / suy luận giữa CNN và Transformer.</li>
-        <li><strong>Phân tích lỗi (Error Analysis):</strong> Trích xuất Confusion Matrix, so sánh các ca dự đoán sai tiêu biểu của CNN so với ViT.</li>
+        <li><strong>Khi nào chiến lược Freeze có lợi?</strong> Đánh đổi giữa chi phí tính toán, nguy cơ overfitting khi
+          dữ liệu ít và độ chính xác phân loại.</li>
+        <li><strong>Khi nào ViT cần Pretrain?</strong> Khảo sát ảnh hưởng của Inductive Bias: Tại sao ViT khó hội tụ từ
+          đầu khi dữ liệu kích thước vừa phải và sự bứt phá khi được nạp pre-trained weights. Được kiểm chứng bằng
+          ablation theo kích thước dữ liệu (10% / 25% / 50% / 100%).</li>
+        <li><strong>Chi phí tài nguyên:</strong> So sánh số lượng tham số trainable, GMACs, thời gian huấn luyện, thông
+          lượng và latency suy luận, và bộ nhớ GPU đỉnh giữa CNN và Transformer (Bảng 4b, 4c).</li>
+        <li><strong>Phân tích lỗi (Error Analysis):</strong> Trích xuất Confusion Matrix, các cặp lớp bị nhầm nhiều
+          nhất, so sánh các ca dự đoán sai tiêu biểu của CNN so với ViT; minh họa nhiễu nhãn bằng các ảnh train có loss
+          cao nhất.</li>
       </ul>
+      <p><strong>Metric:</strong> top-1, top-5, macro-F1 trên tập test; số tham số trainable; GMACs; thời gian mỗi
+        epoch, tổng thời gian huấn luyện; thông lượng và latency suy luận; bộ nhớ GPU đỉnh.</p>
+      <p>
+        <strong>Phân tích bổ sung (chỉ cần suy luận, không huấn luyện thêm; thực hiện sau các thí nghiệm lõi):</strong>
+      </p>
+      <ul>
+        <li><strong>Hiệu chỉnh độ tin cậy (Calibration) [13]:</strong> ECE, NLL, Brier, biểu đồ reliability, và
+          temperature scaling fit trên validation. Lưu ý Mixup/CutMix và label smoothing ảnh hưởng đến độ tin cậy; đây
+          là hiệu ứng của recipe, giống nhau với mọi mô hình.</li>
+        <li><strong>Ensemble CNN + ViT:</strong> so với từng mô hình đơn và với ensemble cùng kiến trúc (khác seed) để
+          tách tính bổ trợ do kiến trúc khỏi hiệu ứng ensemble; phân tích mức chồng lấn lỗi.</li>
+        <li><strong>Độ bền vững (Robustness) [14]:</strong> nhiễu Gauss, làm mờ, nén JPEG, thay đổi tương phản, che
+          khuất (occlusion) và xáo trộn patch trên một tập con test 50 ảnh/lớp (sinh bằng seed cố định, không phân phối
+          lại); so sánh CNN/ViT và các chế độ pretrain/freeze.</li>
+        <li><strong>Diễn giải (Interpretability) [15]:</strong> Grad-CAM cho CNN và bản đồ chú ý/Grad-CAM trên token cho
+          ViT trên khoảng 12 ảnh chọn trước (cả hai đúng, chỉ CNN sai, chỉ ViT sai), dùng như minh họa định tính cho
+          phần phân tích lỗi, không phải bằng chứng định lượng.</li>
+      </ul>
+      <p>
+        <strong>Về mất cân bằng lớp:</strong> Food-101 cân bằng tuyệt đối (700 / 50 / 250 ảnh mỗi lớp trong split của
+        nhóm), nên không dùng
+        reweighting, oversampling hay focal loss. Vấn đề thực tế là nhiễu nhãn ở tập train, đã nêu ở Mục 01.
+      </p>
+      <p><strong>Hạn chế đã biết (sẽ được nêu lại trong báo cáo):</strong></p>
+      <ul>
+        <li><strong>Chưa kiểm chứng trùng lặp với dữ liệu pretrain:</strong> nhóm không kiểm tra độc lập sự trùng lặp ở
+          cấp ảnh giữa Food-101 và ImageNet-1k, nên lợi thế của pretrain có thể một phần phản ánh sự gần gũi miền dữ
+          liệu.</li>
+        <li><strong>Recipe pretrain khác nhau</strong> giữa trọng số CNN và Transformer (Mục 02), nên khác biệt giữa hai
+          họ không hoàn toàn quy được cho kiến trúc.</li>
+        <li><strong>From-scratch 40 epoch</strong> có thể chưa đủ cho ViT; đối chứng 100 epoch (mở rộng 2) chỉ chạy nếu
+          còn tài nguyên.</li>
+        <li><strong>Công thức augmentation cố định, không tinh chỉnh:</strong> RandAugment nhẹ (30% biên độ) kết hợp
+          Mixup/CutMix áp dụng cho mọi batch có thể là điều chuẩn hóa quá mạnh cho lịch huấn luyện ngắn, nhất là khi
+          fine-tune 10 epoch hoặc train từ đầu 40 epoch.</li>
+        <li><strong>Quét LR ngắn</strong> (3 epoch, 20% dữ liệu) và một tập dữ liệu duy nhất; nhiễu nhãn ở tập train.
+        </li>
+        <li><strong>Phần cứng Colab</strong> không đồng nhất giữa các phiên; vì vậy số liệu chi phí được đo kiểm soát
+          trên một GPU.</li>
+      </ul>
+    </div>
+
+    <!-- SECTION 06: REPRODUCIBILITY -->
+    <div class="section" id="reproducibility">
+      <div class="section-header">
+        <span class="section-num">06</span>
+        <h2>Tái lập thí nghiệm</h2>
+      </div>
+      <p>
+        Nhóm tách rõ <strong>quy trình tái lập chuẩn</strong> (chỉ cần repo và báo cáo) khỏi <strong>cách nhóm thực sự
+          chạy</strong>
+        (các tối ưu để tiết kiệm thời gian). Nguyên tắc: tối ưu chỉ thay đổi <em>kết quả của một bước đến từ đâu</em>,
+        không thay đổi
+        <em>bước đó tính gì</em>.
+      </p>
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Reference path vs our execution">
+          <thead>
+            <tr>
+              <th>Bước</th>
+              <th>Quy trình chuẩn (chỉ repo)</th>
+              <th>Cách nhóm thực sự chạy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Dữ liệu</td>
+              <td>Tải Food-101 bằng torchvision, resize cạnh ngắn 256 bằng script của repo, chia theo
+                <code>split.json</code> đã commit (kiểm tra SHA-256 và số ảnh khi khởi động)</td>
+              <td>Khôi phục bản đã resize từ một file tar trên Drive riêng của nhóm (không phân phối công khai); cùng
+                mã, cùng kết quả</td>
+            </tr>
+            <tr>
+              <td>Huấn luyện</td>
+              <td>Mỗi lần chạy một file cấu hình YAML đã commit, chạy bằng lệnh CLI; có chế độ smoke test nhỏ (dưới 10
+                phút trên một GPU bất kỳ)</td>
+              <td>Hàng đợi chạy trên Colab, lưu checkpoint nguyên tử lên Drive dùng chung, tự động tiếp tục khi mất
+                phiên (đã kiểm tra: khôi phục RNG cho kết quả trùng khớp từng bit trên mô hình thử)</td>
+            </tr>
+            <tr>
+              <td>Trọng số pretrained</td>
+              <td>timm tải theo tên và tag cố định</td>
+              <td>Cache tải sẵn, dùng chung</td>
+            </tr>
+            <tr>
+              <td>Kết quả</td>
+              <td>File <code>results/*.json</code> (số liệu, đường cong, cấu hình, môi trường) trong repo; bảng và hình
+                được sinh lại từ JSON bằng notebook; trọng số cuối và logits đăng trên GitHub Release kèm checksum, có
+                lệnh đánh giá lại để tái hiện số liệu test trong vài phút</td>
+              <td>Checkpoint và log trung gian nằm trên Drive (không phải sản phẩm nộp)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ul>
+        <li>Môi trường thử nghiệm: Python 3.13, PyTorch 2.11.0, torchvision 0.26.0, timm 1.0.30 (ghim trong
+          <code>requirements.txt</code>). Cấu hình khoa học (mô hình, chế độ, epoch, LR, seed, augmentation) nằm trong
+          YAML được commit; đường dẫn và tham số máy (thư mục dữ liệu, số worker) đi qua biến môi trường/tham số CLI.
+        </li>
+        <li>Huấn luyện lại toàn bộ cần khoảng 25 GPU-giờ T4. Sai khác giữa các lần chạy được ước lượng từ 3 seed và nêu
+          trong báo cáo; kết quả không bảo đảm trùng từng bit giữa các loại GPU khác nhau.</li>
+        <li>Mã dùng chung nằm trong một package cài được ở thư mục gốc repo (<code>pip install -e .</code>); thí nghiệm
+          là notebook mỏng gọi vào package và các script <code>python -m</code>.</li>
+        <li>Trước khi nộp A1.2, nhóm thực hiện kiểm tra “fresh clone”: clone repo trên một runtime Colab mới, không có
+          Drive hay dữ liệu cache, rồi chỉ làm theo README để chạy smoke test và đánh giá lại các trọng số đã phát hành.
+        </li>
+        <li>Mã nguồn: <a href="https://github.com/broistg/deep-learning-CO5085/tree/main/A1" target="_blank"
+            rel="noopener noreferrer">thư mục A1 trên GitHub</a>.</li>
+      </ul>
+    </div>
+
+    <!-- SECTION 07: REFERENCES -->
+    <div class="section" id="references">
+      <div class="section-header">
+        <span class="section-num">07</span>
+        <h2>Tài liệu tham khảo</h2>
+      </div>
+      <ol>
+        <li>L. Bossard, M. Guillaumin, L. Van Gool. “Food-101 – Mining Discriminative Components with Random Forests.”
+          ECCV 2014.
+          <a href="https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/" target="_blank"
+            rel="noopener noreferrer">Trang dữ liệu</a>.
+        </li>
+        <li>K. He, X. Zhang, S. Ren, J. Sun. “Deep Residual Learning for Image Recognition.” CVPR 2016.</li>
+        <li>R. Wightman, H. Touvron, H. Jégou. “ResNet strikes back: An improved training procedure in timm.”
+          arXiv:2110.00476, 2021.</li>
+        <li>H. Touvron et al. “Training data-efficient image transformers &amp; distillation through attention.” ICML
+          2021 (arXiv:2012.12877).</li>
+        <li>Z. Liu et al. “A ConvNet for the 2020s.” CVPR 2022 (arXiv:2201.03545).</li>
+        <li>Z. Liu et al. “Swin Transformer: Hierarchical Vision Transformer using Shifted Windows.” ICCV 2021
+          (arXiv:2103.14030).</li>
+        <li>R. Wightman. “PyTorch Image Models (timm).” 2019. <a
+            href="https://github.com/huggingface/pytorch-image-models" target="_blank"
+            rel="noopener noreferrer">github.com/huggingface/pytorch-image-models</a>.</li>
+        <li>H. Zhang, M. Cissé, Y. N. Dauphin, D. Lopez-Paz. “mixup: Beyond Empirical Risk Minimization.” ICLR 2018
+          (arXiv:1710.09412).</li>
+        <li>S. Yun et al. “CutMix: Regularization Strategy to Train Strong Classifiers with Localizable Features.” ICCV
+          2019 (arXiv:1905.04899).</li>
+        <li>E. D. Cubuk, B. Zoph, J. Shlens, Q. V. Le. “RandAugment: Practical automated data augmentation with a
+          reduced search space.” CVPR Workshops 2020 (arXiv:1909.13719).</li>
+        <li>C. Szegedy et al. “Rethinking the Inception Architecture for Computer Vision.” CVPR 2016 (arXiv:1512.00567).
+        </li>
+        <li>I. Loshchilov, F. Hutter. “Decoupled Weight Decay Regularization.” ICLR 2019 (arXiv:1711.05101).</li>
+        <li>C. Guo, G. Pleiss, Y. Sun, K. Q. Weinberger. “On Calibration of Modern Neural Networks.” ICML 2017
+          (arXiv:1706.04599).</li>
+        <li>D. Hendrycks, T. Dietterich. “Benchmarking Neural Network Robustness to Common Corruptions and
+          Perturbations.” ICLR 2019 (arXiv:1903.12261).</li>
+        <li>R. R. Selvaraju et al. “Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization.”
+          ICCV 2017 (arXiv:1610.02391).</li>
+        <li>ETH Zürich Computer Vision Lab. “ethz/food101” (dataset card, mục Licensing Information). Hugging Face
+          Datasets.
+          <a href="https://huggingface.co/datasets/ethz/food101" target="_blank"
+            rel="noopener noreferrer">huggingface.co/datasets/ethz/food101</a>.
+        </li>
+        <li>Foodspotting. “Terms of Service” (bản lưu trữ 23/12/2017; hiệu lực từ 17/10/2012). Internet Archive.
+          <a href="https://web.archive.org/web/20171223075548/https://www.foodspotting.com/terms/" target="_blank"
+            rel="noopener noreferrer">web.archive.org/web/20171223075548/https://www.foodspotting.com/terms/</a>.
+        </li>
+      </ol>
     </div>
 
   </div>
