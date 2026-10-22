@@ -46,7 +46,7 @@
       </div>
       <div class="meta-item">
         <span class="meta-label">Nhóm</span>
-        <span class="meta-value">[Nhóm ... / Group ID]</span>
+        <span class="meta-value">DL4DL</span>
       </div>
       <div class="meta-item">
         <span class="meta-label">Thành viên phụ trách</span>
@@ -54,7 +54,7 @@
       </div>
       <div class="meta-item">
         <span class="meta-label">Trạng thái</span>
-        <span class="meta-value"><span class="badge badge-todo">Upcoming</span></span>
+        <span class="meta-value"><span class="badge badge-wip">In progress...</span></span>
       </div>
     </div>
 
@@ -73,11 +73,11 @@
       <a class="link-btn" href="#references">📚 Tài liệu tham khảo</a>
     </div>
 
-    <!-- Status Banner: Upcoming -->
-    <div class="status-banner upcoming">
+    <!-- Status Banner: Work In Progress -->
+    <div class="status-banner wip">
       <div class="status-banner-icon">📌</div>
       <div class="status-banner-content">
-        <h4>Bài tập lớn A1 (Chiếm 30% coursework) <span class="badge badge-todo">Upcoming</span></h4>
+        <h4>Bài tập lớn A1 (Chiếm 30% coursework) <span class="badge badge-wip">In progress...</span></h4>
         <p>
           So sánh CNN và Vision Transformer trên tập dữ liệu ảnh lớn với các chế độ huấn luyện: From-scratch vs.
           Pretrained, và 3 kiểu đóng băng (Freeze toàn bộ, Freeze một phần, Full fine-tuning).
@@ -421,7 +421,8 @@
             <tr>
               <td>Phần mềm</td>
               <td>Python 3.13, PyTorch 2.11.0, torchvision 0.26.0, timm 1.0.30. Phiên bản Pillow và NumPy được ghi vào
-                <code>results/*.json</code> của mỗi lần chạy.</td>
+                <code>results/*.json</code> của mỗi lần chạy.
+              </td>
             </tr>
             <tr>
               <td>Resize offline</td>
@@ -1032,7 +1033,8 @@
             <tr>
               <td>Dữ liệu</td>
               <td>Tải Food-101 bằng torchvision, resize cạnh ngắn 256 bằng script của repo, chia theo
-                <code>split.json</code> đã commit (kiểm tra SHA-256 và số ảnh khi khởi động)</td>
+                <code>split.json</code> đã commit (kiểm tra SHA-256 và số ảnh khi khởi động)
+              </td>
               <td>Khôi phục bản đã resize từ một file tar trên Drive riêng của nhóm (không phân phối công khai); cùng
                 mã, cùng kết quả</td>
             </tr>
