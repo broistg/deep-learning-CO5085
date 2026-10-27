@@ -1,0 +1,8 @@
+# Do NOT list torch / torchvision here: Colab ships its own CUDA build and pip would replace it.
+# Tested with Python 3.13, torch 2.11.0+cu130, torchvision 0.26.0+cu130, Tesla T4 (see A1/README.md).
+numpy>=1.26
+pyyaml>=6.0
+tqdm>=4.66
+pandas>=2.0
+matplotlib>=3.8
+pillow>=10.0

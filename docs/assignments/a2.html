@@ -15,6 +15,60 @@
 
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="../css/style.css">
+
+  <!-- Math: inline $...$ and display $$...$$ -->
+  <script>window.MathJax = { tex: { inlineMath: [['$', '$']] } };</script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js"></script>
+
+  <style>
+    /* Page-local helpers (no change to the shared style.css) */
+    .link-btn.pending {
+      opacity: .55;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .note {
+      font-size: 13px;
+      color: var(--ink3);
+      margin-top: -12px;
+      margin-bottom: 20px;
+    }
+
+    .cite {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      font-size: 13.5px;
+      color: var(--ink2);
+      margin: 16px 0 24px;
+    }
+
+    .cite strong {
+      color: var(--ink);
+    }
+
+    .section ul {
+      margin: 0 0 1rem 1.25rem;
+      color: var(--ink2);
+    }
+
+    .section li {
+      margin-bottom: 6px;
+    }
+
+    .section li strong {
+      color: var(--ink);
+    }
+
+    .formula {
+      overflow-x: auto;
+      margin: 6px 0 18px;
+      color: var(--ink);
+    }
+  </style>
 </head>
 
 <body>
@@ -37,7 +91,7 @@
 
     <!-- Page Hero Banner -->
     <div class="page-tag">Assignment 02 · Technical Report</div>
-    <h1>Computer Vision Pipeline<br>&amp; <em>Paper Critical Analysis</em></h1>
+    <h1>Phân đoạn ngữ nghĩa trên ADE20K<br><em>SegFormer-B0 so với DeepLabV3+ (MobileNetV2)</em></h1>
 
     <div class="page-meta">
       <div class="meta-item">
@@ -53,8 +107,12 @@
         <span class="meta-value">Lê Tiến Đạt · Nguyễn Lê Thảo Ly</span>
       </div>
       <div class="meta-item">
+        <span class="meta-label">Giảng viên hướng dẫn</span>
+        <span class="meta-value">TS. Lê Thành Sách và TS. Nguyễn Quốc Minh</span>
+      </div>
+      <div class="meta-item">
         <span class="meta-label">Trạng thái</span>
-        <span class="meta-value"><span class="badge badge-wip">In progress...</span></span>
+        <span class="meta-value"><span class="badge badge-wip">A2.1 · Khóa chủ đề</span></span>
       </div>
     </div>
 
@@ -62,251 +120,543 @@
     <div class="quick-links">
       <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085/tree/main/A2" target="_blank"
         rel="noopener noreferrer">↗ Mã nguồn A2</a>
+      <a class="link-btn primary" href="https://arxiv.org/abs/2105.15203" target="_blank" rel="noopener noreferrer">📄
+        Paper: SegFormer</a>
       <a class="link-btn primary" href="../reports/assignment2.pdf" target="_blank" rel="noopener noreferrer">📄 Báo
-        cáo
-        PDF A2</a>
-      <a class="link-btn primary" href="#" target="_blank" rel="noopener noreferrer">🎬 Video Demo &amp; Thuyết
-        trình</a>
-      <a class="link-btn" href="#paper">📄 Bài báo liên quan</a>
-      <a class="link-btn" href="#pipeline">🛠 Kiến trúc Pipeline</a>
-      <a class="link-btn" href="#analysis">🔍 So sánh &amp; Phân tích</a>
+        cáo PDF A2</a>
+      <a class="link-btn primary" href="#" target="_blank" rel="noopener noreferrer">🎬 Video Demo</a>
+      <a class="link-btn" href="#data">📊 Tập dữ liệu &amp; metric</a>
+      <a class="link-btn" href="#paper">🔎 Phân tích paper</a>
+      <a class="link-btn" href="#pipeline">⚙️ Kế hoạch pipeline</a>
     </div>
 
     <!-- Status Banner: Work In Progress -->
     <div class="status-banner wip">
       <div class="status-banner-icon">📌</div>
       <div class="status-banner-content">
-        <h4>Bài tập lớn A2 (Chiếm 30% coursework) <span class="badge badge-wip">In progress...</span></h4>
+        <h4>Mốc A2.1: Chủ đề + paper + dữ liệu <span class="badge badge-wip">Đang thực hiện</span></h4>
         <p>
-          Xây dựng pipeline thị giác máy tính chạy được (so sánh ít nhất 2 phương pháp/biến thể) kết hợp đọc, phân tích
-          và phản biện chuyên sâu một bài báo khoa học liên quan.
+          Nhóm chọn bài toán <strong>phân đoạn ngữ nghĩa (semantic segmentation)</strong> trên tập
+          <strong>ADE20K SceneParsing</strong>, phân tích paper <strong>SegFormer</strong> (NeurIPS 2021) và so sánh
+          SegFormer-B0 với DeepLabV3+ (MobileNetV2), mỗi mô hình ở hai chế độ khởi tạo: pretrained và huấn luyện từ đầu.
+          Trang này chốt chủ đề, paper, tập dữ liệu, metric và kế hoạch pipeline; số liệu huấn luyện sẽ có ở mốc A2.2.
         </p>
+        <ul class="progress-checklist">
+          <li class="done">Chủ đề và paper đã chọn, có citation và link</li>
+          <li class="done">Tập dữ liệu đã tải, kiểm tra và khảo sát (EDA kích thước ảnh)</li>
+          <li class="done">Metric và quy trình đánh giá đã kiểm chứng bằng checkpoint công bố của tác giả</li>
+          <li class="done">Hai mô hình đã cài đặt và đo chi phí, khớp số liệu trong paper</li>
+          <li class="wip">Pipeline dữ liệu, huấn luyện và so sánh (A2.2)</li>
+          <li class="todo">Phân tích paper đầy đủ, số liệu, thảo luận (A2.2)</li>
+        </ul>
       </div>
     </div>
 
-    <!-- SUB-TASK NAVIGATION -->
+    <!-- MILESTONES -->
     <div class="overview-grid">
       <div class="overview-card">
-        <div class="overview-icon">🎯</div>
+        <div class="overview-icon">🔒</div>
         <div>
-          <div class="overview-title">Mốc A2.1: Khóa Đề tài &amp; Paper</div>
-          <div class="overview-sub"><strong>Hạn: 02/11/2026 (W9)</strong> · Khóa chủ đề CV, citation paper
-            (CVPR/ICCV/ECCV/...), mô tả tập dữ liệu &amp; metric, kế hoạch pipeline (chưa cần kết quả cuối).</div>
+          <div class="overview-title">Mốc A2.1</div>
+          <div class="overview-sub"><strong>Hạn: 02/11/2026 23:59 (W9)</strong></div>
+          <div class="overview-tag">Chủ đề · paper · dữ liệu · metric · kế hoạch</div>
         </div>
       </div>
       <div class="overview-card">
-        <div class="overview-icon">🛠</div>
+        <div class="overview-icon">⚙️</div>
         <div>
-          <div class="overview-title">Mốc A2.2: Pipeline &amp; Paper Report</div>
-          <div class="overview-sub"><strong>Hạn: 16/11/2026 (W11)</strong> · Pipeline chạy được, so sánh ≥ 2 biến
-            thể, phân tích paper đầy đủ (phương pháp, thí nghiệm, hạn chế, đối chiếu), số liệu và thảo luận.</div>
+          <div class="overview-title">Huấn luyện</div>
+          <div class="overview-sub">Dự kiến hoàn tất khoảng 12/11/2026</div>
+          <div class="overview-tag">12 lượt dò LR + 8 lượt huấn luyện đầy đủ</div>
         </div>
       </div>
       <div class="overview-card">
-        <div class="overview-icon">🌐</div>
+        <div class="overview-icon">📝</div>
         <div>
-          <div class="overview-title">Khung trang Web</div>
-          <div class="overview-sub"><strong>Hạn: 19/10/2026 (W7)</strong> · Hoàn thiện khung landing page GitHub
-            Pages có mục A2 (tiêu đề, dataset, mô hình, paper).</div>
+          <div class="overview-title">Mốc A2.2</div>
+          <div class="overview-sub"><strong>Hạn: 16/11/2026 23:59 (W11)</strong></div>
+          <div class="overview-tag">Pipeline · so sánh ≥ 2 biến thể · phân tích paper</div>
         </div>
       </div>
     </div>
 
-    <!-- SECTION 01: SELECTED PAPER & TOPIC -->
-    <div class="section" id="paper">
+    <!-- SECTION 01: PROBLEM & DATASET -->
+    <div class="section" id="data">
       <div class="section-header">
         <span class="section-num">01</span>
-        <h2>A2.1: Bài báo khoa học &amp; Bài toán lựa chọn</h2>
+        <h2>Bài toán và tập dữ liệu (EDA)</h2>
       </div>
+
       <p>
-        Thông tin bài báo khoa học và bài toán thị giác máy tính được nhóm lựa chọn nghiên cứu:
+        <strong>Bài toán.</strong> Phân đoạn ngữ nghĩa gán một nhãn lớp cho <em>từng điểm ảnh</em>: đầu vào là ảnh RGB,
+        đầu ra là bản đồ nhãn cùng kích thước. Khác với phân loại ảnh ở A1, mô hình phải vừa nhận biết đối tượng vừa
+        định
+        vị chính xác ranh giới của chúng, nên chất lượng phụ thuộc cả vào ngữ cảnh toàn ảnh lẫn chi tiết ở độ phân giải
+        cao.
+      </p>
+      <p>
+        <strong>Tập dữ liệu.</strong> Nhóm dùng <strong>ADE20K SceneParsing</strong> (bản ADEChallengeData2016), thuộc
+        danh sách
+        tập được đề bài gợi ý cho bài toán phân đoạn. Đây cũng là benchmark chính của paper SegFormer, nên có thể đối
+        chiếu trực
+        tiếp số liệu với paper. Ảnh là các cảnh trong nhà và ngoài trời đa dạng, mỗi ảnh chứa nhiều đối tượng thuộc
+        nhiều lớp
+        khác nhau. Phân bố lớp được kỳ vọng rất lệch (đuôi dài); nhóm sẽ đo bằng EDA ở bước chuẩn bị dữ liệu.
       </p>
 
       <div class="results-table-wrapper">
-        <table class="results-table" aria-label="Selected Paper Details">
+        <table class="results-table" aria-label="ADE20K dataset specifications">
           <thead>
             <tr>
-              <th>Hạng mục</th>
-              <th>Nội dung chi tiết</th>
+              <th>Thông số</th>
+              <th>Giá trị</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Bài toán (Task)</td>
-              <td>[Object Detection / Semantic Segmentation / Instance Segmentation]</td>
+              <td>Nguồn</td>
+              <td>MIT CSAIL, benchmark Scene Parsing (<a href="https://ade20k.csail.mit.edu/" target="_blank"
+                  rel="noopener noreferrer">ade20k.csail.mit.edu</a>); gói ADEChallengeData2016, 967 MB
+                (922 MiB), nhóm ghi lại mã sha256 của file đã tải để tái lập</td>
             </tr>
             <tr>
-              <td>Tên bài báo</td>
-              <td><em>[Tên bài báo khoa học được chọn]</em></td>
+              <td>Số ảnh gốc</td>
+              <td>20.210 ảnh huấn luyện · 2.000 ảnh validation (nhãn tập test của ban tổ chức không công khai nên không
+                dùng)</td>
             </tr>
             <tr>
-              <td>Tác giả &amp; Năm xuất bản</td>
-              <td>[Tác giả, Hội nghị / Tạp chí: e.g. CVPR / ICCV / ECCV]</td>
+              <td>Số lớp</td>
+              <td>150 lớp đối tượng/vật liệu. Giá trị 0 trong ảnh nhãn là “other objects”, bị bỏ qua khi đánh giá theo
+                quy ước chính thức</td>
             </tr>
             <tr>
-              <td>Link bài báo (ArXiv / DOI)</td>
-              <td><a href="#" target="_blank">[Link ArXiv]</a></td>
+              <td>Cách chia của nhóm</td>
+              <td>
+                <strong>Train 19.210</strong> + <strong>dev 1.000</strong> (lấy ngẫu nhiên, seed 42, từ tập huấn luyện
+                chính thức;
+                danh sách ảnh lưu trong <code>split.json</code> kèm sha256) · <strong>Test = 2.000 ảnh validation chính
+                  thức</strong>,
+                mỗi lượt chạy chỉ chấm một lần ở cuối. Tập dev dùng để chọn learning rate và vẽ đường học
+              </td>
             </tr>
             <tr>
-              <td>Tập dữ liệu kiểm chứng</td>
-              <td>[e.g. MS-COCO / Pascal-VOC / Cityscapes / Custom Dataset]</td>
+              <td>Ánh xạ nhãn</td>
+              <td>0 → 255 (ignore_index) · 1…150 → 0…149</td>
+            </tr>
+            <tr>
+              <td>Điều khoản sử dụng</td>
+              <td>Chỉ cho nghiên cứu và giáo dục phi thương mại; MIT không sở hữu bản quyền ảnh. Nhóm không phân phối
+                lại ảnh
+                hay bản cache: repo không chứa dữ liệu, mỗi thành viên tự tải về</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <figure class="report-figure">
-        <img src="../assets/placeholder-figure.svg" alt="Paper Overview Architecture" loading="lazy">
-        <figcaption>Hình 2.1: Sơ đồ kiến trúc tổng quan đề xuất từ bài báo khoa học được lựa chọn.</figcaption>
-      </figure>
-    </div>
-
-    <!-- SECTION 02: PIPELINE ARCHITECTURE -->
-    <div class="section" id="pipeline">
-      <div class="section-header">
-        <span class="section-num">02</span>
-        <h2>A2.2: Thiết kế &amp; Xây dựng Pipeline thực tế</h2>
+      <h3 class="section-subhead">Khảo sát kích thước ảnh (toàn bộ 20.210 ảnh huấn luyện)</h3>
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Image size statistics">
+          <thead>
+            <tr>
+              <th>Đại lượng</th>
+              <th>Nhỏ nhất</th>
+              <th>Trung vị</th>
+              <th>Lớn nhất</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Chiều rộng (px)</td>
+              <td>130</td>
+              <td>512</td>
+              <td>2.100</td>
+            </tr>
+            <tr>
+              <td>Chiều cao (px)</td>
+              <td>96</td>
+              <td>480</td>
+              <td>2.100</td>
+            </tr>
+            <tr>
+              <td>Cạnh ngắn (px)</td>
+              <td>96</td>
+              <td>473</td>
+              <td>2.100</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <p>
-        Các thành phần cấu thành pipeline hoàn chỉnh từ dữ liệu thô đến kết quả suy luận:
+        Kích thước ảnh không đồng nhất: 54,1% ảnh có cạnh ngắn dưới 512 px, nên khi đánh giá (đưa cạnh ngắn về 512 px)
+        phần lớn
+        ảnh được phóng to chứ không bị thu nhỏ. Điểm ảnh mang nhãn 0 (bị bỏ qua) chiếm khoảng 9% (trung bình trên 300
+        ảnh
+        lấy mẫu ngẫu nhiên). Hình phân bố tần suất lớp, ví dụ ảnh và nhãn minh họa sẽ được thêm khi pipeline dữ liệu
+        hoàn thiện.
+      </p>
+
+      <h3 class="section-subhead">Metric đánh giá</h3>
+      <p>
+        Mọi metric đều tính từ <em>một ma trận nhầm lẫn 150×150 cộng dồn trên toàn bộ tập test</em> (không lấy trung
+        bình theo
+        từng ảnh), bỏ qua điểm ảnh nhãn 255. Với lớp $c$, gọi $TP_c$, $FP_c$, $FN_c$ lần lượt là số điểm ảnh đúng, dự
+        đoán thừa
+        và dự đoán thiếu:
+      </p>
+      <div class="formula">
+        $$\mathrm{IoU}_c=\frac{TP_c}{TP_c+FP_c+FN_c},\quad
+        \mathrm{mIoU}=\frac{1}{C}\sum_{c=1}^{C}\mathrm{IoU}_c,\quad
+        \mathrm{Dice}_c=\frac{2\,TP_c}{2\,TP_c+FP_c+FN_c},\quad
+        \mathrm{PixAcc}=\frac{\sum_c TP_c}{\sum_c (TP_c+FN_c)}$$
+      </div>
+      <ul>
+        <li><strong>mIoU</strong> là metric chính (cũng là metric của paper); báo cáo thêm <strong>Dice trung
+            bình</strong> theo
+          yêu cầu đề bài, <strong>pixel accuracy</strong> và IoU theo từng lớp.</li>
+        <li><strong>Quy trình đánh giá:</strong> một tỉ lệ duy nhất (cạnh ngắn 512 px, giữ tỉ lệ khung hình, cạnh dài
+          tối đa
+          2.048 px), không lật ảnh, không ghép nhiều tỉ lệ; logits được nội suy song tuyến tính về kích thước nhãn gốc.
+          Lớp không
+          xuất hiện trong nhãn lẫn dự đoán sẽ được đếm và báo cáo, không âm thầm bỏ qua.</li>
+        <li><strong>Kiểm chứng đánh giá:</strong> nhóm chạy checkpoint SegFormer-B0 do tác giả công bố (đã huấn luyện
+          trên ADE20K)
+          chỉ ở chế độ suy luận trên 2.000 ảnh validation, đạt <strong>36,7 mIoU</strong> và 77,4% pixel accuracy, sát
+          với
+          37,4 mIoU trong paper. Checkpoint này <strong>không bao giờ</strong> được dùng để khởi tạo huấn luyện, vì nó
+          đã thấy
+          dữ liệu ADE20K và sẽ gây rò rỉ.</li>
+      </ul>
+    </div>
+
+    <!-- SECTION 02: DATASET / DATALOADER / AUGMENTATION -->
+    <div class="section" id="loader">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2>Dataset, DataLoader và augmentation (kế hoạch)</h2>
+      </div>
+      <p>
+        Nhóm tự cài đặt <code>Dataset</code> và <code>DataLoader</code> bằng PyTorch (đọc ảnh và nhãn PNG, ánh xạ nhãn,
+        chia train/dev
+        theo <code>split.json</code>). Pipeline tăng cường dữ liệu bám theo cấu hình ADE20K của mmsegmentation mà paper
+        dùng, áp dụng
+        giống nhau cho cả hai mô hình để so sánh công bằng:
+      </p>
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Augmentation pipeline">
+          <thead>
+            <tr>
+              <th>Bước</th>
+              <th>Huấn luyện</th>
+              <th>Đánh giá</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Thay đổi kích thước</td>
+              <td>Cạnh ngắn cơ sở 512 px, nhân ngẫu nhiên hệ số 0,5–2,0, giữ tỉ lệ khung hình</td>
+              <td>Cạnh ngắn 512 px (cạnh dài tối đa 2.048 px), một tỉ lệ</td>
+            </tr>
+            <tr>
+              <td>Cắt</td>
+              <td>Cắt ngẫu nhiên 512×512, không để một lớp chiếm quá 75% vùng cắt</td>
+              <td>Không cắt, suy luận trên toàn ảnh</td>
+            </tr>
+            <tr>
+              <td>Lật</td>
+              <td>Lật ngang, xác suất 0,5</td>
+              <td>Không</td>
+            </tr>
+            <tr>
+              <td>Quang học</td>
+              <td>Biến đổi độ sáng, tương phản, bão hòa, sắc độ (photometric distortion)</td>
+              <td>Không</td>
+            </tr>
+            <tr>
+              <td>Chuẩn hóa</td>
+              <td colspan="2">Trừ trung bình và chia độ lệch chuẩn của ImageNet; điểm ảnh nhãn 255 không tham gia loss
+                và metric</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Colab chỉ cấp 2 nhân CPU, nên nhóm đã đo trước tốc độ đọc dữ liệu (khoảng 80 ảnh/giây với 2 worker, đủ cho cả
+        hai mô hình).
+        Mọi phép biến đổi dùng một seed cố định theo từng lượt chạy để lặp lại được.
+      </p>
+    </div>
+
+    <!-- SECTION 03: PAPER -->
+    <div class="section" id="paper">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2>Phân tích paper</h2>
+      </div>
+
+      <div class="cite">
+        <strong>Paper:</strong> E. Xie, W. Wang, Z. Yu, A. Anandkumar, J. M. Alvarez, P. Luo.
+        <em>“SegFormer: Simple and Efficient Design for Semantic Segmentation with Transformers”</em>.
+        Advances in Neural Information Processing Systems 34 (NeurIPS 2021).
+        <a href="https://arxiv.org/abs/2105.15203" target="_blank" rel="noopener noreferrer">arXiv:2105.15203</a> ·
+        <a href="https://github.com/NVlabs/SegFormer" target="_blank" rel="noopener noreferrer">mã nguồn của tác giả</a>
+      </div>
+
+      <p>
+        <strong>Vì sao chọn paper này.</strong> SegFormer là paper ảnh hưởng đã được nhận ở hội nghị hàng đầu (NeurIPS),
+        liên quan
+        trực tiếp đến phân đoạn ngữ nghĩa, và đề bài nêu rõ SegFormer trong danh sách phương pháp cho chủ đề này. Paper
+        báo cáo
+        kết quả ngay trên ADE20K với các mô hình nhỏ, nên nhóm có thể tái hiện phép so sánh chính trong khả năng tính
+        toán của Colab.
+      </p>
+
+      <h3 class="section-subhead">Ý tưởng chính (bản tóm tắt sơ bộ, viết đầy đủ ở A2.2)</h3>
+      <ul>
+        <li><strong>Encoder phân cấp MiT:</strong> chuỗi bốn tầng cho đặc trưng ở độ phân giải 1/4, 1/8, 1/16 và 1/32,
+          tương tự CNN
+          nên phù hợp cho dự đoán dày. Patch được ghép chồng lấn (overlapped patch merging) để giữ tính liên tục cục bộ.
+        </li>
+        <li><strong>Self-attention hiệu quả:</strong> ở mỗi tầng, chuỗi khóa/giá trị được rút gọn theo tỉ lệ
+          $R=[64,16,4,1]$ trước khi tính
+          attention, nên chi phí giảm từ $O(N^2)$ xuống $O(N^2/R)$.</li>
+        <li><strong>Mix-FFN thay positional encoding:</strong> khối feed-forward có thêm một tích chập 3×3,
+          $x_{out}=\mathrm{MLP}(\mathrm{GELU}(\mathrm{Conv}_{3\times3}(\mathrm{MLP}(x_{in}))))+x_{in}$,
+          cung cấp thông tin vị trí nên mô hình không phụ thuộc vào độ phân giải lúc huấn luyện.</li>
+        <li><strong>Decoder All-MLP:</strong> chỉ gồm các lớp tuyến tính: chiếu đặc trưng bốn tầng về cùng số kênh, nội
+          suy về 1/4,
+          ghép lại rồi dự đoán lớp. Lập luận của paper là vùng tiếp nhận hiệu dụng của Transformer đủ lớn để không cần
+          decoder phức tạp.</li>
+      </ul>
+
+      <h3 class="section-subhead">Số liệu của paper mà nhóm sẽ đối chiếu (ADE20K, Bảng 2)</h3>
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Paper reference numbers">
+          <thead>
+            <tr>
+              <th>Mô hình</th>
+              <th>Tham số</th>
+              <th>FLOPs</th>
+              <th>FPS</th>
+              <th>mIoU (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>SegFormer-B0</td>
+              <td>3,8M</td>
+              <td>8,4G</td>
+              <td>50,5</td>
+              <td class="highlight">37,4</td>
+            </tr>
+            <tr>
+              <td>DeepLabV3+ (MobileNetV2)</td>
+              <td>15,4M</td>
+              <td>69,4G</td>
+              <td>43,1</td>
+              <td>34,0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Số liệu lấy từ paper. Paper không nêu rõ độ phân giải tính FLOPs; nhóm giả định 512×512 và số tự
+        đo của hai mô hình (mục 04) khớp với giả định này. Paper huấn luyện 160.000 vòng lặp trên 8 GPU V100 và không
+        báo cáo sai số giữa các lần chạy.</p>
+
+      <h3 class="section-subhead">Hạn chế và liên hệ với thí nghiệm của nhóm (sẽ phân tích sâu ở A2.2)</h3>
+      <ul>
+        <li><strong>Tính toán:</strong> lịch huấn luyện của paper vượt xa khả năng của nhóm; nhóm huấn luyện 20 epoch
+          (24.000 vòng lặp, khoảng 15% lịch của paper),
+          vì vậy mIoU tuyệt đối dự kiến thấp hơn paper. Điều cần kiểm tra là thứ tự và khoảng cách tương đối giữa hai mô
+          hình.</li>
+        <li><strong>Thiếu sai số:</strong> paper không có error bar. Nhóm chạy nhiều seed cho các cấu hình pretrained và
+          báo cáo trung bình ± độ lệch chuẩn.</li>
+        <li><strong>Giả thiết về pretrain:</strong> toàn bộ kết quả của paper dùng encoder pretrained ImageNet-1K. Nhóm
+          kiểm tra thêm phiên bản huấn luyện từ đầu để thấy
+          mức phụ thuộc vào pretrain khi dữ liệu chỉ có vài chục nghìn ảnh.</li>
+        <li><strong>Phép so sánh chưa thật sự kiểm soát:</strong> trong thí nghiệm Mix-FFN so với positional encoding
+          của paper, hai cấu hình được suy luận ở hai độ phân giải
+          và hai kiểu suy luận khác nhau (cửa sổ trượt và toàn ảnh), nên độ phân giải và quy trình đánh giá bị lẫn vào
+          nhau. Nhóm dự định kiểm tra độ bền theo
+          độ phân giải với quy trình thống nhất.</li>
+        <li><strong>Không nhất quán nhỏ:</strong> số tham số của B0 được nêu là 3,7M ở một số chỗ và 3,8M ở chỗ khác;
+          nhóm báo cáo số tự đếm.</li>
+      </ul>
+    </div>
+
+    <!-- SECTION 04: PIPELINE -->
+    <div class="section" id="pipeline">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2>Pipeline, huấn luyện và so sánh phương pháp (kế hoạch)</h2>
+      </div>
+
+      <p>
+        Hai kiến trúc được so sánh trên cùng dữ liệu, cùng ngân sách huấn luyện và cùng quy trình đánh giá. Mỗi kiến
+        trúc có hai biến thể khởi tạo,
+        cho tổng cộng bốn cấu hình.
       </p>
 
       <div class="models-grid">
         <div class="model-card">
-          <div class="model-family">Module 1</div>
-          <div class="model-name">Data &amp; Preprocessing</div>
+          <div class="model-family"><span class="badge badge-transformer">Transformer</span></div>
+          <div class="model-name">SegFormer-B0 (MiT-B0 + decoder All-MLP)</div>
           <div class="model-desc">
-            Quy trình nạp dữ liệu theo batch, chuyển đổi color space, resize tỉ lệ khung hình (letterboxing), và gán
-            nhãn bounding box / mask ground-truth.
+            Encoder phân cấp với self-attention rút gọn chuỗi và Mix-FFN, decoder chỉ gồm các lớp tuyến tính (256 kênh).
+            Biến thể pretrained
+            nạp trọng số encoder ImageNet-1K và khởi tạo ngẫu nhiên decoder.
+          </div>
+          <div class="model-meta">
+            <div><span class="meta-label">Số tham số (nhóm đếm)</span><span class="meta-val">3,75M</span></div>
+            <div><span class="meta-label">GMACs ở 512×512</span><span class="meta-val">8,39</span></div>
+            <div><span class="meta-label">Paper</span><span class="meta-val">3,8M · 8,4G</span></div>
           </div>
         </div>
 
         <div class="model-card">
-          <div class="model-family">Module 2</div>
-          <div class="model-name">Backbone &amp; Head</div>
+          <div class="model-family"><span class="badge badge-cnn">CNN</span></div>
+          <div class="model-name">DeepLabV3+ (MobileNetV2), cấu hình mmsegmentation M-V2-D8</div>
           <div class="model-desc">
-            Mạng trích xuất đặc trưng đa quy mô (Feature Pyramid Network - FPN) kết hợp Prediction Head tính toán loss
-            phân loại và hồi quy tọa độ.
+            Nhóm tự cài đặt lại đúng mô hình mà paper dùng làm baseline: backbone MobileNetV2 với output stride 8, ASPP
+            và decoder 512 kênh
+            (gồm một tích chập 3×3 đầy đủ trên 5×512 kênh, phần chiếm nhiều tham số nhất), nhánh đặc trưng mức thấp
+            24→48 kênh, và đầu phụ trợ chỉ dùng lúc huấn luyện.
+            Nhóm không dùng bản DeepLabV3+ nhẹ hơn trong thư viện segmentation_models_pytorch vì nó chỉ có 4,4M tham số
+            và 6,6 GMACs, không còn là baseline của paper.
           </div>
-        </div>
-
-        <div class="model-card">
-          <div class="model-family">Module 3</div>
-          <div class="model-name">Post-processing &amp; Eval</div>
-          <div class="model-desc">
-            Lọc hộp trùng lặp bằng Non-Maximum Suppression (NMS), tính toán chỉ số mAP@[.5:.95] hoặc mIoU tiêu chuẩn.
+          <div class="model-meta">
+            <div><span class="meta-label">Số tham số (nhóm đếm)</span><span class="meta-val">15,35M</span></div>
+            <div><span class="meta-label">GMACs ở 512×512</span><span class="meta-val">69,4</span></div>
+            <div><span class="meta-label">Paper</span><span class="meta-val">15,4M · 69,4G</span></div>
           </div>
         </div>
       </div>
 
-      <!-- Qualitative sample grid -->
-      <figure class="report-figure" style="margin-top: 24px;">
-        <img src="../assets/placeholder-sample.svg" alt="Pipeline Output Predictions" loading="lazy">
-        <figcaption>Hình 2.2: Trực quan hóa kết quả dự đoán của pipeline trên các ảnh mẫu kiểm thử.</figcaption>
-      </figure>
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Experiment configurations">
+          <thead>
+            <tr>
+              <th>Cấu hình</th>
+              <th>Khởi tạo encoder</th>
+              <th>Số seed</th>
+              <th>Mục đích</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>SegFormer-B0</td>
+              <td>ImageNet-1K pretrained</td>
+              <td>3 (0, 1, 2)</td>
+              <td>Tái hiện phép so sánh của paper</td>
+            </tr>
+            <tr>
+              <td>SegFormer-B0</td>
+              <td>Ngẫu nhiên (from scratch)</td>
+              <td>1</td>
+              <td>Mức phụ thuộc vào pretrain</td>
+            </tr>
+            <tr>
+              <td>DeepLabV3+ (MobileNetV2)</td>
+              <td>ImageNet-1K pretrained</td>
+              <td>3 (0, 1, 2)</td>
+              <td>Baseline CNN của paper</td>
+            </tr>
+            <tr>
+              <td>DeepLabV3+ (MobileNetV2)</td>
+              <td>Ngẫu nhiên (from scratch)</td>
+              <td>1</td>
+              <td>Mức phụ thuộc vào pretrain</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="section-subhead">Công thức huấn luyện</h3>
+      <p>
+        Mỗi mô hình dùng công thức huấn luyện chính thức của nó (SegFormer theo cấu hình của tác giả, DeepLabV3+ theo
+        cấu hình mặc định của mmsegmentation
+        đã tạo ra con số 34,0 mIoU), với cùng ngân sách: <strong>20 epoch, tức 24.000 vòng lặp ở batch 16</strong>.
+      </p>
+      <div class="results-table-wrapper">
+        <table class="results-table" aria-label="Training recipes">
+          <thead>
+            <tr>
+              <th>Thành phần</th>
+              <th>SegFormer-B0</th>
+              <th>DeepLabV3+ (MobileNetV2)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Optimizer</td>
+              <td>AdamW, lr 6e-5, weight decay 0,01 (không áp dụng cho norm và vị trí)</td>
+              <td>SGD, lr 0,01, momentum 0,9, weight decay 5e-4</td>
+            </tr>
+            <tr>
+              <td>Lịch lr</td>
+              <td>Poly (mũ 1,0) · warmup tuyến tính 6,25% số vòng lặp · decoder lr ×10</td>
+              <td>Poly (mũ 0,9) · không warmup</td>
+            </tr>
+            <tr>
+              <td>Loss</td>
+              <td colspan="2">Cross-entropy, ignore_index 255, trên logits nội suy lên 512×512; DeepLabV3+ thêm loss đầu
+                phụ trợ (trọng số 0,4)</td>
+            </tr>
+            <tr>
+              <td>Batch</td>
+              <td>16</td>
+              <td>16 (2 × 8 tích lũy gradient do giới hạn bộ nhớ GPU)</td>
+            </tr>
+            <tr>
+              <td>Độ chính xác</td>
+              <td colspan="2">fp16 (autocast) trên Tesla T4</td>
+            </tr>
+            <tr>
+              <td>Chọn learning rate</td>
+              <td colspan="2">Dò 3 giá trị trên 20% tập train, 3 epoch, chọn theo mIoU trên tập dev; mỗi nhóm cấu hình
+                (kiến trúc × khởi tạo) có lưới riêng</td>
+            </tr>
+            <tr>
+              <td>Báo cáo</td>
+              <td colspan="2">Điểm ở vòng lặp cuối cùng, không chọn checkpoint tốt nhất theo tập test</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="section-subhead">Chi phí và phân tích dự kiến</h3>
+      <ul>
+        <li><strong>Chi phí:</strong> số tham số, GMACs ở 512×512, tốc độ huấn luyện và suy luận (FPS, độ trễ), bộ nhớ
+          GPU đỉnh, đo trên cùng một loại GPU (Tesla T4) để so sánh được.</li>
+        <li><strong>Chất lượng:</strong> mIoU, Dice, pixel accuracy, IoU theo lớp so với tần suất lớp (đuôi dài), cặp
+          lớp hay bị nhầm, độ chính xác theo kích thước đối tượng,
+          ví dụ phân đoạn tốt và tệ nhất, đường học (mIoU trên dev theo epoch).</li>
+        <li><strong>Mở rộng nếu còn thời gian:</strong> kiểm tra độ bền theo độ phân giải đầu vào (chỉ suy luận), thay
+          encoder bằng ResNet với cùng decoder MLP, demo nhỏ.</li>
+      </ul>
     </div>
 
-    <!-- SECTION 03: COMPARATIVE EXPERIMENTS & PAPER ANALYSIS -->
-    <div class="section" id="analysis">
+    <!-- SECTION 05: RESULTS (A2.2) -->
+    <div class="section" id="results">
       <div class="section-header">
-        <span class="section-num">03</span>
-        <h2>A2.2: So sánh Pipeline &amp; Phân tích Paper</h2>
+        <span class="section-num">05</span>
+        <h2>Kết quả, thảo luận và hạn chế</h2>
       </div>
-
-      <h3>3.1. So sánh các biến thể trong Pipeline của nhóm</h3>
       <p>
-        Quy định bắt buộc (Specs Mục 4.1): Triển khai ít nhất một pipeline chạy được và so sánh ít nhất hai phương pháp
-        hoặc hai biến thể (kiến trúc, backbone, pretrained vs scratch, hàm loss, v.v.):
-      </p>
-
-      <div class="results-table-wrapper">
-        <table class="results-table" aria-label="Pipeline Variants Comparison Table">
-          <thead>
-            <tr>
-              <th>Biến thể Pipeline</th>
-              <th>Kiến trúc / Backbone</th>
-              <th>Cơ chế Huấn luyện &amp; Loss</th>
-              <th>Tham số</th>
-              <th>Metric chính (mAP / mIoU / FID)</th>
-              <th>Tốc độ suy luận (FPS)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Biến thể 1 (Phương pháp cơ sở)</strong></td>
-              <td>[e.g. YOLO / Faster R-CNN / DeepLabv3]</td>
-              <td>[Loss chuẩn]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-            </tr>
-            <tr>
-              <td><strong>Biến thể 2 (Phương pháp đối chiếu)</strong></td>
-              <td>[e.g. DETR / Mask R-CNN / SegFormer]</td>
-              <td>[Loss cải tiến / Backbone khác]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3 style="margin-top: 28px;">3.2. Đối chiếu thực nghiệm với bài báo khoa học gốc</h3>
-      <p>
-        Bảng so sánh kết quả thực nghiệm đạt được bởi nhóm so với số liệu công bố trong bài báo gốc:
-      </p>
-
-      <div class="results-table-wrapper">
-        <table class="results-table" aria-label="Paper Analysis Benchmark Table">
-          <thead>
-            <tr>
-              <th>Phương pháp</th>
-              <th>Backbone</th>
-              <th>Metric (Công bố trong Paper gốc)</th>
-              <th>Metric (Nhóm tự tái hiện)</th>
-              <th>FPS (Inference)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Baseline từ bài báo</strong></td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>—</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td><strong>Phương pháp đề xuất chính</strong></td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-            </tr>
-            <tr>
-              <td><strong>Cải tiến của nhóm (Nếu có)</strong></td>
-              <td>[Sẽ cập nhật]</td>
-              <td>—</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3 style="margin-top: 28px;">3.3. Báo cáo phân tích phê phán bài báo (Paper Critical Analysis)</h3>
-      <p>
-        Phân tích chi tiết 4 nội dung bắt buộc theo yêu cầu đặc tả (Specs Mục 4.2):
+        Phần này sẽ được cập nhật ở mốc A2.2 (16/11/2026) gồm bảng kết quả trung bình ± độ lệch chuẩn, đường học, phân
+        tích lỗi, đối chiếu với paper và liên hệ
+        với phần phân tích paper. Các hạn chế đã biết trước khi chạy thí nghiệm:
       </p>
       <ul>
-        <li><strong>Tóm tắt phương pháp:</strong> Ý tưởng cốt lõi, kiến trúc mạng, hàm mất mát (loss function), và các
-          giả thiết tiên nghiệm của tác giả (không chép lại abstract).</li>
-        <li><strong>Tóm tắt thí nghiệm của paper:</strong> Bộ dữ liệu kiểm chứng, các độ đo (metrics) được áp dụng, và
-          kết luận rút ra từ bài báo.</li>
-        <li><strong>Hạn chế của bài báo (Limitations):</strong> Rào cản về dữ liệu, chi phí tính toán phần cứng, các
-          trường hợp lỗi (failure cases), và giả thiết nào không còn đúng khi áp dụng trên tập dữ liệu của nhóm.</li>
-        <li><strong>Đối chiếu với pipeline của nhóm:</strong> Nhóm đã tái hiện được những gì, điểm khác biệt trong quá
-          trình cài đặt thực tế, và bài học rút ra cho pipeline.</li>
+        <li>Ngân sách 20 epoch chỉ bằng khoảng 15% lịch huấn luyện của paper, mIoU tuyệt đối sẽ thấp hơn; đặc biệt các
+          lượt huấn luyện từ đầu sẽ hội tụ chưa đủ,
+          nên khoảng cách pretrained so với from-scratch có thể bị phóng đại so với lịch dài.</li>
+        <li>Tập train của nhóm có 19.210 ảnh (1.000 ảnh dùng làm tập dev), ít hơn khoảng 5% so với tập train đầy đủ mà
+          paper dùng.</li>
+        <li>DeepLabV3+ dùng tích lũy gradient 2 × 8 nên thống kê BatchNorm tính trên 8 ảnh thay vì SyncBN trên 16 ảnh
+          như cấu hình gốc.</li>
+        <li>Trọng số ImageNet của MobileNetV2 lấy từ torchvision, khác trọng số mà mmsegmentation dùng.</li>
+        <li>Chỉ dùng một loại GPU và một tỉ lệ đánh giá; không đánh giá đa tỉ lệ hay lật ảnh như một số số liệu trong
+          paper.</li>
       </ul>
     </div>
 
@@ -314,7 +664,7 @@
 
   <!-- Footer -->
   <footer>
-    CO5085 · Assignment 02 Report · Nhóm DL4DL · HCMUT &nbsp;·&nbsp;
+    CO5085 · Assignment 02 · DL4DL · HCMUT &nbsp;·&nbsp;
     <a href="../index.html">Về trang chủ</a>
     &nbsp;·&nbsp;
     <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">GitHub Repo</a>

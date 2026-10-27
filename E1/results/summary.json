@@ -1,0 +1,74 @@
+{
+ "minivgg": {
+  "model": "minivgg",
+  "augment": true,
+  "n_seeds": 3,
+  "seeds": [
+   0,
+   1,
+   2
+  ],
+  "params": 37338,
+  "test_acc_final_mean_std": [
+   0.7962333333333333,
+   0.0026083200212652907
+  ],
+  "test_acc_best_val_loss_mean_std": [
+   0.7987666666666667,
+   0.003108590248542446
+  ],
+  "train_s_per_epoch": 9.464345574378967,
+  "inference_ms_per_image": 0.052012340227762854,
+  "split_hashes": [
+   "7f11b9983ea0f6f8"
+  ]
+ },
+ "mlp": {
+  "model": "mlp",
+  "augment": true,
+  "n_seeds": 3,
+  "seeds": [
+   0,
+   1,
+   2
+  ],
+  "params": 199082,
+  "test_acc_final_mean_std": [
+   0.5117333333333333,
+   0.0022722969289539307
+  ],
+  "test_acc_best_val_loss_mean_std": [
+   0.5137666666666666,
+   0.00418608807042246
+  ],
+  "train_s_per_epoch": 8.497234304745993,
+  "inference_ms_per_image": 0.0506614605585734,
+  "split_hashes": [
+   "7f11b9983ea0f6f8"
+  ]
+ },
+ "softmax": {
+  "model": "softmax",
+  "augment": true,
+  "n_seeds": 3,
+  "seeds": [
+   0,
+   1,
+   2
+  ],
+  "params": 30730,
+  "test_acc_final_mean_std": [
+   0.32606666666666667,
+   0.009785874173181105
+  ],
+  "test_acc_best_val_loss_mean_std": [
+   0.33653333333333335,
+   0.004970244796117501
+  ],
+  "train_s_per_epoch": 7.388369043668111,
+  "inference_ms_per_image": 0.05194019476572673,
+  "split_hashes": [
+   "7f11b9983ea0f6f8"
+  ]
+ }
+}

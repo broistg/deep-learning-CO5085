@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dl-course"
+version = "0.1.0"
+description = "CO5085 coursework: shared utilities (common) and the A1 pipeline (a1lib). Dependencies live in requirements/*.txt, not here."
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.setuptools]
+packages = ["common", "a1lib", "e1lib", "e2lib"]
+
+[tool.setuptools.package-dir]
+common = "common"
+a1lib = "A1/a1lib"
+e1lib = "E1/e1lib"
+e2lib = "E2/e2lib"

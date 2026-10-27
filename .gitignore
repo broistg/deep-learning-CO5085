@@ -1,20 +1,22 @@
 # Byte-compiled / optimized / DLL files
-__pycache__/
+**/__pycache__/
+*.egg-info/
 *.py[cod]
 *$py.class
 
 # Virtual Environments
-.venv/
-env/
-venv/
+**/.venv/
+**/env/
+**/venv/
 
 # Jupyter Notebook Checkpoints
 .ipynb_checkpoints/
 
 # Datasets and Weights
-data/
-datasets/
-checkpoints/
+**/data/
+**/datasets/
+**/checkpoints/
+**/artifacts/
 *.pth
 *.pt
 *.onnx
@@ -22,10 +24,14 @@ checkpoints/
 *.h5
 
 # Logs & Metrics
-wandb/
-runs/
+**/wandb/
+**/runs/
 *.log
+**/figures/*.png
 
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Others
+*.tex

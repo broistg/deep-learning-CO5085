@@ -1,0 +1,5 @@
+-r base.txt
+timm==1.0.30
+scikit-learn>=1.4
+fvcore>=0.1.5
+grad-cam>=1.5
