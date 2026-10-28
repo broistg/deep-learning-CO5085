@@ -33,3 +33,15 @@ class Cifar(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Fingerprint(unittest.TestCase):
+    def test_fingerprint_detects_one_changed_pixel_and_is_stable(self):
+        from common.cifar import fingerprint
+        r = np.random.default_rng(0)
+        a = (r.integers(0, 256, (5, 32, 32, 3), dtype=np.uint8), r.integers(0, 10, 5), r.integers(0, 256, (2, 32, 32, 3), dtype=np.uint8), r.integers(0, 10, 2))
+        f = fingerprint(*a)
+        self.assertEqual(f, fingerprint(*[x.copy() for x in a]))
+        b = [x.copy() for x in a]
+        b[0][0, 0, 0, 0] ^= 1
+        self.assertNotEqual(f, fingerprint(*b))

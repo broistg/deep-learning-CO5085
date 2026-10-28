@@ -1,0 +1,24 @@
+{
+ "sha256": "aa654a69adc0edc370f2c593f5d218bb57042a815f5def67e41dfa4794f2c343",
+ "source": "torchvision.datasets.CIFAR10",
+ "shapes": [
+  [
+   50000,
+   32,
+   32,
+   3
+  ],
+  [
+   50000
+  ],
+  [
+   10000,
+   32,
+   32,
+   3
+  ],
+  [
+   10000
+  ]
+ ]
+}
