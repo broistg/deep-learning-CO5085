@@ -18,7 +18,7 @@ SPLIT_SEED, VAL_PER_CLASS = 42, 500
 
 
 FINGERPRINT_PATH = REPO / "common" / "cifar10_fingerprint.json"   # SHA-256 of the exact arrays (commit it once; see below)
-HF_REPO, HF_FILES = "uoft-cs/cifar10", {"train": "plain_text/train-00000-of-00001.parquet", "test": "plain_text/test-00000-of-00001.parquet"}
+HF_REPO = "uoft-cs/cifar10"
 
 
 def fingerprint(xtr, ytr, xte, yte):
@@ -32,14 +32,6 @@ def fingerprint(xtr, ytr, xte, yte):
     return h.hexdigest()
 
 
-def _decode_png_column(col):
-    """HF parquet image column (dicts with PNG `bytes`) -> uint8 (N, 32, 32, 3)."""
-    import io
-
-    from PIL import Image
-    return np.stack([np.asarray(Image.open(io.BytesIO(d["bytes"])).convert("RGB"), dtype=np.uint8) for d in col])
-
-
 def _load_torchvision(root):
     from torchvision.datasets import CIFAR10
     tr, te = CIFAR10(root, train=True, download=True), CIFAR10(root, train=False, download=True)
@@ -47,15 +39,14 @@ def _load_torchvision(root):
 
 
 def _load_hf(root):
-    """The same CIFAR-10 from the Hugging Face Hub (parquet, ~145 MB, CDN: fast where the Toronto server is slow). Only accepted if
-    the fingerprint matches the torchvision data (see `load_cifar`)."""
-    import pandas as pd
-    from huggingface_hub import hf_hub_download
-    out = {}
-    for split, f in HF_FILES.items():
-        df = pd.read_parquet(hf_hub_download(HF_REPO, f, repo_type="dataset", local_dir=Path(root) / "hf"))
-        out[split] = (_decode_png_column(df["img"]), df["label"].to_numpy(np.int64))
-    return out["train"][0], out["train"][1], out["test"][0], out["test"][1]
+    """The same CIFAR-10 through the Hugging Face `datasets` library (`uoft-cs/cifar10`, ~145 MB, CDN: fast where the Toronto server
+    is slow). Only accepted if the fingerprint matches the torchvision data (see `load_cifar`)."""
+    from datasets import load_dataset
+    out = []
+    for split in ("train", "test"):
+        ds = load_dataset(HF_REPO, split=split, cache_dir=str(Path(root) / "hf"))
+        out += [np.stack([np.asarray(im.convert("RGB"), dtype=np.uint8) for im in ds["img"]]), np.asarray(ds["label"], dtype=np.int64)]
+    return tuple(out)
 
 
 def load_cifar(root=None, source="auto"):
