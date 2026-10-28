@@ -2,7 +2,15 @@
  "repo": "broistg/deep-learning-CO5085",
  "tag": "weights-v1",
  "assets": {
-  "e1_artifacts.zip": {"sha256": "", "bytes": 0, "files": 0},
-  "e2_artifacts.zip": {"sha256": "", "bytes": 0, "files": 0}
+  "e1_artifacts.zip": {
+   "sha256": "5c2a1a49c69f03ad06676a1bb57da82194ceb9c451625daa39ee4836e3dfc58d",
+   "bytes": 6001751,
+   "files": 18
+  },
+  "e2_artifacts.zip": {
+   "sha256": "1bb95f059e25421fad93f4b9e2a3f95d12fe42d4a908ae26b778932a6a6ebaea",
+   "bytes": 97996671,
+   "files": 60
+  }
  }
 }
