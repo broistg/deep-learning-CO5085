@@ -17,6 +17,11 @@
 **/datasets/
 **/checkpoints/
 **/artifacts/
+release_assets/
+.release/
+**/results_published/
+**/results_rerun/
+**/regenerated/
 *.pth
 *.pt
 *.onnx

@@ -1,5 +1,6 @@
 """Aggregate results/*.json into LaTeX table bodies and figures.   python -m e2lib.analyze
 Outputs: E2/results/summary.json, E2/results/tab_*.tex (\\input into the report), E2/figures/*.pdf|png"""
+import argparse
 import json
 from collections import defaultdict
 from pathlib import Path
@@ -207,14 +208,30 @@ def fig_confusion_and_errors(g, data_root=None):
             "top_confusions": [[int(n), a, b] for n, a, b in pairs]}
 
 
-def main():
-    FIG.mkdir(exist_ok=True)
+def main(argv=None):
+    """Default: read E2/results, write tables + summary.json there and figures to E2/figures (what the report uses).
+    `--out DIR`: read the same results but write everything into DIR (tables, summary.json, figures/), leaving the committed files alone;
+    the replication notebook uses it to regenerate the outputs and diff them against the committed ones."""
+    global RES, FIG
+    ap = argparse.ArgumentParser(description="E2 tables and figures from results/*.json")
+    ap.add_argument("--results", help="folder with the run JSONs (default E2/results)")
+    ap.add_argument("--out", help="write tables, summary.json and figures/ here instead of E2/results and E2/figures")
+    a = ap.parse_args(argv)
+    src = Path(a.results) if a.results else RES
+    if a.out:
+        out = Path(a.out)
+        out.mkdir(parents=True, exist_ok=True)
+        RES_OUT, FIG = out, out / "figures"
+    else:
+        RES_OUT = src
+    RES = src
+    FIG.mkdir(parents=True, exist_ok=True)
     runs = load()
     g = group(runs)
     print(f"{len(runs)} finished runs in {len(g)} groups")
     for name, body in tables(g).items():
         # no trailing "\\": the report writes "\input{..}\\" (a "\\" at the very end of an \input'ed file breaks \bottomrule)
-        (RES / name).write_text(body.rstrip().removesuffix("\\\\").rstrip() + "\n", encoding="utf8")
+        (RES_OUT / name).write_text(body.rstrip().removesuffix("\\\\").rstrip() + "\n", encoding="utf8")
         print(f"--- {name}\n{body}")
     if runs:
         fig_curves(g)
@@ -225,7 +242,7 @@ def main():
         summary["errors"] = fig_confusion_and_errors(g)
     except Exception as e:  # noqa: BLE001  (artifacts or dataset not present on this machine)
         print("confusion/error figures skipped:", e)
-    (RES / "summary.json").write_text(json.dumps(summary, indent=1), encoding="utf8")
+    (RES_OUT / "summary.json").write_text(json.dumps(summary, indent=1), encoding="utf8")
 
 
 if __name__ == "__main__":

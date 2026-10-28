@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Assignment 01 Report · [Course Code]</title>
-  
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap"
+    rel="stylesheet">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
   <!-- Sticky Header -->
@@ -34,7 +41,7 @@
     <!-- Page Hero Banner -->
     <div class="page-tag">Assignment 01 · Technical Report</div>
     <h1><em>[Task Name]</em><br>[Problem &amp; Benchmark Dataset]</h1>
-    
+
     <div class="page-meta">
       <div class="meta-item">
         <span class="meta-label">Group</span>
@@ -56,7 +63,8 @@
 
     <!-- Quick Action Links -->
     <div class="quick-links">
-      <a class="link-btn primary" href="https://github.com/YOUR_USERNAME/YOUR_REPO" target="_blank" rel="noopener noreferrer">↗ Source Code</a>
+      <a class="link-btn primary" href="https://github.com/YOUR_USERNAME/YOUR_REPO" target="_blank"
+        rel="noopener noreferrer">↗ Source Code</a>
       <a class="link-btn primary" href="demo.html">⚡ Live Demo</a>
       <a class="link-btn" href="#" target="_blank" rel="noopener noreferrer">↓ Slide Deck (PDF)</a>
       <a class="link-btn" href="#" target="_blank" rel="noopener noreferrer">🌐 Official Dataset</a>
@@ -70,40 +78,79 @@
         <h2>Dataset &amp; Exploratory Data Analysis</h2>
       </div>
       <p>
-        Describe the problem formulation and dataset characteristics. Explain the data acquisition process, 
-        number of target categories, input modalities, sample distribution, and any class imbalance or domain-specific nuances.
+        Describe the problem formulation and dataset characteristics. Explain the data acquisition process,
+        number of target categories, input modalities, sample distribution, and any class imbalance or domain-specific
+        nuances.
       </p>
 
       <!-- Dataset summary table -->
       <div class="results-table-wrapper">
         <table class="results-table" aria-label="Dataset Overview">
           <thead>
-            <tr><th>Property</th><th>Specification / Value</th></tr>
+            <tr>
+              <th>Property</th>
+              <th>Specification / Value</th>
+            </tr>
           </thead>
           <tbody>
-            <tr><td>Dataset Name</td><td>[e.g. CIFAR-100 / ImageNet / Custom Dataset]</td></tr>
-            <tr><td>Total Samples</td><td>[e.g. 60,000 samples]</td></tr>
-            <tr><td>Target Classes</td><td>[e.g. 100 fine-grained categories]</td></tr>
-            <tr><td>Input Dimensionality</td><td>[e.g. 32 × 32 × 3 RGB images or Token Sequences]</td></tr>
-            <tr><td>Class Distribution</td><td>[e.g. Balanced: 500 train, 100 test per category]</td></tr>
+            <tr>
+              <td>Dataset Name</td>
+              <td>[e.g. CIFAR-100 / ImageNet / Custom Dataset]</td>
+            </tr>
+            <tr>
+              <td>Total Samples</td>
+              <td>[e.g. 60,000 samples]</td>
+            </tr>
+            <tr>
+              <td>Target Classes</td>
+              <td>[e.g. 100 fine-grained categories]</td>
+            </tr>
+            <tr>
+              <td>Input Dimensionality</td>
+              <td>[e.g. 32 × 32 × 3 RGB images or Token Sequences]</td>
+            </tr>
+            <tr>
+              <td>Class Distribution</td>
+              <td>[e.g. Balanced: 500 train, 100 test per category]</td>
+            </tr>
           </tbody>
         </table>
       </div>
 
       <!-- Train / Val / Test Partition -->
       <p>
-        Explain your dataset split strategy (e.g. stratified K-fold, hold-out split, fixed random seed) 
+        Explain your dataset split strategy (e.g. stratified K-fold, hold-out split, fixed random seed)
         and validation protocol:
       </p>
       <div class="results-table-wrapper">
         <table class="results-table" aria-label="Dataset Splits">
           <thead>
-            <tr><th>Split Partition</th><th>Sample Count</th><th>Percentage</th><th>Intended Role</th></tr>
+            <tr>
+              <th>Split Partition</th>
+              <th>Sample Count</th>
+              <th>Percentage</th>
+              <th>Intended Role</th>
+            </tr>
           </thead>
           <tbody>
-            <tr><td>Training Set</td><td>40,000</td><td>80%</td><td>Parameter optimization via backpropagation</td></tr>
-            <tr><td>Validation Set</td><td>10,000</td><td>20%</td><td>Hyperparameter tuning &amp; early checkpointing</td></tr>
-            <tr><td>Held-out Test Set</td><td>10,000</td><td>Official</td><td>Final unbiased benchmark evaluation</td></tr>
+            <tr>
+              <td>Training Set</td>
+              <td>40,000</td>
+              <td>80%</td>
+              <td>Parameter optimization via backpropagation</td>
+            </tr>
+            <tr>
+              <td>Validation Set</td>
+              <td>10,000</td>
+              <td>20%</td>
+              <td>Hyperparameter tuning &amp; early checkpointing</td>
+            </tr>
+            <tr>
+              <td>Held-out Test Set</td>
+              <td>10,000</td>
+              <td>Official</td>
+              <td>Final unbiased benchmark evaluation</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -111,7 +158,8 @@
       <!-- Dataset sample figure container -->
       <figure class="report-figure">
         <img src="assets/placeholder-sample.svg" alt="Dataset sample preview" loading="lazy">
-        <figcaption>Figure 1.1: Representative samples across benchmark target categories and modality variations.</figcaption>
+        <figcaption>Figure 1.1: Representative samples across benchmark target categories and modality variations.
+        </figcaption>
       </figure>
 
       <!-- Overview feature highlights -->
@@ -152,14 +200,21 @@
         <h2>Model Architectures &amp; Backbones</h2>
       </div>
       <p>
-        Detail the deep learning architectures investigated in this work. Contrast structural paradigms 
-        (e.g., local inductive bias in convolutional layers versus global dynamic receptive fields in attention mechanisms).
+        Detail the deep learning architectures investigated in this work. Contrast structural paradigms
+        (e.g., local inductive bias in convolutional layers versus global dynamic receptive fields in attention
+        mechanisms).
       </p>
 
       <div class="results-table-wrapper">
         <table class="results-table" aria-label="Model Architectures Summary">
           <thead>
-            <tr><th>Model Name</th><th>Family</th><th>Parameters</th><th>Core Mechanism</th><th>Pretrained Weights</th></tr>
+            <tr>
+              <th>Model Name</th>
+              <th>Family</th>
+              <th>Parameters</th>
+              <th>Core Mechanism</th>
+              <th>Pretrained Weights</th>
+            </tr>
           </thead>
           <tbody>
             <tr>
@@ -196,7 +251,7 @@
 
       <!-- Model Architecture Cards Grid -->
       <div class="model-grid">
-        
+
         <!-- Card 1 -->
         <div class="model-card">
           <div class="model-header">
@@ -205,7 +260,8 @@
           </div>
           <div class="model-name">[ResNet-50]</div>
           <div class="model-desc">
-            Deep residual network utilizing identity mappings to bypass vanishing gradient bottlenecks, providing steady feature representations.
+            Deep residual network utilizing identity mappings to bypass vanishing gradient bottlenecks, providing steady
+            feature representations.
           </div>
           <div class="model-stat">
             <span class="stat-label">Validation Acc</span>
@@ -225,7 +281,8 @@
           </div>
           <div class="model-name">[EfficientNet-B3]</div>
           <div class="model-desc">
-            Compound-scaled convolutional network with depthwise separable convolutions and Squeeze-and-Excitation channel attention.
+            Compound-scaled convolutional network with depthwise separable convolutions and Squeeze-and-Excitation
+            channel attention.
           </div>
           <div class="model-stat">
             <span class="stat-label">Validation Acc</span>
@@ -245,7 +302,8 @@
           </div>
           <div class="model-name">[Swin-Tiny]</div>
           <div class="model-desc">
-            Hierarchical Vision Transformer featuring shifted window self-attention, offering linear computational complexity with respect to image resolution.
+            Hierarchical Vision Transformer featuring shifted window self-attention, offering linear computational
+            complexity with respect to image resolution.
           </div>
           <div class="model-stat">
             <span class="stat-label">Validation Acc</span>
@@ -265,7 +323,8 @@
           </div>
           <div class="model-name">[ViT-Base/16]</div>
           <div class="model-desc">
-            Global Vision Transformer operating directly on sequences of 16×16 image patches with class token aggregation.
+            Global Vision Transformer operating directly on sequences of 16×16 image patches with class token
+            aggregation.
           </div>
           <div class="model-stat">
             <span class="stat-label">Validation Acc</span>
@@ -287,22 +346,55 @@
         <h2>Training Protocols &amp; Hyperparameters</h2>
       </div>
       <p>
-        Explain data transformations, optimization algorithms, regularization, learning rate schedulers, and compute hardware setup.
+        Explain data transformations, optimization algorithms, regularization, learning rate schedulers, and compute
+        hardware setup.
       </p>
 
       <div class="results-table-wrapper">
         <table class="results-table" aria-label="Hyperparameters">
           <thead>
-            <tr><th>Hyperparameter</th><th>Configuration / Value</th><th>Rationale</th></tr>
+            <tr>
+              <th>Hyperparameter</th>
+              <th>Configuration / Value</th>
+              <th>Rationale</th>
+            </tr>
           </thead>
           <tbody>
-            <tr><td>Optimizer</td><td>AdamW (weight decay = 1e-4)</td><td>Decoupled weight decay prevents overfitting in deep heads</td></tr>
-            <tr><td>Head Learning Rate</td><td>1e-4</td><td>Higher adaptation rate for newly initialized classification projection</td></tr>
-            <tr><td>Backbone Learning Rate</td><td>1e-5</td><td>Conservative rate prevents catastrophic forgetting of pretrained weights</td></tr>
-            <tr><td>Batch Size</td><td>128</td><td>Optimal throughput within GPU memory limits</td></tr>
-            <tr><td>Learning Rate Scheduler</td><td>Cosine Annealing with warmup</td><td>Smooth parameter convergence without abrupt decay cliffs</td></tr>
-            <tr><td>Regularization</td><td>Label Smoothing (0.1)</td><td>Softens hard one-hot targets to calibrate confidence</td></tr>
-            <tr><td>Hardware Environment</td><td>1× NVIDIA T4 (16GB VRAM)</td><td>Consistent hardware for wall-clock benchmarks</td></tr>
+            <tr>
+              <td>Optimizer</td>
+              <td>AdamW (weight decay = 1e-4)</td>
+              <td>Decoupled weight decay prevents overfitting in deep heads</td>
+            </tr>
+            <tr>
+              <td>Head Learning Rate</td>
+              <td>1e-4</td>
+              <td>Higher adaptation rate for newly initialized classification projection</td>
+            </tr>
+            <tr>
+              <td>Backbone Learning Rate</td>
+              <td>1e-5</td>
+              <td>Conservative rate prevents catastrophic forgetting of pretrained weights</td>
+            </tr>
+            <tr>
+              <td>Batch Size</td>
+              <td>128</td>
+              <td>Optimal throughput within GPU memory limits</td>
+            </tr>
+            <tr>
+              <td>Learning Rate Scheduler</td>
+              <td>Cosine Annealing with warmup</td>
+              <td>Smooth parameter convergence without abrupt decay cliffs</td>
+            </tr>
+            <tr>
+              <td>Regularization</td>
+              <td>Label Smoothing (0.1)</td>
+              <td>Softens hard one-hot targets to calibrate confidence</td>
+            </tr>
+            <tr>
+              <td>Hardware Environment</td>
+              <td>1× NVIDIA T4 (16GB VRAM)</td>
+              <td>Consistent hardware for wall-clock benchmarks</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -393,19 +485,21 @@
         <h2>Error Analysis &amp; Diagnostic Visualizations</h2>
       </div>
       <p>
-        Detailed qualitative evaluation: confusion matrices, per-category error distributions, 
+        Detailed qualitative evaluation: confusion matrices, per-category error distributions,
         and failure mode inspections.
       </p>
 
       <div class="figure-grid">
         <figure class="report-figure">
           <img src="assets/placeholder-figure.svg" alt="Confusion Matrix" loading="lazy">
-          <figcaption>Figure 5.1: Normalized inter-class confusion matrix for model predictions on the held-out test split.</figcaption>
+          <figcaption>Figure 5.1: Normalized inter-class confusion matrix for model predictions on the held-out test
+            split.</figcaption>
         </figure>
 
         <figure class="report-figure">
           <img src="assets/placeholder-figure.svg" alt="Per-class accuracy distribution" loading="lazy">
-          <figcaption>Figure 5.2: Per-class accuracy distribution comparing baseline CNN against Vision Transformer.</figcaption>
+          <figcaption>Figure 5.2: Per-class accuracy distribution comparing baseline CNN against Vision Transformer.
+          </figcaption>
         </figure>
       </div>
 
@@ -414,9 +508,12 @@
         Discuss noticeable patterns from the plots above:
       </p>
       <ul style="margin-left: 20px; margin-bottom: 24px; color: var(--ink2); line-height: 1.7;">
-        <li><strong>Fine-grained Ambiguity:</strong> High intra-class confusion between visually similar subcategories.</li>
-        <li><strong>Receptive Field Impact:</strong> Vision Transformers exhibit stronger resilience to spatial scale variations.</li>
-        <li><strong>Efficiency Trade-off:</strong> Swin-Tiny achieves 96% of ViT-Base's accuracy with less than 42% of the compute time.</li>
+        <li><strong>Fine-grained Ambiguity:</strong> High intra-class confusion between visually similar subcategories.
+        </li>
+        <li><strong>Receptive Field Impact:</strong> Vision Transformers exhibit stronger resilience to spatial scale
+          variations.</li>
+        <li><strong>Efficiency Trade-off:</strong> Swin-Tiny achieves 96% of ViT-Base's accuracy with less than 42% of
+          the compute time.</li>
       </ul>
     </div>
 
@@ -433,7 +530,13 @@
       <div class="results-table-wrapper">
         <table class="results-table" aria-label="Ablation Experiment">
           <thead>
-            <tr><th>Strategy / Variant</th><th>Description</th><th>Test Acc</th><th>Δ vs Baseline</th><th>Notes</th></tr>
+            <tr>
+              <th>Strategy / Variant</th>
+              <th>Description</th>
+              <th>Test Acc</th>
+              <th>Δ vs Baseline</th>
+              <th>Notes</th>
+            </tr>
           </thead>
           <tbody>
             <tr>
@@ -469,8 +572,10 @@
     [Course Code] · Assignment 01 · [Group Name] &nbsp;·&nbsp;
     <a href="index.html">← Return to Hub</a>
     &nbsp;·&nbsp;
-    <a href="https://github.com/YOUR_USERNAME/YOUR_REPO" target="_blank" rel="noopener noreferrer">GitHub Repository ↗</a>
+    <a href="https://github.com/YOUR_USERNAME/YOUR_REPO" target="_blank" rel="noopener noreferrer">GitHub Repository
+      ↗</a>
   </footer>
 
 </body>
+
 </html>

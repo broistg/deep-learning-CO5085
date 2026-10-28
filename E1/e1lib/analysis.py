@@ -386,9 +386,11 @@ def main():
     ap = argparse.ArgumentParser(description="Write the E1 figures for one seed")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--suffix", default="", help="'_noaug' for the no-augmentation runs")
+    ap.add_argument("--results", help="folder with the run JSONs and *_preds.npz (default E1/results)")
+    ap.add_argument("--out", help="figure folder (default E1/figures)")
     a = ap.parse_args()
     plt.switch_backend("Agg")
-    make_figures(seed=a.seed, suffix=a.suffix)
+    make_figures(results_dir=a.results, fig_dir=a.out, seed=a.seed, suffix=a.suffix)
 
 
 if __name__ == "__main__":

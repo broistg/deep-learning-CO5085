@@ -2,9 +2,9 @@
 
 Own MSA (`Linear` + `einsum` + `softmax`) vs `nn.MultiheadAttention`, four tokenizers (patch 4x4, patch 8x8, row, CNN-stem), shallow Transformer classifier, hand-written training loop. Report chapter: `E2/report/chapter-e2.tex`; web page: `docs/e2.html`.
 
-Run from the repo root. Environment as in A1 (Python 3.10+, PyTorch with CUDA, torchvision preinstalled; `pip install -r requirements/e.txt` for the rest; `pip install matplotlib` is in base).
+Run from the repo root. Environment is the same (Python 3.10+, PyTorch with CUDA, torchvision preinstalled; `pip install -r requirements/e.txt` for the rest).
 ```
-export PYTHONPATH=.:E2        # or: pip install -e .
+export PYTHONPATH=.:E2        # Windows PowerShell: $env:PYTHONPATH = ".;E2"   (or: pip install -e .)
 python -m unittest discover -s E2/tests -v          # 1. correctness (MSA scratch == torch, token shapes, split)
 python -m e2lib.bench                               # 2. smoke benchmark: ms/step, memory, estimated hours for all 30 runs
 python -m e2lib.train --tokenizer row --attn torch --fake --smoke   # 3. dry run, synthetic data (no download)

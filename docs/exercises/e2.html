@@ -13,6 +13,9 @@
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap"
     rel="stylesheet">
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="../assets/favicon.png">
+
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="../css/style.css">
 
@@ -65,10 +68,10 @@
         <span class="meta-label">Giảng viên hướng dẫn</span>
         <span class="meta-value">TS. Lê Thành Sách và TS. Nguyễn Quốc Minh</span>
       </div>
-      <div class="meta-item">
+      <!-- <div class="meta-item">
         <span class="meta-label">Trạng thái</span>
-        <span class="meta-value"><span class="badge badge-wip">Work in progress...</span></span>
-      </div>
+        <span class="meta-value"><span class="badge badge-done">Đã có kết quả</span></span>
+      </div> -->
     </div>
 
     <!-- Quick Action Links -->
@@ -82,27 +85,18 @@
       <a href="#reproduce" class="link-btn">🔁 Tái lập</a>
     </div>
 
-    <!-- Status Banner: Work in Progress -->
-    <div class="status-banner wip">
-      <div class="status-banner-icon">⏳</div>
+    <!-- Status Banner -->
+    <div class="status-banner">
+      <div class="status-banner-icon">✅</div>
       <div class="status-banner-content">
-        <h4>Báo cáo đang thực hiện (Work in Progress) · Hạn nộp: 02/11/2026 (W9) <span
-            class="badge badge-wip">WIP</span></h4>
+        <h4>Đã hoàn tất thực nghiệm · Hạn nộp: 02/11/2026 (W9)</h4>
         <p>
-          Bài tập yêu cầu tự hiện thực mô-đun Multi-Head Self-Attention (MSA) từ đầu bằng các phép toán cơ bản của
-          PyTorch, đồng thời đối chiếu với bản chuẩn <code>nn.MultiheadAttention</code> trên cùng cơ chế tokenization
-          và cùng tập ảnh nhỏ của E1 (CIFAR-10). Các bảng dưới đây sẽ được điền số liệu khi các lần chạy hoàn tất.
+          30 lần huấn luyện (4 tokenizer × 2 bản MSA × 3 seed + ablation positional embedding) đã chạy xong trên một máy
+          laptop (RTX 3050 6 GB, khoảng 2,5 giờ). <strong>Kết quả chính:</strong> MSA tự viết tương đương
+          <code>nn.MultiheadAttention</code> (chênh lệch ≤ 0,18 điểm, nhỏ hơn nhiễu giữa các seed); CNN-stem đạt
+          83,0 %, vượt Patch 4×4 (72,4 %), Row (69,0 %) và Patch 8×8 (67,1 %); bỏ positional embedding làm giảm
+          khoảng 7 điểm.
         </p>
-        <ul class="progress-checklist">
-          <li class="done">Công thức toán học và thiết kế lớp Scaled Dot-Product / Multi-Head Attention</li>
-          <li class="done">Tự viết lớp MSA (<code>Linear</code>, <code>einsum</code>, <code>softmax</code>, ghép head)
-          </li>
-          <li class="done">Đối chiếu với <code>nn.MultiheadAttention</code> nhận cùng trọng số khởi tạo</li>
-          <li class="done">Bốn cách tokenization: Patch 4×4, Patch 8×8, Row, CNN-stem (mọi mô hình dùng token CLS)</li>
-          <li class="wip">Chạy kiểm thử tương đương và benchmark thời gian trên máy huấn luyện</li>
-          <li class="wip">Huấn luyện 30 lần chạy (4 tokenizer × 2 bản MSA × 3 seed + ablation positional embedding)</li>
-          <li class="todo">Bảng so sánh, đường cong học, bản đồ chú ý (attention rollout), phân tích lỗi</li>
-        </ul>
       </div>
     </div>
 
@@ -242,23 +236,28 @@
           <tbody>
             <tr>
               <td><strong>Dữ liệu</strong></td>
-              <td>CIFAR-10: 45 000 train / 5 000 validation (500 ảnh/lớp, seed 42) / 10 000 test chính thức</td>
+              <td style="white-space:nowrap">CIFAR-10: 45 000 train / 5 000 validation (500 ảnh/lớp, seed 42) / 10 000
+                test chính thức</td>
             </tr>
             <tr>
               <td><strong>Mô hình</strong></td>
-              <td>Encoder pre-norm 4 khối, $D=128$, 4 head, FFN 512, dropout 0.1, huấn luyện từ đầu</td>
+              <td style="white-space:nowrap">Encoder pre-norm 4 khối, $D=128$, 4 head, FFN 512, dropout 0.1, huấn luyện
+                từ đầu</td>
             </tr>
             <tr>
               <td><strong>Tối ưu</strong></td>
-              <td>AdamW, lr đỉnh 1e-3, weight decay 0.05, warmup 5% + cosine, cắt gradient 1.0, fp16</td>
+              <td style="white-space:nowrap">AdamW, lr đỉnh 1e-3, weight decay 0.05, warmup 5% + cosine, cắt gradient
+                1.0, fp16</td>
             </tr>
             <tr>
               <td><strong>Huấn luyện</strong></td>
-              <td>30 epoch, batch 128, random crop (pad 4) + lật ngang, label smoothing 0.1</td>
+              <td style="white-space:nowrap">30 epoch, batch 128, random crop (pad 4) + lật ngang, label smoothing 0.1
+              </td>
             </tr>
             <tr>
               <td><strong>Báo cáo</strong></td>
-              <td>Epoch cuối (không chọn checkpoint), test dùng một lần, trung bình ± std trên 3 seed</td>
+              <td style="white-space:nowrap">Epoch cuối (không chọn checkpoint), test dùng một lần, trung bình ± std
+                trên 3 seed</td>
             </tr>
           </tbody>
         </table>
@@ -277,6 +276,11 @@
         Hai bản MSA bắt đầu từ cùng trọng số, cùng thứ tự dữ liệu theo seed. Δ là hiệu trung bình theo cặp seed
         (tự viết − PyTorch), tính bằng điểm phần trăm.
       </p>
+      <p>
+        Chênh lệch trung bình chỉ từ −0,18 đến +0,05 điểm, nhỏ hơn nhiều so với độ lệch chuẩn giữa các seed và không
+        có dấu nhất quán (theo từng seed, lớn nhất là 0,68 điểm); hai bản về cơ bản tương đương. Bản PyTorch nhanh
+        hơn khoảng 4 % (Patch 4×4, CNN-stem) đến 17–18 % (Patch 8×8, Row) mỗi epoch nhờ nhân tính toán gộp.
+      </p>
 
       <div class="results-table-wrapper">
         <table class="results-table" aria-label="MSA Implementation Comparison Table">
@@ -294,39 +298,39 @@
           <tbody>
             <tr>
               <td><strong>Patch 4×4 + CLS</strong></td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[…]</td>
-              <td>[…]</td>
-              <td>[…]</td>
+              <td style="white-space:nowrap">809 354</td>
+              <td style="white-space:nowrap">72,42 ± 0,86</td>
+              <td style="white-space:nowrap">72,41 ± 1,03</td>
+              <td style="white-space:nowrap">+0,02</td>
+              <td style="white-space:nowrap">9,1</td>
+              <td style="white-space:nowrap">8,6</td>
             </tr>
             <tr>
               <td><strong>Patch 8×8 + CLS</strong></td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[…]</td>
-              <td>[…]</td>
-              <td>[…]</td>
+              <td style="white-space:nowrap">821 642</td>
+              <td style="white-space:nowrap">67,09 ± 0,84</td>
+              <td style="white-space:nowrap">67,04 ± 0,83</td>
+              <td style="white-space:nowrap">+0,05</td>
+              <td style="white-space:nowrap">7,0</td>
+              <td style="white-space:nowrap">5,8</td>
             </tr>
             <tr>
               <td><strong>Row + CLS</strong></td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[…]</td>
-              <td>[…]</td>
-              <td>[…]</td>
+              <td style="white-space:nowrap">811 402</td>
+              <td style="white-space:nowrap">68,96 ± 0,41</td>
+              <td style="white-space:nowrap">68,92 ± 0,16</td>
+              <td style="white-space:nowrap">+0,04</td>
+              <td style="white-space:nowrap">6,8</td>
+              <td style="white-space:nowrap">5,7</td>
             </tr>
             <tr>
               <td><strong>CNN-stem + CLS</strong></td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[…]</td>
-              <td>[…]</td>
-              <td>[…]</td>
+              <td style="white-space:nowrap">896 426</td>
+              <td style="white-space:nowrap">83,00 ± 0,41</td>
+              <td style="white-space:nowrap">83,19 ± 0,54</td>
+              <td style="white-space:nowrap">−0,18</td>
+              <td style="white-space:nowrap">10,3</td>
+              <td style="white-space:nowrap">9,9</td>
             </tr>
           </tbody>
         </table>
@@ -335,8 +339,16 @@
       <h3 style="margin-top: 28px;">4.2. So sánh các cơ chế Tokenization khác nhau</h3>
       <p>
         MSA tự viết, 3 seed. $N{+}1$ gồm token <code>[CLS]</code>; thời gian là trung vị giây/epoch (huấn luyện, không
-        gồm validation).
+        gồm validation); bộ nhớ là đỉnh GPU khi huấn luyện. Chi phí lý thuyết (triệu MACs/ảnh): Patch 4×4 55,8 ·
+        Patch 8×8 14,1 · Row 27,5 · CNN-stem 65,8.
       </p>
+      <ul>
+        <li><strong>CNN-stem tốt nhất rõ rệt</strong> (83,00 %), hơn Patch 4×4 khoảng 10,6 điểm với chi phí chỉ tăng
+          khoảng 13 % thời gian/epoch.</li>
+        <li><strong>Patch 4×4 hơn Patch 8×8</strong> 5,3 điểm nhưng gấp ≈ 4 lần MACs và ≈ 1,7 lần bộ nhớ.</li>
+        <li><strong>Row (68,96 %)</strong> nằm giữa; cao hơn Patch 8×8 ở cả ba seed, nhưng với n = 3 chênh lệch
+          ≈ 1,9 điểm chỉ nên xem là gợi ý.</li>
+      </ul>
 
       <div class="results-table-wrapper">
         <table class="results-table" aria-label="Tokenization Experiment Results">
@@ -355,43 +367,43 @@
           <tbody>
             <tr>
               <td><strong>Patch 4×4 + CLS</strong></td>
-              <td>64 + 1</td>
-              <td>4</td>
-              <td>[Đang cập nhật...]</td>
-              <td>[…]</td>
-              <td>[…]</td>
-              <td>[…]</td>
-              <td>[…]</td>
+              <td style="white-space:nowrap">64 + 1</td>
+              <td style="white-space:nowrap">4</td>
+              <td style="white-space:nowrap">809 354</td>
+              <td style="white-space:nowrap">72,73 ± 0,91</td>
+              <td style="white-space:nowrap">72,42 ± 0,86</td>
+              <td style="white-space:nowrap">9,1</td>
+              <td style="white-space:nowrap">450</td>
             </tr>
             <tr>
               <td><strong>Patch 8×8 + CLS</strong></td>
-              <td>16 + 1</td>
-              <td>4</td>
-              <td>[Đang cập nhật...]</td>
-              <td>[…]</td>
-              <td>[…]</td>
-              <td>[…]</td>
-              <td>[…]</td>
+              <td style="white-space:nowrap">16 + 1</td>
+              <td style="white-space:nowrap">4</td>
+              <td style="white-space:nowrap">821 642</td>
+              <td style="white-space:nowrap">67,65 ± 0,85</td>
+              <td style="white-space:nowrap">67,09 ± 0,84</td>
+              <td style="white-space:nowrap">7,0</td>
+              <td style="white-space:nowrap">265</td>
             </tr>
             <tr>
               <td><strong>Row + CLS</strong></td>
-              <td>32 + 1</td>
-              <td>4</td>
-              <td>[Đang cập nhật...]</td>
-              <td>[…]</td>
-              <td>[…]</td>
-              <td>[…]</td>
-              <td>[…]</td>
+              <td style="white-space:nowrap">32 + 1</td>
+              <td style="white-space:nowrap">4</td>
+              <td style="white-space:nowrap">811 402</td>
+              <td style="white-space:nowrap">69,25 ± 0,74</td>
+              <td style="white-space:nowrap">68,96 ± 0,41</td>
+              <td style="white-space:nowrap">6,8</td>
+              <td style="white-space:nowrap">323</td>
             </tr>
             <tr>
               <td><strong>CNN-stem + CLS</strong></td>
-              <td>64 + 1</td>
-              <td>4</td>
-              <td>[Đang cập nhật...]</td>
-              <td>[…]</td>
-              <td>[…]</td>
-              <td>[…]</td>
-              <td>[…]</td>
+              <td style="white-space:nowrap">64 + 1</td>
+              <td style="white-space:nowrap">4</td>
+              <td style="white-space:nowrap">896 426</td>
+              <td style="white-space:nowrap">83,69 ± 0,32</td>
+              <td style="white-space:nowrap">83,00 ± 0,41</td>
+              <td style="white-space:nowrap">10,3</td>
+              <td style="white-space:nowrap">487</td>
             </tr>
           </tbody>
         </table>
@@ -401,7 +413,13 @@
       <figure class="report-figure">
         <img src="../assets/e2/curves_tokenizers.png" alt="Learning curves of the four tokenizers" loading="lazy">
         <figcaption>Hình 4.1: Loss huấn luyện và độ chính xác validation theo epoch của bốn tokenizer (trung bình ± std,
-          3 seed). <em>(Hình sẽ được thay khi có kết quả.)</em></figcaption>
+          3 seed). </figcaption>
+      </figure>
+
+      <figure class="report-figure">
+        <img src="../assets/e2/curves_impl.png" alt="Validation accuracy of the two MSA implementations" loading="lazy">
+        <figcaption>Hình 4.2: Độ chính xác validation của MSA tự viết (nét liền) và PyTorch (nét đứt); hai đường gần
+          như chồng khít.</figcaption>
       </figure>
 
       <h3 style="margin-top: 28px;">4.3. Vai trò của positional embedding</h3>
@@ -418,19 +436,24 @@
           <tbody>
             <tr>
               <td><strong>Patch 4×4 + CLS</strong></td>
-              <td>[…]</td>
-              <td>[…]</td>
-              <td>[…]</td>
+              <td style="white-space:nowrap">72,42 ± 0,86</td>
+              <td style="white-space:nowrap">64,78 ± 0,31</td>
+              <td style="white-space:nowrap">−7,65</td>
             </tr>
             <tr>
               <td><strong>Row + CLS</strong></td>
-              <td>[…]</td>
-              <td>[…]</td>
-              <td>[…]</td>
+              <td style="white-space:nowrap">68,96 ± 0,41</td>
+              <td style="white-space:nowrap">62,20 ± 0,65</td>
+              <td style="white-space:nowrap">−6,76</td>
             </tr>
           </tbody>
         </table>
       </div>
+      <p>
+        Bỏ positional embedding làm giảm 7,65 điểm (Patch 4×4) và 6,76 điểm (Row), lớn hơn nhiều so với nhiễu giữa các
+        seed; độ chính xác <em>huấn luyện</em> cũng giảm (≈ 77 % → 71 % ở Patch 4×4), tức mô hình mất khả năng biểu
+        diễn chứ không chỉ khái quát kém hơn. Thí nghiệm không chạy cho CNN-stem.
+      </p>
     </div>
 
     <!-- SECTION 05: ATTENTION MAPS -->
@@ -449,14 +472,30 @@
       <figure class="report-figure">
         <img src="../assets/e2/attention_maps.png" alt="Attention rollout heatmaps" loading="lazy">
         <figcaption>Hình 5.1: Bản đồ chú ý của <code>[CLS]</code> cho 4 ảnh test (máy bay, mèo, ngựa, tàu).
-          <em>(Hình sẽ được thay khi có kết quả.)</em>
+          Mô hình tự viết, seed 0.
         </figcaption>
       </figure>
 
       <figure class="report-figure">
         <img src="../assets/e2/confusion.png" alt="Confusion matrix" loading="lazy">
-        <figcaption>Hình 5.2: Ma trận nhầm lẫn của tokenizer tốt nhất (seed 0). <em>(Sẽ cập nhật.)</em></figcaption>
+        <figcaption>Hình 5.2: Ma trận nhầm lẫn của tokenizer tốt nhất (CNN-stem, seed 0).</figcaption>
       </figure>
+
+      <figure class="report-figure">
+        <img src="../assets/e2/errors.png" alt="Most confident errors" loading="lazy">
+        <figcaption>Hình 5.3: Các ảnh bị dự đoán sai với độ tin cậy cao nhất.</figcaption>
+      </figure>
+
+      <p>
+        Với CNN-stem, lớp dễ nhất là ship (92,2 %), automobile (90,4 %), frog (89,6 %); khó nhất là cat (69,8 %),
+        bird (74,8 %), dog (77,2 %). Cặp nhầm nhiều nhất: cat↔dog (111 và 120 ảnh), bird→deer (63), airplane→ship
+        (59), automobile→truck (58).
+      </p>
+      <p>
+        <strong>Nhận xét:</strong> rollout của Patch 4×4 và CNN-stem tập trung khá rõ vào vật thể (thân ngựa, tàu, máy
+        bay), còn chú ý ở khối cuối thường dồn vào vài điểm cục bộ và đôi khi rơi vào nền. Với Row, bản đồ là các dải
+        ngang vì mỗi token là cả một hàng. Chỉ trên bốn ảnh và một seed, nên chỉ mang tính minh họa.
+      </p>
     </div>
 
     <!-- SECTION 06: REPRODUCE -->
@@ -468,14 +507,15 @@
       <p>
         Mã nguồn, cấu hình, seed và tệp kết quả JSON nằm trong thư mục <code>E2/</code>. Kiểm thử:
         <code>python -m unittest discover -s E2/tests</code>; đo nhanh thời gian trên máy:
-        <code>python -m e2lib.bench</code>;
-        chạy toàn bộ: <code>python -m e2lib.plan</code>; bảng và hình: <code>python -m e2lib.analyze</code>. Chi tiết
-        trong
-        <code>E2/README.md</code>.
+        <code>python -m e2lib.bench</code>; chạy toàn bộ: <code>python -m e2lib.plan</code> (khoảng 2,5 giờ trên RTX
+        3050 Laptop; có thể dừng và chạy tiếp); bảng và hình: <code>python -m e2lib.analyze</code>. Tệp JSON kết quả của
+        cả 30 lần chạy được giữ trong <code>E2/results/</code>, nên có thể chỉ nạp lại kết quả mà không cần huấn luyện
+        lại. Chi tiết trong <code>E2/README.md</code>.
       </p>
       <p>
-        Công cụ AI (Claude) hỗ trợ viết và rà soát mã, bộ kiểm thử và bản nháp báo cáo. Nhóm đã đọc, kiểm tra và chịu
-        trách nhiệm về toàn bộ nội dung.
+        Nhóm lên ý tưởng và tự viết bản gốc của mã. Công cụ AI (ChatGPT / Claude) hỗ trợ cải thiện và rà soát mã, xây
+        dựng bộ kiểm thử và bản nháp báo cáo. Nhóm đã đọc, kiểm tra, hoàn thiện báo cáo và chịu trách nhiệm về toàn bộ
+        nội dung.
       </p>
     </div>
 
