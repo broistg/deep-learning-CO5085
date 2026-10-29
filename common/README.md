@@ -17,3 +17,7 @@ Weights and test logits are too large for git, so they live in a GitHub Release;
 2. `python common/pack_release.py` creates `release_assets/e1_artifacts.zip` and `e2_artifacts.zip`, fills the manifest and prints the `gh release create ...` command.
 3. Run that command (or upload the two zips by hand: GitHub > Releases > Draft a new release > tag `weights-v1`).
 4. Commit `common/release_manifest.json` and push. Never edit a published tag: for new weights use `--tag weights-v2`.
+
+## CIFAR-10 source
+
+`python -m common.cifar` loads CIFAR-10 from the Hugging Face Hub (`datasets`, `uoft-cs/cifar10`) and falls back to TorchVision. The arrays must match `common/cifar10_fingerprint.json` (SHA-256 of the TorchVision data). The Hugging Face train split has the same images in a different order, so it is put back in the TorchVision order with `common/cifar10_train_order.json`; any changed pixel or label is rejected. One-time setup on a machine that has the TorchVision data: `python -m common.cifar --write-fingerprint`, then commit both JSON files. `python -m common.compare_cifar` prints how the two copies differ.

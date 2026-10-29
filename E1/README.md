@@ -20,5 +20,13 @@ Outputs: `E1/results/<model>_s<seed>.json` (config, split hash, history, final, 
 
 Changes with respect to the original notebook (details and reasons in `E1_ghi_chu_thay_doi.md`): shared split instead of `random_split`; shared train-only normalisation; augmentation on train only, three separate Dataset objects; last-epoch weights are the main result (best-val-loss checkpoint returned separately); seed before each model, seeds 0-2; 30 epochs; GPU-synchronised timing; no global `device` in the layers; results in JSON with the E2 schema. The architectures, `train_one_epoch`, `evaluate_one_epoch`, `predict` and the plotting functions are unchanged.
 
-Status: torch-dependent code was written without a GPU in the authoring sandbox; run steps 1 to 3 first.
+Status: all runs finished; the replication notebook was checked on Colab.
+
+## Replication notebook
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E1/notebooks/E1.ipynb)
+
+`E1/notebooks/E1.ipynb` is a thin notebook (no logic inside; it calls `e1lib` and `common`). `MODE = "load"` (default) regenerates the tables and figures from the committed `E1/results/` and checks that they equal the committed (= reported) ones; it runs in minutes on a free CPU runtime. `MODE = "rerun"` retrains everything into a fresh `results/` (the published results are kept in `results_published/` and compared with the rerun; resumable; GPU needed). 
+Weights and logits are downloaded from the GitHub Release `weights-v1` and verified by SHA-256 (see `common/README.md`). CIFAR-10 comes from the Hugging Face Hub through the `datasets` library, verified against a fingerprint of the TorchVision data (`python -m common.cifar`).
+
 AI use: Claude assisted with the refactoring and tests; the authors reviewed and are responsible for it.

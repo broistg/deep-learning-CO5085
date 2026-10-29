@@ -80,6 +80,9 @@
         rel="noopener noreferrer">↗ Mã nguồn E2</a>
       <a class="link-btn primary" href="../reports/exercises.pdf" target="_blank" rel="noopener noreferrer">📄 Báo
         cáo PDF (E1-E3)</a>
+      <a class="link-btn"
+        href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E2/notebooks/E2.ipynb"
+        target="_blank" rel="noopener noreferrer">📓 Mở bằng Colab</a>
       <a href="#tokenization" class="link-btn">🧩 Các phương pháp Tokenization</a>
       <a href="#results" class="link-btn">📊 Kết quả</a>
       <a href="#reproduce" class="link-btn">🔁 Tái lập</a>
@@ -511,6 +514,19 @@
         3050 Laptop; có thể dừng và chạy tiếp); bảng và hình: <code>python -m e2lib.analyze</code>. Tệp JSON kết quả của
         cả 30 lần chạy được giữ trong <code>E2/results/</code>, nên có thể chỉ nạp lại kết quả mà không cần huấn luyện
         lại. Chi tiết trong <code>E2/README.md</code>.
+      </p>
+      <p>
+        <strong>Notebook tái lập:</strong>
+        <a href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E2/notebooks/E2.ipynb"
+          target="_blank" rel="noopener noreferrer">E2/notebooks/E2.ipynb</a>
+        (mở bằng Colab). Notebook có hai chế độ, chọn bằng biến <code>MODE</code> ở ô đầu tiên:
+        <code>"load"</code> (mặc định) nạp kết quả đã lưu, sinh lại các bảng và hình rồi kiểm tra chúng khớp với bảng
+        trong báo cáo (vài phút, chạy được trên Colab miễn phí chỉ với CPU); <code>"rerun"</code> huấn luyện lại cả 30
+        lần chạy từ đầu (cần GPU, khoảng 2,5 giờ trên RTX 3050 Laptop) và so sánh với kết quả đã công bố. Trọng số và
+        logit kiểm thử nằm trong GitHub Release <code>weights-v1</code>, có kiểm tra mã băm SHA-256. Dữ liệu CIFAR-10
+        được tải qua thư viện <code>datasets</code> (Hugging Face) và chỉ được chấp nhận khi mã băm của dữ liệu trùng
+        với
+        bản TorchVision dùng cho phép chia cố định.
       </p>
       <p>
         Nhóm lên ý tưởng và tự viết bản gốc của mã. Công cụ AI (ChatGPT / Claude) hỗ trợ cải thiện và rà soát mã, xây
