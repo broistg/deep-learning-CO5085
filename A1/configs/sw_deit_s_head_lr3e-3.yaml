@@ -1,0 +1,52 @@
+run_id: sw_deit_s_head_lr3e-3
+model: deit_small_patch16_224.fb_in1k
+mode: head
+epochs: 3
+seed: 0
+kind: sweep
+pretrained: true
+data_fraction: 0.2
+lr_peak: 0.003
+batch_size: 64
+warmup_frac: 0.05
+warmup_start_frac: 0.01
+min_lr_frac: 0.01
+weight_decay: 0.05
+betas:
+- 0.9
+- 0.999
+eps: 1.0e-08
+drop_rate: 0.0
+drop_path_rate: 0.0
+amp: fp16
+workers: 2
+img_size: 224
+augmentation:
+  random_resized_crop:
+    size: 224
+    scale:
+    - 0.25
+    - 1.0
+    ratio:
+    - 0.75
+    - 1.3333333333333333
+    interpolation: bilinear
+  hflip_p: 0.5
+  randaugment:
+    num_ops: 2
+    magnitude: 9
+    num_magnitude_bins: 31
+    interpolation: nearest
+  mixup:
+    mixup_alpha: 0.8
+    cutmix_alpha: 1.0
+    prob: 1.0
+    switch_prob: 0.5
+    mode: batch
+    correct_lam: true
+    label_smoothing: 0.1
+  eval:
+    resize: 256
+    crop: 224
+split_json_sha256_16: 75ed81bfe380c089
+notes: LR sweep for group 'head' (3 epochs, 20% of train, seed 0, val only)

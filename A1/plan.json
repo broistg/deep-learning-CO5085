@@ -1,0 +1,719 @@
+{
+ "version": 1,
+ "owners": [
+  "dat",
+  "ly"
+ ],
+ "grids": {
+  "head": [
+   0.0003,
+   0.001,
+   0.003
+  ],
+  "finetune": [
+   3e-05,
+   0.0001,
+   0.0003
+  ],
+  "scratch": [
+   0.0001,
+   0.0003,
+   0.001
+  ]
+ },
+ "runs": [
+  {
+   "run_id": "sw_convnext_t_finetune_lr1e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.057,
+   "config": "configs/sw_convnext_t_finetune_lr1e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_convnext_t_finetune_lr3e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.057,
+   "config": "configs/sw_convnext_t_finetune_lr3e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_convnext_t_finetune_lr3e-5",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.057,
+   "config": "configs/sw_convnext_t_finetune_lr3e-5.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_convnext_t_head_lr1e-3",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.039,
+   "config": "configs/sw_convnext_t_head_lr1e-3.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_convnext_t_head_lr3e-3",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.039,
+   "config": "configs/sw_convnext_t_head_lr3e-3.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_convnext_t_head_lr3e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.039,
+   "config": "configs/sw_convnext_t_head_lr3e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_convnext_t_scratch_lr1e-3",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.057,
+   "config": "configs/sw_convnext_t_scratch_lr1e-3.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_convnext_t_scratch_lr1e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.057,
+   "config": "configs/sw_convnext_t_scratch_lr1e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_convnext_t_scratch_lr3e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.057,
+   "config": "configs/sw_convnext_t_scratch_lr3e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_deit_s_finetune_lr1e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.047,
+   "config": "configs/sw_deit_s_finetune_lr1e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_deit_s_finetune_lr3e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.047,
+   "config": "configs/sw_deit_s_finetune_lr3e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_deit_s_finetune_lr3e-5",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.047,
+   "config": "configs/sw_deit_s_finetune_lr3e-5.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_deit_s_head_lr1e-3",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.039,
+   "config": "configs/sw_deit_s_head_lr1e-3.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_deit_s_head_lr3e-3",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.039,
+   "config": "configs/sw_deit_s_head_lr3e-3.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_deit_s_head_lr3e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.039,
+   "config": "configs/sw_deit_s_head_lr3e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_deit_s_scratch_lr1e-3",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.047,
+   "config": "configs/sw_deit_s_scratch_lr1e-3.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_deit_s_scratch_lr1e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.047,
+   "config": "configs/sw_deit_s_scratch_lr1e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_deit_s_scratch_lr3e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.047,
+   "config": "configs/sw_deit_s_scratch_lr3e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_resnet50_finetune_lr1e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.046,
+   "config": "configs/sw_resnet50_finetune_lr1e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_resnet50_finetune_lr3e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.046,
+   "config": "configs/sw_resnet50_finetune_lr3e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_resnet50_finetune_lr3e-5",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.046,
+   "config": "configs/sw_resnet50_finetune_lr3e-5.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_resnet50_head_lr1e-3",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.039,
+   "config": "configs/sw_resnet50_head_lr1e-3.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_resnet50_head_lr3e-3",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.039,
+   "config": "configs/sw_resnet50_head_lr3e-3.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_resnet50_head_lr3e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.039,
+   "config": "configs/sw_resnet50_head_lr3e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_resnet50_scratch_lr1e-3",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.046,
+   "config": "configs/sw_resnet50_scratch_lr1e-3.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_resnet50_scratch_lr1e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.046,
+   "config": "configs/sw_resnet50_scratch_lr1e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_resnet50_scratch_lr3e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.046,
+   "config": "configs/sw_resnet50_scratch_lr3e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_swin_t_finetune_lr1e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.073,
+   "config": "configs/sw_swin_t_finetune_lr1e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_swin_t_finetune_lr3e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.073,
+   "config": "configs/sw_swin_t_finetune_lr3e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_swin_t_finetune_lr3e-5",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.073,
+   "config": "configs/sw_swin_t_finetune_lr3e-5.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_swin_t_head_lr1e-3",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.042,
+   "config": "configs/sw_swin_t_head_lr1e-3.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_swin_t_head_lr3e-3",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.042,
+   "config": "configs/sw_swin_t_head_lr3e-3.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_swin_t_head_lr3e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.042,
+   "config": "configs/sw_swin_t_head_lr3e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_swin_t_scratch_lr1e-3",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.073,
+   "config": "configs/sw_swin_t_scratch_lr1e-3.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_swin_t_scratch_lr1e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.073,
+   "config": "configs/sw_swin_t_scratch_lr1e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_swin_t_scratch_lr3e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.073,
+   "config": "configs/sw_swin_t_scratch_lr3e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "m_deit_s_full_s0",
+   "stage": 1,
+   "kind": "main",
+   "owner": "dat",
+   "est_hours": 0.727,
+   "config": "configs/m_deit_s_full_s0.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_deit_s_head_s0",
+   "stage": 1,
+   "kind": "main",
+   "owner": "ly",
+   "est_hours": 0.601,
+   "config": "configs/m_deit_s_head_s0.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_deit_s_partial_s0",
+   "stage": 1,
+   "kind": "main",
+   "owner": "dat",
+   "est_hours": 0.647,
+   "config": "configs/m_deit_s_partial_s0.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_deit_s_scratch_s0",
+   "stage": 1,
+   "kind": "main",
+   "owner": "ly",
+   "est_hours": 2.907,
+   "config": "configs/m_deit_s_scratch_s0.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_resnet50_full_s0",
+   "stage": 1,
+   "kind": "main",
+   "owner": "ly",
+   "est_hours": 0.71,
+   "config": "configs/m_resnet50_full_s0.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_resnet50_head_s0",
+   "stage": 1,
+   "kind": "main",
+   "owner": "dat",
+   "est_hours": 0.594,
+   "config": "configs/m_resnet50_head_s0.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_resnet50_partial_s0",
+   "stage": 1,
+   "kind": "main",
+   "owner": "ly",
+   "est_hours": 0.597,
+   "config": "configs/m_resnet50_partial_s0.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_resnet50_scratch_s0",
+   "stage": 1,
+   "kind": "main",
+   "owner": "dat",
+   "est_hours": 2.841,
+   "config": "configs/m_resnet50_scratch_s0.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_deit_s_full_s1",
+   "stage": 2,
+   "kind": "seed",
+   "owner": "dat",
+   "est_hours": 0.727,
+   "config": "configs/m_deit_s_full_s1.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_deit_s_full_s2",
+   "stage": 2,
+   "kind": "seed",
+   "owner": "ly",
+   "est_hours": 0.727,
+   "config": "configs/m_deit_s_full_s2.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_deit_s_head_s1",
+   "stage": 2,
+   "kind": "seed",
+   "owner": "dat",
+   "est_hours": 0.601,
+   "config": "configs/m_deit_s_head_s1.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_deit_s_head_s2",
+   "stage": 2,
+   "kind": "seed",
+   "owner": "ly",
+   "est_hours": 0.601,
+   "config": "configs/m_deit_s_head_s2.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_deit_s_partial_s1",
+   "stage": 2,
+   "kind": "seed",
+   "owner": "dat",
+   "est_hours": 0.647,
+   "config": "configs/m_deit_s_partial_s1.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_deit_s_partial_s2",
+   "stage": 2,
+   "kind": "seed",
+   "owner": "ly",
+   "est_hours": 0.647,
+   "config": "configs/m_deit_s_partial_s2.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_resnet50_full_s1",
+   "stage": 2,
+   "kind": "seed",
+   "owner": "dat",
+   "est_hours": 0.71,
+   "config": "configs/m_resnet50_full_s1.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_resnet50_full_s2",
+   "stage": 2,
+   "kind": "seed",
+   "owner": "ly",
+   "est_hours": 0.71,
+   "config": "configs/m_resnet50_full_s2.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_resnet50_head_s1",
+   "stage": 2,
+   "kind": "seed",
+   "owner": "dat",
+   "est_hours": 0.594,
+   "config": "configs/m_resnet50_head_s1.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_resnet50_head_s2",
+   "stage": 2,
+   "kind": "seed",
+   "owner": "ly",
+   "est_hours": 0.594,
+   "config": "configs/m_resnet50_head_s2.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_resnet50_partial_s1",
+   "stage": 2,
+   "kind": "seed",
+   "owner": "dat",
+   "est_hours": 0.597,
+   "config": "configs/m_resnet50_partial_s1.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "m_resnet50_partial_s2",
+   "stage": 2,
+   "kind": "seed",
+   "owner": "ly",
+   "est_hours": 0.597,
+   "config": "configs/m_resnet50_partial_s2.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "ab_deit_s_full_f10",
+   "stage": 3,
+   "kind": "ablation",
+   "owner": "ly",
+   "est_hours": 0.084,
+   "config": "configs/ab_deit_s_full_f10.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "ab_deit_s_full_f25",
+   "stage": 3,
+   "kind": "ablation",
+   "owner": "dat",
+   "est_hours": 0.191,
+   "config": "configs/ab_deit_s_full_f25.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "ab_deit_s_full_f50",
+   "stage": 3,
+   "kind": "ablation",
+   "owner": "ly",
+   "est_hours": 0.37,
+   "config": "configs/ab_deit_s_full_f50.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "ab_deit_s_scratch_f10",
+   "stage": 3,
+   "kind": "ablation",
+   "owner": "ly",
+   "est_hours": 0.338,
+   "config": "configs/ab_deit_s_scratch_f10.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "ab_deit_s_scratch_f25",
+   "stage": 3,
+   "kind": "ablation",
+   "owner": "ly",
+   "est_hours": 0.766,
+   "config": "configs/ab_deit_s_scratch_f25.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "ab_deit_s_scratch_f50",
+   "stage": 3,
+   "kind": "ablation",
+   "owner": "dat",
+   "est_hours": 1.479,
+   "config": "configs/ab_deit_s_scratch_f50.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "ab_resnet50_full_f10",
+   "stage": 3,
+   "kind": "ablation",
+   "owner": "dat",
+   "est_hours": 0.083,
+   "config": "configs/ab_resnet50_full_f10.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "ab_resnet50_full_f25",
+   "stage": 3,
+   "kind": "ablation",
+   "owner": "ly",
+   "est_hours": 0.187,
+   "config": "configs/ab_resnet50_full_f25.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "ab_resnet50_full_f50",
+   "stage": 3,
+   "kind": "ablation",
+   "owner": "dat",
+   "est_hours": 0.362,
+   "config": "configs/ab_resnet50_full_f50.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "ab_resnet50_scratch_f10",
+   "stage": 3,
+   "kind": "ablation",
+   "owner": "dat",
+   "est_hours": 0.331,
+   "config": "configs/ab_resnet50_scratch_f10.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "ab_resnet50_scratch_f25",
+   "stage": 3,
+   "kind": "ablation",
+   "owner": "dat",
+   "est_hours": 0.749,
+   "config": "configs/ab_resnet50_scratch_f25.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "ab_resnet50_scratch_f50",
+   "stage": 3,
+   "kind": "ablation",
+   "owner": "ly",
+   "est_hours": 1.447,
+   "config": "configs/ab_resnet50_scratch_f50.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "x_convnext_t_full_s0",
+   "stage": 4,
+   "kind": "stretch",
+   "owner": "dat",
+   "est_hours": 0.89,
+   "config": "configs/x_convnext_t_full_s0.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "x_convnext_t_head_s0",
+   "stage": 4,
+   "kind": "stretch",
+   "owner": "dat",
+   "est_hours": 0.596,
+   "config": "configs/x_convnext_t_head_s0.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "x_convnext_t_partial_s0",
+   "stage": 4,
+   "kind": "stretch",
+   "owner": "dat",
+   "est_hours": 0.627,
+   "config": "configs/x_convnext_t_partial_s0.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "x_convnext_t_scratch_s0",
+   "stage": 4,
+   "kind": "stretch",
+   "owner": "dat",
+   "est_hours": 3.561,
+   "config": "configs/x_convnext_t_scratch_s0.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "x_deit_s_scratch_e100",
+   "stage": 4,
+   "kind": "stretch",
+   "owner": "ly",
+   "est_hours": 7.267,
+   "config": "configs/x_deit_s_scratch_e100.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "x_swin_t_full_s0",
+   "stage": 4,
+   "kind": "stretch",
+   "owner": "ly",
+   "est_hours": 1.162,
+   "config": "configs/x_swin_t_full_s0.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "x_swin_t_head_s0",
+   "stage": 4,
+   "kind": "stretch",
+   "owner": "ly",
+   "est_hours": 0.65,
+   "config": "configs/x_swin_t_head_s0.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "x_swin_t_partial_s0",
+   "stage": 4,
+   "kind": "stretch",
+   "owner": "ly",
+   "est_hours": 0.658,
+   "config": "configs/x_swin_t_partial_s0.yaml",
+   "needs_lr": true
+  },
+  {
+   "run_id": "x_swin_t_scratch_s0",
+   "stage": 4,
+   "kind": "stretch",
+   "owner": "dat",
+   "est_hours": 4.649,
+   "config": "configs/x_swin_t_scratch_s0.yaml",
+   "needs_lr": true
+  }
+ ]
+}
