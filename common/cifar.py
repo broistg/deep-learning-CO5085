@@ -32,6 +32,41 @@ def fingerprint(xtr, ytr, xte, yte):
     return h.hexdigest()
 
 
+ORDER_PATH = REPO / "common" / "cifar10_train_order.json"   # per-image hashes + labels of the torchvision TRAIN order (see `reorder_to_torchvision`)
+
+
+def image_hashes(x):
+    import hashlib
+    return [hashlib.sha1(np.ascontiguousarray(a).tobytes()).hexdigest()[:16] for a in x]
+
+
+def write_order(xtr, ytr, path=None):
+    """Record the torchvision train order: one 16-hex hash per image (concatenated) and the labels as a digit string."""
+    Path(path or ORDER_PATH).write_text(json.dumps({"n": len(xtr), "hash_len": 16, "hashes": "".join(image_hashes(xtr)),
+                                                    "labels": "".join(map(str, ytr.tolist()))}) + "\n", encoding="utf8")
+
+
+def reorder_to_torchvision(xtr, ytr, path=None):
+    """The Hugging Face train split has the same 50,000 images and labels as torchvision but in a different (shuffled) order, and the
+    frozen split indexes the torchvision order. Put the images back in that order by matching (hash, label); raise if anything is unmatched
+    (a changed pixel or label is never silently accepted)."""
+    o = json.loads(Path(path or ORDER_PATH).read_text(encoding="utf8"))
+    L = o["hash_len"]
+    want = [(o["hashes"][i * L:(i + 1) * L], int(c)) for i, c in enumerate(o["labels"])]
+    if len(want) != len(xtr):
+        raise RuntimeError(f"order file has {len(want)} images, data has {len(xtr)}")
+    pos = {}
+    for i, k in enumerate(zip(image_hashes(xtr), ytr.tolist())):
+        pos.setdefault(k, []).append(i)
+    idx = []
+    for k in want:
+        if not pos.get(k):
+            raise RuntimeError("an image/label pair of the torchvision order is missing from this copy")
+        idx.append(pos[k].pop())
+    idx = np.array(idx)
+    return xtr[idx], ytr[idx]
+
+
 def _load_torchvision(root):
     from torchvision.datasets import CIFAR10
     tr, te = CIFAR10(root, train=True, download=True), CIFAR10(root, train=False, download=True)
@@ -74,6 +109,14 @@ def load_cifar(root=None, source="auto"):
             print(f"{fn.__name__} failed: {e}")
             continue
         got = fingerprint(*arrs)
+        if expected is not None and got != expected and fn is _load_hf and ORDER_PATH.exists():
+            try:
+                xtr, ytr = reorder_to_torchvision(arrs[0], arrs[1])
+                arrs = (xtr, ytr, arrs[2], arrs[3])
+                got = fingerprint(*arrs)
+                print("hf train split reordered to the torchvision order")
+            except Exception as e:  # noqa: BLE001
+                print("reorder failed:", e)
         if expected is not None and got != expected:
             err = RuntimeError(f"{fn.__name__}: data fingerprint {got[:16]} != committed {expected[:16]}")
             print(err)
@@ -132,7 +175,8 @@ def main(argv=None):
         arrs = load_cifar(source="torchvision")
         FINGERPRINT_PATH.write_text(json.dumps({"sha256": fingerprint(*arrs), "source": "torchvision.datasets.CIFAR10",
                                                 "shapes": [list(x.shape) for x in arrs]}, indent=1) + "\n", encoding="utf8")
-        print(f"wrote {FINGERPRINT_PATH}")
+        write_order(arrs[0], arrs[1])
+        print(f"wrote {FINGERPRINT_PATH} and {ORDER_PATH}")
     elif a.source != "auto":
         load_cifar(source=a.source)
     splits, h = get_splits()
