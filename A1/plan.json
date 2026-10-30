@@ -131,6 +131,15 @@
    "needs_lr": false
   },
   {
+   "run_id": "sw_deit_s_finetune_lr9e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.047,
+   "config": "configs/sw_deit_s_finetune_lr9e-4.yaml",
+   "needs_lr": false
+  },
+  {
    "run_id": "sw_deit_s_head_lr1e-3",
    "stage": 0,
    "kind": "sweep",
@@ -158,6 +167,15 @@
    "needs_lr": false
   },
   {
+   "run_id": "sw_deit_s_head_lr9e-3",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.039,
+   "config": "configs/sw_deit_s_head_lr9e-3.yaml",
+   "needs_lr": false
+  },
+  {
    "run_id": "sw_deit_s_scratch_lr1e-3",
    "stage": 0,
    "kind": "sweep",
@@ -173,6 +191,15 @@
    "owner": "dat",
    "est_hours": 0.047,
    "config": "configs/sw_deit_s_scratch_lr1e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_deit_s_scratch_lr3e-3",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.047,
+   "config": "configs/sw_deit_s_scratch_lr3e-3.yaml",
    "needs_lr": false
   },
   {
@@ -212,6 +239,15 @@
    "needs_lr": false
   },
   {
+   "run_id": "sw_resnet50_finetune_lr9e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.046,
+   "config": "configs/sw_resnet50_finetune_lr9e-4.yaml",
+   "needs_lr": false
+  },
+  {
    "run_id": "sw_resnet50_head_lr1e-3",
    "stage": 0,
    "kind": "sweep",
@@ -236,6 +272,15 @@
    "owner": "dat",
    "est_hours": 0.039,
    "config": "configs/sw_resnet50_head_lr3e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_resnet50_head_lr9e-3",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.039,
+   "config": "configs/sw_resnet50_head_lr9e-3.yaml",
    "needs_lr": false
   },
   {

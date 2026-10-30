@@ -1,0 +1,15 @@
+{
+ "resnet50.a1_in1k|scratch": {
+  "lr": 0.0003,
+  "val_top1": 0.0893069306930693,
+  "val_nll": 4.105555183842135,
+  "grid": [
+   0.0001,
+   0.0003,
+   0.001
+  ],
+  "at_edge": false,
+  "extend_to": null,
+  "extended": false
+ }
+}
