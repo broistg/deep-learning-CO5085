@@ -1,17 +1,19 @@
 """Resumable training run: forward -> loss -> backward -> step is written out explicitly below (no trainer framework).
 
     python -m a1lib.train --config A1/configs/<run_id>.yaml --owner dat            # a real run (resumes automatically)
-    python -m a1lib.train --config A1/configs/<run_id>.yaml --smoke                # 2 tiny epochs, nothing written to the shared folder
+    python -m a1lib.train --config A1/configs/<run_id>.yaml --smoke                # 2 tiny epochs, nothing written to the shared store
     python -m a1lib.train --config A1/configs/<run_id>.yaml --smoke --fake         # laptop dry run, no dataset needed
 
-Safety rules (see A1/TEAM_PROTOCOL.md): checkpoint every epoch (atomic, verified, last-good backup) locally AND on the shared
-folder; resume picks the newest valid checkpoint from either; a single-writer lock + heartbeat protects against a zombie session.
+Safety rules (see A1/TEAM_PROTOCOL.md): checkpoint every epoch (atomic, verified, last-good backup) on the LOCAL disk; push it to the
+store every A1_PUSH_EVERY_MIN minutes and at every clean exit (time limit, Ctrl-C, SIGTERM); resume pulls the store's checkpoint when it
+is ahead of the local one; a per-run lock with a heartbeat keeps two workers (even of the same person) off the same run.
 """
 import argparse
 import os
 
 os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
 
+import signal
 import threading
 import time
 import traceback
@@ -21,7 +23,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from common.ckpt import RunLock, atomic_save, best_checkpoint, build_state, make_scaler, push_ckpt, restore_state
+from common.ckpt import atomic_save, build_state, find_checkpoint, make_scaler, restore_state
 from common.repro import append_jsonl, config_hash, env_info, read_json, set_seed, write_json
 
 from a1lib import metrics as M
@@ -32,6 +34,11 @@ from a1lib.models import FAMILY, apply_freeze, count_params, make_model, param_g
 from a1lib.paths import Paths
 from a1lib.schedule import make_scheduler
 from a1lib.status import Status
+from a1lib.store import HEARTBEAT_S, LocalStore, RunSync, worker_id
+
+
+class TimeUp(Exception):
+    """The session's time budget (--max-hours) is nearly used up; the checkpoint has been pushed, the run continues elsewhere."""
 
 
 def log(*a):
@@ -39,18 +46,18 @@ def log(*a):
 
 
 class Heartbeat(threading.Thread):
-    """Refreshes the run lock every `every` seconds so another account can tell a live session from a dead one."""
+    """Every `every` seconds: refresh the lock and push status.json (one commit). If the lock was taken over, flag it."""
 
-    def __init__(self, lock, every=60):
+    def __init__(self, sync, every=HEARTBEAT_S):
         super().__init__(daemon=True)
-        self.lock, self.every, self._stop_evt = lock, every, threading.Event()
+        self.sync, self.every, self._stop_evt = sync, every, threading.Event()
 
     def run(self):
         while not self._stop_evt.wait(self.every):
             try:
-                self.lock.heartbeat()
-            except Exception:  # noqa: BLE001  (a Drive hiccup must not kill training)
-                pass
+                self.sync.beat()
+            except Exception as e:  # noqa: BLE001  (a network hiccup must not kill training; a lost lock is checked after each epoch)
+                log(f"  ! heartbeat failed: {e!r}")
 
     def stop(self):
         self._stop_evt.set()
@@ -68,9 +75,11 @@ def make_loader(ds, cfg, shuffle, epoch=0, batch_size=None, drop_last=False):
     if cfg.workers > 0:
         kw = {"prefetch_factor": 4, "worker_init_fn": _worker_init}
     g = None
+    if hasattr(ds, "set_epoch"):
+        ds.set_epoch(epoch)
     if shuffle:
         g = torch.Generator()
-        g.manual_seed(cfg.seed * 1000 + epoch)  # data order and worker seeds depend only on (seed, epoch)
+        g.manual_seed(cfg.seed * 1000 + epoch)  # data order depends only on (seed, epoch); augmentation on (seed, epoch, sample)
     return torch.utils.data.DataLoader(ds, batch_size=batch_size or cfg.batch_size, shuffle=shuffle, generator=g,
                                        num_workers=cfg.workers, drop_last=drop_last, pin_memory=torch.cuda.is_available(), **kw)
 
@@ -126,67 +135,107 @@ def train_one_epoch(model, loader, opt, sched, scaler, mix, device, channels_las
     return {"train_loss": mean_loss, "train_s": dt, "data_wait_s": wait, "train_ips": n_imgs / dt, "lr_end": opt.param_groups[0]["lr"]}
 
 
-def run_training(cfg, paths, owner, data_root=None, max_batches=None, force=False, fake=False, smoke=False):
-    """Runs (or resumes) one configuration to completion. Returns the result dict."""
-    cfg = resolve_lr(cfg, read_json(paths.lr_choice))
+def run_training(cfg, paths, owner, worker=None, data_root=None, max_batches=None, force=False, fake=False, smoke=False, deadline=None):
+    """Runs (or resumes) one configuration to completion. Returns the result dict. Raises TimeUp when `deadline` (epoch seconds) is near;
+    the checkpoint is then already in the store and another session continues the run."""
+    store = paths.store
+    worker = worker or worker_id(owner)
+    cfg = resolve_lr(cfg, store.read_json("lr_choice.json", {}, fresh=True))
     rid = cfg.run_id
-    rdir, ldir = paths.remote_run(rid), paths.local_run(rid)
-    rdir.mkdir(parents=True, exist_ok=True)
+    rel = paths.run_rel(rid)
+    ldir = paths.local_run(rid)
     ldir.mkdir(parents=True, exist_ok=True)
-    result_path = rdir / "result.json"
-    if result_path.exists() and not force:
+    done = store.read_json(f"{rel}/result.json", None, fresh=True)
+    if done and not force:
         log(f"{rid}: already finished (result.json exists) -> skipping")
-        return read_json(result_path)
+        return done
 
     cfg_dict = cfg.to_dict()
     chash = config_hash({k: v for k, v in cfg_dict.items() if k != "notes"})
-    saved_cfg = rdir / "config.yaml"
-    if saved_cfg.exists():
-        old = load_config(saved_cfg)
+    remote_cfg = store.read_bytes_fresh(f"{rel}/config.yaml")
+    local_cfg = ldir / "config.yaml"
+    if remote_cfg is not None:
+        (ldir / "config.remote.yaml").write_bytes(remote_cfg)
+        old = load_config(ldir / "config.remote.yaml")
         if config_hash({k: v for k, v in old.to_dict().items() if k != "notes"}) != chash and not force:
-            raise RuntimeError(f"{rid}: config.yaml on the shared folder differs from this config (hash). "
+            raise RuntimeError(f"{rid}: config.yaml in the store differs from this config (hash). "
                                f"Same run_id must mean the same settings. Use a new run_id, or --force if you are sure.")
-    else:
-        dump_config(cfg, saved_cfg)
+    dump_config(cfg, local_cfg)
 
-    lock = RunLock(rdir, owner)
-    lock.acquire(force=force)
-    hb = Heartbeat(lock)
+    sync = RunSync(store, rid, owner, worker, ldir)
+    sync.lock.acquire(force=force)
+    if remote_cfg is None:
+        store.put({f"{rel}/config.yaml": local_cfg}, f"config {rid}")
+    hb = Heartbeat(sync)
     hb.start()
-    status = Status(rdir, rid, owner, cfg.epochs)
+    status = Status(ldir, rid, owner, cfg.epochs, worker)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    use_cuda = device.type == "cuda"
     env = env_info()
-    status.set(state="running", gpu=env["gpu"], message="starting")
+    progress = {"epoch": 0}
+
+    def beat():
+        try:
+            sync.beat()
+        except Exception as e:  # noqa: BLE001
+            log(f"  ! could not push status ({e!r})")
+
+    def _term(*_):
+        raise KeyboardInterrupt()
     try:
-        result = _train(cfg, chash, paths, owner, rdir, ldir, status, device, env, data_root, max_batches, fake, smoke)
+        old_term = signal.signal(signal.SIGTERM, _term)
+    except ValueError:                                   # not the main thread (tests)
+        old_term = None
+    status.set(state="running", gpu=env["gpu"], message="starting")
+    beat()
+    try:
+        result = _train(cfg, chash, paths, owner, sync, ldir, status, device, env, data_root, max_batches, fake, smoke, deadline, progress)
         status.set(state="done", epoch=cfg.epochs, message="finished")
+        beat()
         return result
-    except KeyboardInterrupt:
-        status.set(state="interrupted", message="stopped by user; rerun the same command to resume")
+    except (KeyboardInterrupt, TimeUp) as e:
+        _push_on_exit(sync, ldir, progress)
+        timeup = isinstance(e, TimeUp)
+        status.set(state="paused" if timeup else "interrupted",
+                   message="time budget used up; another session continues from the pushed checkpoint" if timeup
+                   else "stopped; rerun the same command to resume")
+        beat()
         raise
     except BaseException:
+        _push_on_exit(sync, ldir, progress)
         status.set(state="failed", message=traceback.format_exc()[-1500:])
+        beat()
         raise
     finally:
         hb.stop()
-        lock.release()
+        sync.lock.release()
+        if old_term is not None:
+            signal.signal(signal.SIGTERM, old_term)
 
 
-def _train(cfg, chash, paths, owner, rdir, ldir, status, device, env, data_root, max_batches, fake, smoke):
+def _push_on_exit(sync, ldir, progress):
+    """Whatever the reason we stop, hand the newest local checkpoint to the store (unless it is already there)."""
+    try:
+        if progress["epoch"] > sync.last_pushed_epoch and (ldir / "ckpt" / "last.pt").exists():
+            sync.push_ckpt(progress["epoch"])
+            log(f"pushed checkpoint (epoch {progress['epoch']}) before exit")
+    except Exception as e:  # noqa: BLE001
+        log(f"  ! could not push the checkpoint on exit ({e!r}); it stays on the local disk of this session only")
+
+
+def _train(cfg, chash, paths, owner, sync, ldir, status, device, env, data_root, max_batches, fake, smoke, deadline, progress):
     use_cuda = device.type == "cuda"
     # ---- data ----------------------------------------------------------------------------------------------
     if fake:
         root = make_fake_cache(paths.data_local)
         split = load_split(root / "split.json", expect=None)
     else:
-        root = Path(data_root) if data_root else ensure_data(paths.shared, paths.data_local)
+        root = Path(data_root) if data_root else ensure_data(paths.data_local)
         split = load_split(root / "split.json", expect=cfg.split_json_sha256_16)
     classes = split["classes"]
     cidx = {c: i for i, c in enumerate(classes)}
     train_entries = subset_per_class(split["train"], cfg.data_fraction)
     tfm_train, tfm_eval = train_transform(cfg.augmentation), eval_transform(cfg.augmentation)
-    ds_train = FoodDataset(root / "images", train_entries, cidx, tfm_train)
+    ds_train = FoodDataset(root / "images", train_entries, cidx, tfm_train, seed=cfg.seed)   # per-sample augmentation seeds
     ds_val = FoodDataset(root / "images", split["val"], cidx, tfm_eval)
     ds_test = FoodDataset(root / "images", split["test"], cidx, tfm_eval)
     steps_per_epoch = len(ds_train) // cfg.batch_size
@@ -209,17 +258,24 @@ def _train(cfg, chash, paths, owner, rdir, ldir, status, device, env, data_root,
     mix = make_mixup(cfg.augmentation, N_CLASSES)
     log(f"trainable parameters: {trainable / 1e6:.2f}M of {total / 1e6:.2f}M ({100 * trainable / total:.1f}%)")
 
-    # ---- resume --------------------------------------------------------------------------------------------
+    # ---- resume: local checkpoint, or the store's when it is ahead ------------------------------------------
     history, sessions, epoch0 = [], [], 0
-    src_dir, src_path, st = best_checkpoint([ldir / "ckpt", rdir / "ckpt"])
+    _, st = find_checkpoint(ldir / "ckpt")
+    local_epoch = st["epoch"] if st is not None else 0
+    pulled = sync.pull_ckpt(local_epoch)
+    if pulled is not None:
+        log(f"pulled the store's checkpoint (epoch {pulled}; local was {local_epoch})")
+        _, st = find_checkpoint(ldir / "ckpt")
     if st is not None:
         if st["extra"].get("config_hash") != chash:
             raise RuntimeError("checkpoint was made with a different config (hash mismatch); refusing to resume")
         epoch0 = restore_state(st, model, opt, sched, scaler, with_rng=True)
         history, sessions = st["extra"].get("history", []), st["extra"].get("sessions", [])
-        log(f"resumed from {src_path} at epoch {epoch0}/{cfg.epochs}")
-    sessions.append({"owner": owner, "host": env["host"], "gpu": env["gpu"], "start_epoch": epoch0, "started": time.time(),
-                     "torch": env["torch"], "timm": env["timm"], "git_commit": env["git_commit"]})
+        sync.last_pushed_epoch = epoch0 if (pulled is not None or sync.remote_epoch() == epoch0) else -1
+        log(f"resumed at epoch {epoch0}/{cfg.epochs}")
+    progress["epoch"] = epoch0
+    sessions.append({"owner": owner, "worker": sync.worker, "host": env["host"], "gpu": env["gpu"], "start_epoch": epoch0,
+                     "started": time.time(), "torch": env["torch"], "timm": env["timm"], "git_commit": env["git_commit"]})
     if use_cuda:
         torch.cuda.reset_peak_memory_stats()
     val_loader = make_loader(ds_val, cfg, shuffle=False, batch_size=128)
@@ -235,30 +291,37 @@ def _train(cfg, chash, paths, owner, rdir, ldir, status, device, env, data_root,
         row = {"epoch": epoch + 1, **{k: round(val, 5) for k, val in tr.items()}, "val_s": round(time.perf_counter() - t0, 2),
                "val_top1": round(v["top1"], 5), "val_top5": round(v["top5"], 5), "val_nll": round(v["nll"], 5),
                "peak_mem_mb": round(torch.cuda.max_memory_allocated() / 2**20) if use_cuda else None,
-               "owner": owner, "gpu": env["gpu"]}
+               "owner": owner, "worker": sync.worker, "gpu": env["gpu"]}
         history.append(row)
-        append_jsonl(rdir / "history.jsonl", row)
+        append_jsonl(ldir / "history.jsonl", row)
         log(f"epoch {epoch + 1}/{cfg.epochs} loss {row['train_loss']:.4f} | val top1 {100 * v['top1']:.2f}% nll {v['nll']:.3f} | "
             f"train {row['train_s']:.0f}s (data wait {row['data_wait_s']:.0f}s) {row['train_ips']:.0f} img/s")
         state = build_state(model, opt, sched, scaler, epoch + 1,
                             extra={"history": history, "config_hash": chash, "sessions": sessions})
         atomic_save(state, ldir / "ckpt" / "last.pt")
-        try:
-            if not smoke:
-                push_ckpt(ldir / "ckpt", rdir / "ckpt")
-            push_failures = 0
-        except Exception as e:  # noqa: BLE001
-            push_failures += 1
-            log(f"  ! could not push checkpoint to the shared folder ({e!r}); local copy is safe; failures in a row: {push_failures}")
-            if push_failures >= 3:
-                raise
-        remaining = (cfg.epochs - epoch - 1) * (row["train_s"] + row["val_s"]) / 60
+        progress["epoch"] = epoch + 1
+        if sync.lock.lost:
+            raise RuntimeError("the lock of this run was taken over by another worker; stopping without pushing")
+        epoch_s = row["train_s"] + row["val_s"]
+        out_of_time = deadline is not None and time.time() + 1.15 * epoch_s > deadline and epoch + 1 < cfg.epochs
+        if sync.should_push_ckpt() or out_of_time:
+            try:
+                sync.push_ckpt(epoch + 1)
+                push_failures = 0
+            except Exception as e:  # noqa: BLE001
+                push_failures += 1
+                log(f"  ! could not push the checkpoint ({e!r}); local copy is safe; failures in a row: {push_failures}")
+                if push_failures >= 3:
+                    raise
+        remaining = (cfg.epochs - epoch - 1) * epoch_s / 60
         status.set(epoch=epoch + 1, message=f"val top1 {100 * v['top1']:.2f}%", eta_min=round(remaining, 1))
+        if out_of_time:
+            raise TimeUp(f"{cfg.run_id}: stopping after epoch {epoch + 1}: the next epoch would not finish before the time limit")
 
     # ---- final: test (not for LR sweeps), logits, weights, result.json -----------------------------------
     v_logits, v_y = predict(model, val_loader, device, channels_last, max_batches)
     final = {"val": M.summarize(v_logits.numpy(), v_y.numpy(), N_CLASSES)}
-    artifacts = {}
+    artifacts, push_files = {}, {}
     if cfg.kind != "sweep":
         t_logits, t_y = predict(model, make_loader(ds_test, cfg, shuffle=False, batch_size=128), device, channels_last, max_batches)
         final["test"] = M.summarize(t_logits.numpy(), t_y.numpy(), N_CLASSES)
@@ -268,22 +331,19 @@ def _train(cfg, chash, paths, owner, rdir, ldir, status, device, env, data_root,
         torch.save({"logits": t_logits.half(), "labels": t_y, "split": "test"}, out / "logits_test.pt")
         torch.save({k: v.detach().cpu() for k, v in model.state_dict().items()}, out / "model_final.pt")
         artifacts = {"logits_val": "logits_val.pt", "logits_test": "logits_test.pt", "weights": "model_final.pt"}
-        if not smoke:
-            import shutil
-            for f in out.iterdir():
-                shutil.copyfile(f, rdir / (f.name + ".tmp"))
-                os.replace(rdir / (f.name + ".tmp"), rdir / f.name)
+        push_files = {f.name: f for f in out.iterdir()}
     result = {
         "run_id": cfg.run_id, "kind": cfg.kind, "config": cfg.to_dict(), "config_hash": chash,
         "split_json_sha256_16": cfg.split_json_sha256_16, "n_train_images": len(ds_train), "n_val": len(ds_val), "n_test": len(ds_test),
         "trainable_M": round(trainable / 1e6, 3), "total_M": round(total / 1e6, 3), "trainable_pct": round(100 * trainable / total, 2),
         "final": final, "history": history,
         "timing": {"train_s_total": round(sum(h["train_s"] for h in history), 1), "val_s_total": round(sum(h["val_s"] for h in history), 1),
-                   "note": "wall-clock on the Colab VM (loader-bound for head/partial); use cost_bench.py for architecture comparison"},
+                   "note": "wall-clock on the session (loader-bound for head/partial); use cost_bench.py for architecture comparison"},
         "peak_mem_mb_max": max((h["peak_mem_mb"] or 0) for h in history), "sessions": sessions, "artifacts": artifacts,
-        "env": env, "finished_at": time.time(), "finished_by": owner, "smoke": bool(smoke), "fake": bool(fake),
+        "env": env, "finished_at": time.time(), "finished_by": owner, "worker": sync.worker, "smoke": bool(smoke), "fake": bool(fake),
     }
-    write_json(rdir / "result.json", result)
+    write_json(ldir / "result.json", result)
+    sync.push_final(push_files, (ldir / "result.json").read_text(encoding="utf8"))
     log(f"DONE {cfg.run_id}: val top1 {100 * final['val']['top1']:.2f}%" +
         (f" | test top1 {100 * final['test']['top1']:.2f}%" if "test" in final else ""))
     return result
@@ -295,7 +355,7 @@ def main():
     ap.add_argument("--owner", default=os.environ.get("A1_OWNER", "unknown"))
     ap.add_argument("--smoke", action="store_true", help="2 epochs x 6 batches, writes only to the local disk")
     ap.add_argument("--fake", action="store_true", help="synthetic dataset (laptop dry run)")
-    ap.add_argument("--force", action="store_true", help="ignore a stale lock / config mismatch / existing result (ask the team first)")
+    ap.add_argument("--force", action="store_true", help="ignore a live lock / config mismatch / existing result (ask the team first)")
     ap.add_argument("--data-root", default=None)
     a = ap.parse_args()
     cfg = load_config(a.config)
@@ -305,9 +365,9 @@ def main():
         cfg = replace(cfg, run_id="smoke_" + cfg.run_id, epochs=2, lr_peak=(1e-4 if cfg.lr_peak == "auto" else cfg.lr_peak))
         max_batches = 6
         if not a.fake and a.data_root is None:
-            a.data_root = str(ensure_data(paths.shared, paths.data_local))  # real data from the real shared folder
-        paths = Paths(paths.local / "smoke_shared", paths.local)             # but every OUTPUT goes to local disk
-    run_training(cfg, paths, a.owner, a.data_root, max_batches, a.force, a.fake, a.smoke)
+            a.data_root = str(ensure_data(paths.data_local))
+        paths = Paths(LocalStore(paths.local / "smoke_store"), paths.local)    # every OUTPUT goes to the local disk
+    run_training(cfg, paths, a.owner, None, a.data_root, max_batches, a.force, a.fake, a.smoke)
 
 
 if __name__ == "__main__":

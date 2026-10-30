@@ -1,4 +1,4 @@
-"""Per-run status.json on the shared folder. SINGLE WRITER: only the run's current owner writes it. Everyone else only reads."""
+"""Per-run status.json. Written to the LOCAL run folder by the worker; RunSync.beat() pushes it to the store with the heartbeat."""
 import socket
 import time
 from pathlib import Path
@@ -7,10 +7,10 @@ from common.repro import read_json, write_json
 
 
 class Status:
-    def __init__(self, run_dir, run_id, owner, epochs):
+    def __init__(self, run_dir, run_id, owner, epochs, worker=None):
         self.path = Path(run_dir) / "status.json"
         old = read_json(self.path, {}) or {}
-        self.d = {"run_id": run_id, "owner": owner, "state": "pending", "epoch": 0, "epochs": epochs, "host": socket.gethostname(),
+        self.d = {"run_id": run_id, "owner": owner, "worker": worker, "state": "pending", "epoch": 0, "epochs": epochs, "host": socket.gethostname(),
                   "gpu": None, "started": old.get("started"), "updated": time.time(), "message": "", "eta_min": None}
         if old.get("state") in ("running", "interrupted", "failed"):
             self.d["epoch"] = old.get("epoch", 0)

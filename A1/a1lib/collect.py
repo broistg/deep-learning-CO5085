@@ -1,6 +1,6 @@
-"""Copy the small result files of finished runs from the shared folder into the repo, and build the Release bundle.
+"""Copy the small result files of finished runs from the store into the repo, and build the Release bundle.
 
-    python -m a1lib.collect results           # shared/runs/*/result.json -> A1/results/<run_id>.json   (commit these)
+    python -m a1lib.collect results           # store runs/*/result.json -> A1/results/<run_id>.json   (commit these)
     python -m a1lib.collect bundle --out release/   # zip of logits + final weights + SHA256SUMS.txt     (upload to a GitHub Release)
 """
 import argparse
@@ -13,6 +13,7 @@ from a1lib.paths import Paths
 
 
 def collect_results(paths, a1_dir):
+    paths.store.refresh()
     out = Path(a1_dir) / "results"
     out.mkdir(parents=True, exist_ok=True)
     n = 0
@@ -29,13 +30,17 @@ def bundle(paths, out_dir):
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     sums = []
-    for kind, pat in (("logits", "logits_*.pt"), ("weights", "model_final.pt")):
+    tmp = out / "_dl"
+    files = [(rel, s) for rel, s in paths.store.list_files("runs/") if rel.endswith(("/logits_val.pt", "/logits_test.pt", "/model_final.pt"))]
+    for kind, pat in (("logits", "/logits_"), ("weights", "/model_final.pt")):
         zp = out / f"a1_{kind}.zip"
         with zipfile.ZipFile(zp, "w", zipfile.ZIP_STORED) as z:
-            for p in sorted((paths.shared / "runs").glob(f"*/{pat}")):
-                if p.parent.name.startswith("sw_"):
+            for rel, _ in files:
+                rid, name = rel.split("/")[1], rel.split("/")[2]
+                if rid.startswith("sw_") or pat not in "/" + name:
                     continue
-                z.write(p, f"{p.parent.name}/{p.name}")
+                z.write(paths.store.get(rel, tmp / rid / name), f"{rid}/{name}")
+                (tmp / rid / name).unlink()
         sums.append(f"{sha256_file(zp)}  {zp.name}")
     (out / "SHA256SUMS.txt").write_text("\n".join(sums) + "\n")
     print("\n".join(sums))

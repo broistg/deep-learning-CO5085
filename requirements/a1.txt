@@ -1,5 +1,6 @@
 -r base.txt
 timm==1.0.30
+huggingface_hub>=0.24
 scikit-learn>=1.4
 fvcore>=0.1.5
 grad-cam>=1.5

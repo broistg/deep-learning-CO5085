@@ -186,9 +186,10 @@ def main():
             print(f"  {o:10s} " + "  ".join(f"{k}={h:.1f}" for k, h in sorted(kinds.items(), key=lambda kv: STAGES[kv[0]])) + f"   | sum {sum(kinds.values()):.1f} h")
     elif a.cmd == "choose-lr":
         paths = Paths.from_env()
+        paths.store.refresh()
         rows = collect_sweep_rows(paths.shared)
         models = PAIR1 if a.models == "pair1" else PAIR1 + PAIR2
-        chosen = read_json(paths.lr_choice, {}) or {}
+        chosen = paths.store.read_json("lr_choice.json", {}, fresh=True) or {}
         for model in models:
             for group, grid in LR_GRID.items():
                 key = f"{model}|{group}"
@@ -203,9 +204,9 @@ def main():
                     chosen.pop(key, None)
                 else:
                     chosen[key] = res
-        write_json(paths.lr_choice, chosen)
+        paths.store.put({"lr_choice.json": json.dumps(chosen, indent=1)}, "lr_choice")
         write_json(a1 / "results" / "lr_choice.json", chosen)
-        print(f"wrote {paths.lr_choice} and {a1 / 'results' / 'lr_choice.json'} (commit the latter)")
+        print(f"wrote lr_choice.json to the store {paths.store.describe()} and {a1 / 'results' / 'lr_choice.json'} (commit the latter)")
     elif a.cmd == "extend":
         run = sweep_run(a.model, a.group, a.lr)
         dump_config(run, a1 / "configs" / f"{run.run_id}.yaml")

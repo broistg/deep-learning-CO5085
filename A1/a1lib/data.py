@@ -1,6 +1,6 @@
 """Food-101: split, nested class-balanced subsets, pre-resized cache, datasets.
 
-Layout of the pre-resized cache (one tar on the shared Drive, extracted to fast local disk on every Colab VM):
+Layout of the pre-resized cache (a private Kaggle dataset, copied to fast local disk at the start of every session):
     food101_256/images/<class>/<id>.jpg   (short side 256, bicubic, JPEG q90, never upscaled)
     food101_256/classes.txt, food101_256/split.json
 """
@@ -80,11 +80,19 @@ def subset_per_class(entries, fraction, seed=42):
 # dataset
 # ----------------------------------------------------------------------------------------------------------
 class FoodDataset:
-    """Returns (uint8 CHW tensor from `transform`, label). `transform` must end in PILToTensor (normalisation happens on the GPU)."""
+    """Returns (uint8 CHW tensor from `transform`, label). `transform` must end in PILToTensor (normalisation happens on the GPU).
 
-    def __init__(self, images_root, entries, class_to_idx, transform):
+    Per-sample seeding: when `seed` is given, the random augmentation of sample i in epoch e is drawn from an RNG seeded with
+    sample_seed(seed, e, i), so it does not depend on num_workers, on the batch layout, or on which process loads the sample.
+    Call set_epoch(e) BEFORE creating the DataLoader for that epoch (workers get a copy of the dataset when they start)."""
+
+    def __init__(self, images_root, entries, class_to_idx, transform, seed=None):
         self.root, self.entries, self.cidx, self.tfm = Path(images_root), entries, class_to_idx, transform
         self.labels = [class_to_idx[e.split("/")[0]] for e in entries]
+        self.seed, self.epoch = seed, 0
+
+    def set_epoch(self, epoch):
+        self.epoch = int(epoch)
 
     def __len__(self):
         return len(self.entries)
@@ -93,6 +101,22 @@ class FoodDataset:
         from PIL import Image
         with Image.open(self.root / f"{self.entries[i]}.jpg") as im:
             x = im.convert("RGB")
+        if self.seed is None:
+            return self.tfm(x), self.labels[i]
+        import torch
+        from a1lib.seeding import sample_seed
+        s = sample_seed(self.seed, self.epoch, i)
+        if torch.utils.data.get_worker_info() is None:      # main process: do not disturb the training RNG stream
+            py_state = random.getstate()
+            try:
+                with torch.random.fork_rng(devices=[]):
+                    random.seed(s)
+                    torch.manual_seed(s)
+                    return self.tfm(x), self.labels[i]
+            finally:
+                random.setstate(py_state)
+        random.seed(s)                                       # worker process: its RNG is private, just reseed
+        torch.manual_seed(s)
         return self.tfm(x), self.labels[i]
 
 
@@ -158,23 +182,63 @@ def count_images(images_dir):
     return n
 
 
-def ensure_data(shared_dir, local_dir, expect_images=N_IMAGES, allow_fake=False):
-    """Make `<local_dir>/food101_256` available on fast local disk. Returns its path. Idempotent."""
+def _find_source():
+    """The dataset as Kaggle mounted it: a folder with images/ and split.json (Kaggle unpacks uploaded archives), or a tar."""
+    env = os.environ.get("A1_DATA_SRC")
+    roots = [Path(env)] if env else [Path("/kaggle/input")]
+    for r in roots:
+        if not r.exists():
+            continue
+        for sp in sorted(r.rglob("split.json")):
+            if (sp.parent / "images").is_dir():
+                return sp.parent
+        for t in sorted(r.rglob(f"{CACHE_NAME}.tar")):
+            return t
+    return None
+
+
+def _copy_tree(src, dst, threads=32):
+    """/kaggle/input is network-backed (about 12 img/s when read during training); copy once with many threads (about 5 min)."""
+    from concurrent.futures import ThreadPoolExecutor
+    files = list((src / "images").rglob("*.jpg"))
+
+    def cp(p):
+        d = dst / "images" / p.relative_to(src / "images")
+        if not d.exists():
+            d.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(p, d)
+    with ThreadPoolExecutor(threads) as ex:
+        list(ex.map(cp, files))
+    for n in ("split.json", "classes.txt"):
+        if (src / n).exists():
+            shutil.copyfile(src / n, dst / n)
+
+
+def ensure_data(local_dir, expect_images=N_IMAGES, source=None):
+    """Make `<local_dir>/food101_256` available on fast local disk. Returns its path. Idempotent (marker file).
+    source: folder (images/ + split.json) or tar; default: search /kaggle/input (or $A1_DATA_SRC)."""
     local, root = Path(local_dir), Path(local_dir) / CACHE_NAME
-    marker = root / ".complete"
-    if marker.exists():
+    if (root / ".complete").exists():
         return root
-    tar = Path(shared_dir) / "cache" / f"{CACHE_NAME}.tar"
-    if not tar.exists():
-        raise FileNotFoundError(f"{tar} not found. One member must run `python -m a1lib.data build-cache` first.")
+    src = Path(source) if source else _find_source()
+    if src is None:
+        raise FileNotFoundError("Food-101 cache not found under /kaggle/input: add the private dataset to the notebook (Add Input), "
+                                "or set A1_DATA_SRC to the folder that contains images/ and split.json")
     local.mkdir(parents=True, exist_ok=True)
-    print(f"extracting {tar} -> {local} (1-2 min)", flush=True)
-    subprocess.run(["tar", "-xf", str(tar), "-C", str(local)], check=True)
+    t0 = time.time()
+    if src.is_dir():
+        print(f"copying {src} -> {root} (about 5 min on Kaggle)", flush=True)
+        root.mkdir(parents=True, exist_ok=True)
+        _copy_tree(src, root)
+    else:
+        print(f"extracting {src} -> {local} (1-2 min)", flush=True)
+        subprocess.run(["tar", "-xf", str(src), "-C", str(local)], check=True)
     n = count_images(root / "images")
     if n != expect_images:
-        raise RuntimeError(f"extracted {n} images, expected {expect_images}")
+        raise RuntimeError(f"found {n} images in {root}, expected {expect_images}; delete {root} and retry")
     load_split(root / "split.json")  # verifies the hash
-    marker.write_text(str(n))
+    (root / ".complete").write_text(str(n))
+    print(f"data ready: {n} images in {time.time() - t0:.0f} s", flush=True)
     return root
 
 
@@ -215,7 +279,7 @@ if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser(description="Data utilities")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    b = sub.add_parser("build-cache", help="one-time: resize Food-101 and put the tar on the shared Drive folder")
+    b = sub.add_parser("build-cache", help="one-time: resize Food-101 and write the tar (upload it as a private Kaggle dataset)")
     b.add_argument("--food-root", required=True, help="official 'food-101' folder (downloaded by torchvision)")
     b.add_argument("--shared-dir", required=True)
     b.add_argument("--work-dir", default="/content/a1_work")
