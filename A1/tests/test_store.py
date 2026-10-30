@@ -241,3 +241,44 @@ class DataCopy(unittest.TestCase):
                 del os.environ["A1_DATA_SRC"]
             self.assertEqual(D.count_images(dst / "images"), 6)
             self.assertTrue((dst / "split.json").exists())
+
+
+class CommitBudget(unittest.TestCase):
+    def test_run_lifecycle_costs_two_commits(self):
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            st = S.LocalStore(d / "store")
+            sy = S.RunSync(st, "r1", "dat", "dat-s1-g0", d / "loc")
+            (d / "loc").mkdir()
+            (d / "loc" / "status.json").write_text('{"state": "done"}')
+            cfg = d / "config.yaml"
+            cfg.write_text("a: 1")
+            sy.lock.acquire(extra={"runs/r1/config.yaml": cfg})          # start
+            sy.push_final({}, '{"run_id": "r1"}')                         # result + status + lock removal
+            self.assertEqual(st.pushed_commits, 2)
+            self.assertFalse(st.exists("runs/r1/run.lock.json"))
+            self.assertTrue(st.exists("runs/r1/config.yaml") and st.exists("runs/r1/status.json"))
+            sy.release()                                                  # already released: no extra commit
+            self.assertEqual(st.pushed_commits, 2)
+
+    def test_exit_is_one_commit_with_checkpoint(self):
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            st = S.LocalStore(d / "store")
+            sy = S.RunSync(st, "r1", "dat", "dat-s1-g0", d / "loc")
+            (d / "loc" / "ckpt").mkdir(parents=True)
+            (d / "loc" / "ckpt" / "last.pt").write_bytes(b"e3")
+            sy.lock.acquire()
+            n = st.pushed_commits
+            sy.release(push_epoch=3)
+            self.assertEqual(st.pushed_commits, n + 1)
+            self.assertEqual(sy.remote_epoch(), 3)
+            self.assertFalse(st.exists("runs/r1/run.lock.json"))
+
+    def test_budget_skips_heartbeats_but_not_real_writes(self):
+        with tempfile.TemporaryDirectory() as d:
+            st = S.LocalStore(Path(d) / "store")
+            st.max_commits_per_h = 3
+            self.assertTrue(all(st.put({"a.json": "1"}) for _ in range(3)))
+            self.assertFalse(st.put({"a.json": "2"}, low=True))           # heartbeat dropped, not delayed
+            self.assertEqual(st.read_json("a.json"), 1)

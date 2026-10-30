@@ -32,8 +32,10 @@ import uuid
 from pathlib import Path
 
 META_SUFFIXES = (".json", ".yaml", ".jsonl", ".log")
-STALE_S = float(os.environ.get("A1_LOCK_STALE_S", 2100))        # a lock whose heartbeat is older than this is dead
-HEARTBEAT_S = float(os.environ.get("A1_HEARTBEAT_S", 600))      # also the interval at which status.json is pushed
+STALE_S = float(os.environ.get("A1_LOCK_STALE_S", 2700))        # a lock whose heartbeat is older than this is dead
+HEARTBEAT_S = float(os.environ.get("A1_HEARTBEAT_S", 900))      # also the interval at which status.json is pushed
+# Hugging Face allows 128 commits per hour per REPO (all workers of both accounts together). Each process keeps to its own budget:
+MAX_COMMITS_PER_H = int(os.environ.get("A1_MAX_COMMITS_PER_H", 24))
 PUSH_EVERY_S = float(os.environ.get("A1_PUSH_EVERY_MIN", 45)) * 60
 WARN_BYTES = 40e9                                                # warn when this much has been pushed since the last squash
 
@@ -74,6 +76,26 @@ class Store:
         self.pushed_bytes = 0
         self.pushed_commits = 0
         self._count_lock = threading.Lock()
+        self.max_commits_per_h = None           # set by HFStore
+        self._commit_times = []
+
+    def _slot(self, low):
+        """Commit budget of this process (sliding hour). low=True (heartbeats): skip when the budget is spent, returns False.
+        Otherwise wait for a free slot."""
+        if not self.max_commits_per_h:
+            return True
+        while True:
+            with self._count_lock:
+                now = time.time()
+                self._commit_times = [t for t in self._commit_times if now - t < 3600]
+                if len(self._commit_times) < self.max_commits_per_h:
+                    self._commit_times.append(now)
+                    return True
+                wait = 3600 - (now - self._commit_times[0]) + 1
+            if low:
+                return False
+            log(f"  commit budget of this process spent ({self.max_commits_per_h}/h); waiting {wait / 60:.1f} min")
+            time.sleep(min(wait, 60))
 
     # -- to implement ------------------------------------------------------------------------------------------
     def refresh(self):
@@ -100,14 +122,18 @@ class Store:
         raise NotImplementedError
 
     # -- shared ------------------------------------------------------------------------------------------------
-    def put(self, files, message="update", parent=None):
-        """files: {relative path: Path | bytes | str | None}; None deletes. One atomic commit. parent: head the caller read."""
+    def put(self, files, message="update", parent=None, low=False):
+        """files: {relative path: Path | bytes | str | None}; None deletes. One atomic commit. parent: head the caller read.
+        low=True: optional write (heartbeat) that is skipped, not delayed, when the commit budget is spent. Returns True if written."""
         files = {k: v for k, v in files.items()}
         n = sum(_size(v) for v in files.values())
+        if not self._slot(low):
+            return False
         self._put(files, message, parent)
         with self._count_lock:
             self.pushed_bytes += n
             self.pushed_commits += 1
+        return True
 
     def read_json(self, rel, default=None, fresh=False, revision=None):
         try:
@@ -242,6 +268,7 @@ class HFStore(Store):
         if not self.token:
             raise RuntimeError("no Hugging Face token: add a Kaggle secret named HF_TOKEN (write access) or set HF_TOKEN")
         self.api = HfApi(token=self.token)
+        self.max_commits_per_h = MAX_COMMITS_PER_H
         self.mirror = Path(mirror_dir)
         self.mirror.mkdir(parents=True, exist_ok=True)
         if create:
@@ -250,6 +277,7 @@ class HFStore(Store):
     # every network call goes through here: retry 429/5xx/timeouts, never retry a lost race or a missing file
     def _retry(self, fn, tries=5):
         from huggingface_hub.utils import HfHubHTTPError
+        rate_waits = 0
         for i in range(tries):
             try:
                 return fn()
@@ -257,6 +285,19 @@ class HFStore(Store):
                 code = getattr(getattr(e, "response", None), "status_code", None)
                 if code in (412, 409):
                     raise StoreConflict(str(e)[:200]) from e
+                if code == 429:                                   # rate limit: wait as long as the server says (up to ~1 h), do not fail
+                    ra = None
+                    try:
+                        ra = float(e.response.headers.get("Retry-After"))
+                    except Exception:  # noqa: BLE001
+                        pass
+                    wait = min(3700, (ra or 300) + 5)
+                    if rate_waits >= 4:
+                        raise
+                    rate_waits += 1
+                    log(f"  ! Hugging Face rate limit (429); waiting {wait / 60:.0f} min ({rate_waits}/4)")
+                    time.sleep(wait)
+                    continue
                 if code in (401, 403, 404) or i == tries - 1:
                     raise
                 wait = min(60, 3 * 2 ** i)
@@ -402,7 +443,8 @@ class RunLock:
     def payload(self):
         return json.dumps({"owner": self.owner, "worker": self.worker, "host": socket.gethostname(), "heartbeat": time.time()})
 
-    def acquire(self, force=False, tries=8):
+    def acquire(self, force=False, tries=8, extra=None):
+        """extra: more files for the same commit (e.g. config.yaml), so starting a run costs ONE commit."""
         for i in range(tries):
             head = self.store.head()
             info = self.store.read_json(self.rel, {}, fresh=True, revision=head if self.store.kind == "hf" else None) or {}
@@ -411,7 +453,7 @@ class RunLock:
                 raise RuntimeError(f"run {self.rid} is locked by worker '{info.get('worker')}' (owner {info.get('owner')}, "
                                    f"heartbeat {age:.0f}s ago)")
             try:
-                self.store.put({self.rel: self.payload()}, f"lock {self.rid} {self.worker}", parent=head)
+                self.store.put({self.rel: self.payload(), **(extra or {})}, f"start {self.rid} {self.worker}", parent=head)
                 self.lost = False
                 return
             except StoreConflict:
@@ -422,10 +464,11 @@ class RunLock:
         info = self.store.read_json(self.rel, {}, fresh=True) or {}
         return info.get("worker") == self.worker
 
-    def release(self):
+    def release(self, extra=None):
+        """Delete the lock (if still mine). `extra` files go in the same commit."""
         try:
             if self.still_mine():
-                self.store.put({self.rel: None}, f"unlock {self.rid} {self.worker}")
+                self.store.put({self.rel: None, **(extra or {})}, f"stop {self.rid} {self.worker}")
         except Exception as e:  # noqa: BLE001
             log(f"  ! could not release the lock of {self.rid} ({e!r}); it expires by itself after {self.stale_s / 60:.0f} min")
 
@@ -450,6 +493,7 @@ class RunSync:
         self.last_ckpt_push = time.time()
         self.last_pushed_epoch = -1
         self._mutex = threading.Lock()
+        self.released = False
 
     def _stats(self):
         return {f"stats/{self.worker}.json": json.dumps({"worker": self.worker, "bytes_pushed": self.store.pushed_bytes,
@@ -465,7 +509,7 @@ class RunSync:
             st = self.local / "status.json"
             if st.exists():
                 files[f"{self.rel}/status.json"] = st
-            self.store.put(files, f"beat {self.rid} {self.worker}")
+            self.store.put(files, f"beat {self.rid} {self.worker}", low=True)
 
     def should_push_ckpt(self):
         return time.time() - self.last_ckpt_push >= self.push_every_s
@@ -493,13 +537,33 @@ class RunSync:
         self.store.get(f"{self.rel}/last.pt", dest)
         return ep
 
+    def _status_file(self):
+        st = self.local / "status.json"
+        return {f"{self.rel}/status.json": st} if st.exists() else {}
+
     def push_final(self, files, result_json):
-        """Final artefacts + result.json in one commit; result.json is what marks the run as finished."""
+        """Final artefacts + result.json + status.json + lock removal in ONE commit; result.json marks the run as finished."""
         with self._mutex:
             allf = {f"{self.rel}/{name}": p for name, p in files.items()}
             allf[f"{self.rel}/result.json"] = result_json
             allf.update(self._stats())
+            allf.update(self._status_file())
+            allf[self.lock.rel] = None
             self.store.put(allf, f"result {self.rid}")
+            self.released = True
+
+    def release(self, push_epoch=None):
+        """Leave the run (any reason): newest checkpoint (if push_epoch), status.json and lock removal in ONE commit."""
+        if self.released:
+            return
+        with self._mutex:
+            extra = {**self._status_file(), **self._stats()}
+            if push_epoch is not None:
+                meta = json.dumps({"epoch": push_epoch, "saved_at": time.time(), "worker": self.worker})
+                extra.update({f"{self.rel}/last.pt": self.local / "ckpt" / "last.pt", f"{self.rel}/ckpt_meta.json": meta})
+                self.last_pushed_epoch = push_epoch
+            self.lock.release(extra=extra)
+            self.released = True
 
 
 # ----------------------------------------------------------------------------------------------------------------

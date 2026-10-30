@@ -18,13 +18,13 @@ maintenance.json, maintenance.log    written only by `store squash`
 stats/<worker>.json                  bytes each worker pushed (drives the squash reminder)
 runs/<run_id>/
   config.yaml                        copy of the config used (hash-checked on every start)
-  status.json                        live state, pushed with the heartbeat (every 10 min)
+  status.json                        live state, pushed with the heartbeat (every 15 min)
   run.lock.json                      worker id + heartbeat: nobody trains the same run twice
   last.pt, ckpt_meta.json            newest pushed checkpoint (every 45 min and at every clean exit) and its epoch
   result.json                        final metrics + history + timing + env   (its existence = the run is DONE)
   logits_val.pt, logits_test.pt, model_final.pt   (not for sweep runs)
 ```
-Every write is one atomic commit; lock acquisition is conditional on the repo head, so two workers starting at the same moment cannot both win. Nobody edits or deletes files in the store by hand.
+Every write is one atomic commit, and Hugging Face allows only **128 commits per hour per repo** (all workers of both accounts together). A run therefore costs two commits (start: lock + config; end: result + status + lock removal) plus one heartbeat every 15 minutes; each process keeps to a budget of 24 commits per hour (`A1_MAX_COMMITS_PER_H`; heartbeats are dropped first, real writes wait) and waits out a 429 instead of failing. lock acquisition is conditional on the repo head, so two workers starting at the same moment cannot both win. Nobody edits or deletes files in the store by hand.
 
 Working data stay on the session's local disk (`/kaggle/temp/a1_local`: the dataset copy and the per-epoch checkpoint), never in `/kaggle/working` (20 GB output cap, saved on commit). A session that dies loses at most the epochs since the last push (45 min by default; `A1_PUSH_EVERY_MIN`).
 
@@ -49,7 +49,7 @@ Working data stay on the session's local disk (`/kaggle/temp/a1_local`: the data
 ## 6. Store maintenance (Hugging Face history)
 Hugging Face keeps every pushed version of a large file (LFS history) and counts it against the 100 GB. Keep the number of large pushes modest (45 min interval) and reclaim history with a squash:
 - `python -m a1lib.store stats` shows files, current size and the bytes pushed since the last squash (an upper bound of the history). It prints a warning above 40 GB. Any member may run it; the notebook prints it at the end of every session.
-- `python -m a1lib.store squash --actor dat` (**coordinator only**) rewrites the history to one commit. It is irreversible, therefore: it **refuses** while any run has a live lock (heartbeat < 35 min; `--force` only when you know those workers are dead), lists files before and after, verifies that the file list and sizes are identical, and appends a line to `maintenance.log`. Do it between sessions (nobody running), after announcing it in chat, when `stats` warns or at the latest weekly. After a squash the quota may take up to about 36 h to refresh.
+- `python -m a1lib.store squash --actor dat` (**coordinator only**) rewrites the history to one commit. It is irreversible, therefore: it **refuses** while any run has a live lock (heartbeat < 45 min; `--force` only when you know those workers are dead), lists files before and after, verifies that the file list and sizes are identical, and appends a line to `maintenance.log`. Do it between sessions (nobody running), after announcing it in chat, when `stats` warns or at the latest weekly. After a squash the quota may take up to about 36 h to refresh.
 - Never run it in the middle of someone's session. If it reports MISMATCH, stop, tell the team, check `maintenance.log`.
 
 ## 7. Saving results
@@ -60,7 +60,7 @@ Hugging Face keeps every pushed version of a large file (LFS history) and counts
 
 ## 8. Ownership, takeover and forced actions
 - `worker run --owner X --steal` also takes **unfinished runs of others that have no live lock**. Use after agreeing in chat.
-- A live run (heartbeat < 35 min) is never taken, not even by another worker of the same owner. `--force` (ignore a live lock or a config mismatch) is only for a crashed session whose lock is still fresh, after the other person agrees.
+- A live run (heartbeat < 45 min) is never taken, not even by another worker of the same owner. `--force` (ignore a live lock or a config mismatch) is only for a crashed session whose lock is still fresh, after the other person agrees.
 - Never change a `config.yaml` or a run_id after the run started; a new setting means a new run_id.
 
 ## 9. Reproducibility and quality gates

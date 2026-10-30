@@ -163,9 +163,7 @@ def run_training(cfg, paths, owner, worker=None, data_root=None, max_batches=Non
     dump_config(cfg, local_cfg)
 
     sync = RunSync(store, rid, owner, worker, ldir)
-    sync.lock.acquire(force=force)
-    if remote_cfg is None:
-        store.put({f"{rel}/config.yaml": local_cfg}, f"config {rid}")
+    sync.lock.acquire(force=force, extra={f"{rel}/config.yaml": local_cfg} if remote_cfg is None else None)   # ONE commit
     hb = Heartbeat(sync)
     hb.start()
     status = Status(ldir, rid, owner, cfg.epochs, worker)
@@ -173,53 +171,43 @@ def run_training(cfg, paths, owner, worker=None, data_root=None, max_batches=Non
     env = env_info()
     progress = {"epoch": 0}
 
-    def beat():
-        try:
-            sync.beat()
-        except Exception as e:  # noqa: BLE001
-            log(f"  ! could not push status ({e!r})")
-
     def _term(*_):
         raise KeyboardInterrupt()
     try:
         old_term = signal.signal(signal.SIGTERM, _term)
     except ValueError:                                   # not the main thread (tests)
         old_term = None
-    status.set(state="running", gpu=env["gpu"], message="starting")
-    beat()
+    status.set(state="running", gpu=env["gpu"], message="starting")     # local; pushed with the next heartbeat
     try:
         result = _train(cfg, chash, paths, owner, sync, ldir, status, device, env, data_root, max_batches, fake, smoke, deadline, progress)
-        status.set(state="done", epoch=cfg.epochs, message="finished")
-        beat()
-        return result
+        return result                                    # _train's last commit already holds result + status + lock removal
     except (KeyboardInterrupt, TimeUp) as e:
-        _push_on_exit(sync, ldir, progress)
         timeup = isinstance(e, TimeUp)
         status.set(state="paused" if timeup else "interrupted",
                    message="time budget used up; another session continues from the pushed checkpoint" if timeup
                    else "stopped; rerun the same command to resume")
-        beat()
+        _exit_push(sync, ldir, progress)
         raise
     except BaseException:
-        _push_on_exit(sync, ldir, progress)
         status.set(state="failed", message=traceback.format_exc()[-1500:])
-        beat()
+        _exit_push(sync, ldir, progress)
         raise
     finally:
         hb.stop()
-        sync.lock.release()
+        sync.release()                                   # no-op when already released
         if old_term is not None:
             signal.signal(signal.SIGTERM, old_term)
 
 
-def _push_on_exit(sync, ldir, progress):
-    """Whatever the reason we stop, hand the newest local checkpoint to the store (unless it is already there)."""
+def _exit_push(sync, ldir, progress):
+    """Whatever the reason we stop: ONE commit with the newest local checkpoint (unless the store has it), status and lock removal."""
+    ep = progress["epoch"] if progress["epoch"] > sync.last_pushed_epoch and (ldir / "ckpt" / "last.pt").exists() else None
     try:
-        if progress["epoch"] > sync.last_pushed_epoch and (ldir / "ckpt" / "last.pt").exists():
-            sync.push_ckpt(progress["epoch"])
-            log(f"pushed checkpoint (epoch {progress['epoch']}) before exit")
+        sync.release(push_epoch=ep)
+        if ep is not None:
+            log(f"pushed checkpoint (epoch {ep}) before exit")
     except Exception as e:  # noqa: BLE001
-        log(f"  ! could not push the checkpoint on exit ({e!r}); it stays on the local disk of this session only")
+        log(f"  ! could not push on exit ({e!r}); the checkpoint stays on the local disk of this session only")
 
 
 def _train(cfg, chash, paths, owner, sync, ldir, status, device, env, data_root, max_batches, fake, smoke, deadline, progress):
@@ -343,6 +331,7 @@ def _train(cfg, chash, paths, owner, sync, ldir, status, device, env, data_root,
         "env": env, "finished_at": time.time(), "finished_by": owner, "worker": sync.worker, "smoke": bool(smoke), "fake": bool(fake),
     }
     write_json(ldir / "result.json", result)
+    status.set(state="done", epoch=cfg.epochs, message="finished")
     sync.push_final(push_files, (ldir / "result.json").read_text(encoding="utf8"))
     log(f"DONE {cfg.run_id}: val top1 {100 * final['val']['top1']:.2f}%" +
         (f" | test top1 {100 * final['test']['top1']:.2f}%" if "test" in final else ""))
