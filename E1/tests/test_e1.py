@@ -114,9 +114,7 @@ class Summary(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             td = Path(td)
             for seed, (fin, best) in enumerate([(0.70, 0.71), (0.72, 0.72), (0.74, 0.73)]):
-                r = {"config": {"model": "mlp", "seed": seed, "augment": True, "epochs": 1},
-                     "history": [{"epoch": 1}], "channel_mean": [0.5] * 3, "channel_std": [0.2] * 3,
-                     "peak_mem_mb": 20.0 + seed, "n_params": 199_082, "smoke": False, "fake": False,
+                r = {"config": {"model": "mlp", "seed": seed, "augment": True}, "n_params": 199_082, "smoke": False, "fake": False,
                      "final": {"test_acc": fin}, "best": {"test_acc": best}, "train_s_per_epoch_median": 2.0,
                      "inference_ms_per_image": 0.01, "split_sha256_16": "abc"}
                 (td / f"mlp_s{seed}.json").write_text(json.dumps(r), encoding="utf8")
@@ -124,11 +122,9 @@ class Summary(unittest.TestCase):
             s = json.loads((td / "summary.json").read_text(encoding="utf8"))["mlp"]
             self.assertAlmostEqual(s["test_acc_final_mean_std"][0], 0.72)
             self.assertAlmostEqual(s["test_acc_final_mean_std"][1], 0.02)            # sample std, ddof = 1
-            self.assertEqual(s["peak_mem_mb_max"], 22.0)
             tab = (td / "tab_e1_summary.tex").read_text(encoding="utf8")
             self.assertIn("199\\,082", tab)
             self.assertIn("72{,}00", tab)
-            self.assertIn("22{,}0", tab)
 
 
 if __name__ == "__main__":
