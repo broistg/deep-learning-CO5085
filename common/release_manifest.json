@@ -11,6 +11,26 @@
    "sha256": "1bb95f059e25421fad93f4b9e2a3f95d12fe42d4a908ae26b778932a6a6ebaea",
    "bytes": 97996671,
    "files": 60
+  },
+  "a1_logits.zip": {
+   "sha256": "41a4992bb0096303c881a2941fa46fa2c87a0f4d70af09a6fc8f178ca849aef9",
+   "bytes": 224784308,
+   "files": 82
+  },
+  "a1_weights_core.zip": {
+   "sha256": "6529ec557d8535116433baa786dbcc016b0df117c788faa0f7ab4a5a3864343a",
+   "bytes": 728136406,
+   "files": 8
+  },
+  "a1_weights_seeds.zip": {
+   "sha256": "8949dfaddbb696cb05f2700ba1a778d1214b748ea582d5f6277ad14bd1e8d08a",
+   "bytes": 1092204586,
+   "files": 12
+  },
+  "a1_weights_extra.zip": {
+   "sha256": "a8aa3ffa3209ce71dc148b83a0c200d9f76e6d5d34256fb01d66b76f343583ee",
+   "bytes": 2067429827,
+   "files": 21
   }
  }
 }

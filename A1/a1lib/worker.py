@@ -1,7 +1,7 @@
 """The commands a team member runs on Kaggle. Works through the run list in plan order, resumes interrupted runs.
 
-    python -m a1lib.worker launch --owner dat --gpus 2 --max-hours 11    # one worker per GPU in this session (the normal way)
-    python -m a1lib.worker run --owner dat --max-hours 11                # a single worker on the visible GPU
+    python -m a1lib.worker launch --owner dat --gpus 2 --max-hours 8.5    # one worker per GPU in this session (the normal way)
+    python -m a1lib.worker run --owner dat --max-hours 8.5                # a single worker on the visible GPU
     python -m a1lib.worker run --owner dat --steal                        # ALSO runs owned by others that are unfinished and unlocked
     python -m a1lib.worker run --owner dat --only sw_resnet50             # only run_ids starting with this
     python -m a1lib.worker status                                         # table of every run (reads the store)
@@ -139,15 +139,16 @@ def cmd_run(paths, plan, a, me):
         log("nothing left to do for this owner (other workers may still be running their last runs)")
 
 
-def cmd_prepare(paths):
+def cmd_prepare():
     from a1lib.data import ensure_data
-    root = ensure_data(paths.data_local)
+    from a1lib.paths import default_local
+    root = ensure_data(default_local() / "data")
     log(f"data ready at {root}")
 
 
 def cmd_launch(paths, a, session):
     """Prepare the data ONCE, then start one worker process per GPU, each pinned to its GPU and with a unique worker id."""
-    cmd_prepare(paths)
+    cmd_prepare()
     procs = []
     for g in range(a.gpus):
         env = dict(os.environ, CUDA_VISIBLE_DEVICES=str(g), A1_SESSION=session)
@@ -189,9 +190,9 @@ def main():
     ap.add_argument("--gpus", type=int, default=2, help="launch: one worker per GPU")
     ap.add_argument("--session", default=None, help="session tag in worker ids (default: a timestamp)")
     a = ap.parse_args()
+    if a.cmd == "prepare":                       # needs no store (also used by the replication notebook)
+        return cmd_prepare()
     paths = Paths.from_env()
-    if a.cmd == "prepare":
-        return cmd_prepare(paths)
     plan = load_plan(Path(a.a1_dir) / "plan.json")
     plan["_a1"] = a.a1_dir
     if a.cmd == "status":

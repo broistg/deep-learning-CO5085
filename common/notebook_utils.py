@@ -109,14 +109,19 @@ def _walk_numbers(a, b, path, tol, out):
         out.append((path, f"{a!r} vs {b!r}", None))
 
 
-def compare_outputs(new_dir, ref_dir, tex=True, summary=True, tol=1e-9):
+def compare_outputs(new_dir, ref_dir, tex=True, summary=True, tol=1e-9, optional=()):
     """Regenerated vs committed: the `tab_*.tex` files must be byte-identical and summary.json numerically equal (tol, relative).
-    Prints one line per file and raises AssertionError if anything differs, so a broken replication cannot pass silently."""
+    Prints one line per file and raises AssertionError if anything differs, so a broken replication cannot pass silently.
+    optional: names of tables / summary keys that exist only when the logits were downloaded (e.g. A1: tab_calibration.tex, "errors");
+    they are skipped, with a message, when the regenerated side lacks them."""
     new_dir, ref_dir = Path(new_dir), Path(ref_dir)
     bad = []
     if tex:
         for ref in sorted(ref_dir.glob("tab_*.tex")):
             new = new_dir / ref.name
+            if not new.exists() and ref.name in optional:
+                print(f"skip {ref.name} (needs the logits from the Release)")
+                continue
             ok = new.exists() and new.read_text(encoding="utf8") == ref.read_text(encoding="utf8")
             print(f"{'OK  ' if ok else 'DIFF'} {ref.name}")
             if not ok:
@@ -126,9 +131,11 @@ def compare_outputs(new_dir, ref_dir, tex=True, summary=True, tol=1e-9):
         _walk_numbers(json.loads((new_dir / "summary.json").read_text(encoding="utf8")),
                       json.loads((ref_dir / "summary.json").read_text(encoding="utf8")), "", tol, diffs)
         # `errors` comes from the confusion/error figures and exists only when the weights/logits were downloaded
-        if "errors" not in json.loads((new_dir / "summary.json").read_text(encoding="utf8")):
-            diffs = [d for d in diffs if not d[0].startswith("/errors")]
-            print("(summary.json: 'errors' skipped, the logits were not downloaded)")
+        new_keys = json.loads((new_dir / "summary.json").read_text(encoding="utf8"))
+        for key in ("errors",) + tuple(k for k in optional if not k.endswith(".tex")):
+            if key not in new_keys:
+                diffs = [d for d in diffs if not d[0].startswith(f"/{key}")]
+                print(f"(summary.json: '{key}' skipped, the logits were not downloaded)")
         print(f"{'OK  ' if not diffs else 'DIFF'} summary.json" + ("" if not diffs else f"  ({len(diffs)} differences, first: {diffs[0]})"))
         if diffs:
             bad.append("summary.json")
@@ -150,14 +157,21 @@ def compare_runs(new_dir, ref_dir, metric=("final", "test_acc"), pattern="*.json
         if "final" not in r:
             continue
         a = r
-        for k in metric:
-            a = a[k]
+        try:
+            for k in metric:
+                a = a[k]
+        except (KeyError, TypeError):          # e.g. A1 sweep runs have no test metrics
+            continue
         if not new.exists():
             rows.append((ref.stem, 100 * a, math.nan, math.nan))
             continue
         b = json.loads(new.read_text(encoding="utf8"))
-        for k in metric:
-            b = b[k]
+        try:
+            for k in metric:
+                b = b[k]
+        except (KeyError, TypeError):
+            rows.append((ref.stem, 100 * a, math.nan, math.nan))
+            continue
         rows.append((ref.stem, 100 * a, 100 * b, 100 * (b - a)))
     print(f"{'run':32s} {'published':>10s} {'rerun':>10s} {'diff (pts)':>11s}")
     for n, a, b, d in rows:
@@ -170,7 +184,7 @@ def compare_runs(new_dir, ref_dir, metric=("final", "test_acc"), pattern="*.json
     return rows
 
 
-def compare_means(new_dir, ref_dir, metric=("final", "test_acc")):
+def compare_means(new_dir, ref_dir, metric=("final", "test_acc"), only_rerun=False):
     """Per configuration (run id without the seed): mean test accuracy of the rerun vs the published mean +- sample std over seeds.
     A rerun reproduces the result when the difference is within about one published std (3 seeds, so only a rough yardstick)."""
     import re
@@ -185,8 +199,11 @@ def compare_means(new_dir, ref_dir, metric=("final", "test_acc")):
             if "final" not in r:
                 continue
             v = r
-            for k in metric:
-                v = v[k]
+            try:
+                for k in metric:
+                    v = v[k]
+            except (KeyError, TypeError):      # e.g. A1 sweep runs have no test metrics
+                continue
             g.setdefault(re.sub(r"_s\d+(?=$|_)", "", p.stem), []).append(100 * v)
         return g
     new, ref = groups(new_dir), groups(ref_dir)
@@ -195,7 +212,8 @@ def compare_means(new_dir, ref_dir, metric=("final", "test_acc")):
         a = ref[k]
         sd = stdev(a) if len(a) > 1 else float("nan")
         if k not in new:
-            print(f"{k:30s} {mean(a):7.2f} +- {sd:5.2f}   (not rerun)")
+            if not only_rerun:
+                print(f"{k:30s} {mean(a):7.2f} +- {sd:5.2f}   (not rerun)")
             continue
         d = mean(new[k]) - mean(a)
         flag = "" if abs(d) <= max(sd, 0.5) else "  <-- outside 1 std"

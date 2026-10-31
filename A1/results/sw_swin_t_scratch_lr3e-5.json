@@ -1,0 +1,173 @@
+{
+ "run_id": "sw_swin_t_scratch_lr3e-5",
+ "kind": "sweep",
+ "config": {
+  "run_id": "sw_swin_t_scratch_lr3e-5",
+  "model": "swin_tiny_patch4_window7_224.ms_in1k",
+  "mode": "scratch",
+  "epochs": 3,
+  "seed": 0,
+  "kind": "sweep",
+  "pretrained": false,
+  "data_fraction": 0.2,
+  "lr_peak": 3.33e-05,
+  "batch_size": 64,
+  "warmup_frac": 0.05,
+  "warmup_start_frac": 0.01,
+  "min_lr_frac": 0.01,
+  "weight_decay": 0.05,
+  "betas": [
+   0.9,
+   0.999
+  ],
+  "eps": 1e-08,
+  "drop_rate": 0.0,
+  "drop_path_rate": 0.0,
+  "amp": "fp16",
+  "workers": 2,
+  "img_size": 224,
+  "augmentation": {
+   "random_resized_crop": {
+    "size": 224,
+    "scale": [
+     0.25,
+     1.0
+    ],
+    "ratio": [
+     0.75,
+     1.3333333333333333
+    ],
+    "interpolation": "bilinear"
+   },
+   "hflip_p": 0.5,
+   "randaugment": {
+    "num_ops": 2,
+    "magnitude": 9,
+    "num_magnitude_bins": 31,
+    "interpolation": "nearest"
+   },
+   "mixup": {
+    "mixup_alpha": 0.8,
+    "cutmix_alpha": 1.0,
+    "prob": 1.0,
+    "switch_prob": 0.5,
+    "mode": "batch",
+    "correct_lam": true,
+    "label_smoothing": 0.1
+   },
+   "eval": {
+    "resize": 256,
+    "crop": 224
+   }
+  },
+  "split_json_sha256_16": "75ed81bfe380c089",
+  "notes": "LR sweep for group 'scratch' (3 epochs, 20% of train, seed 0, val only)"
+ },
+ "config_hash": "f18bf883a7e9",
+ "split_json_sha256_16": "75ed81bfe380c089",
+ "n_train_images": 14140,
+ "n_val": 5050,
+ "n_test": 25250,
+ "trainable_M": 27.597,
+ "total_M": 27.597,
+ "trainable_pct": 100.0,
+ "final": {
+  "val": {
+   "top1": 0.04950495049504951,
+   "top5": 0.16693069306930694,
+   "nll": 4.41442261119312,
+   "ece": 0.02442696039105946,
+   "brier": 0.9842065670683585,
+   "macro_f1": 0.025844683416139956,
+   "n": 5050
+  }
+ },
+ "history": [
+  {
+   "epoch": 1,
+   "train_loss": 4.60767,
+   "train_s": 80.83359,
+   "data_wait_s": 0.84918,
+   "train_ips": 174.185,
+   "lr_end": 3e-05,
+   "val_s": 11.23,
+   "val_top1": 0.03149,
+   "val_top5": 0.1295,
+   "val_nll": 4.47976,
+   "peak_mem_mb": 4877,
+   "owner": "dat",
+   "worker": "dat-1031-0041-g1",
+   "gpu": "Tesla T4"
+  },
+  {
+   "epoch": 2,
+   "train_loss": 4.55675,
+   "train_s": 80.74299,
+   "data_wait_s": 0.84099,
+   "train_ips": 174.38045,
+   "lr_end": 1e-05,
+   "val_s": 11.46,
+   "val_top1": 0.04158,
+   "val_top5": 0.15327,
+   "val_nll": 4.4325,
+   "peak_mem_mb": 4877,
+   "owner": "dat",
+   "worker": "dat-1031-0041-g1",
+   "gpu": "Tesla T4"
+  },
+  {
+   "epoch": 3,
+   "train_loss": 4.53203,
+   "train_s": 80.92309,
+   "data_wait_s": 0.90021,
+   "train_ips": 173.99238,
+   "lr_end": 0.0,
+   "val_s": 11.42,
+   "val_top1": 0.0495,
+   "val_top5": 0.16693,
+   "val_nll": 4.41442,
+   "peak_mem_mb": 4877,
+   "owner": "dat",
+   "worker": "dat-1031-0041-g1",
+   "gpu": "Tesla T4"
+  }
+ ],
+ "timing": {
+  "train_s_total": 242.5,
+  "val_s_total": 34.1,
+  "note": "wall-clock on the session (loader-bound for head/partial); use cost_bench.py for architecture comparison"
+ },
+ "peak_mem_mb_max": 4877,
+ "sessions": [
+  {
+   "owner": "dat",
+   "worker": "dat-1031-0041-g1",
+   "host": "478b981d589b",
+   "gpu": "Tesla T4",
+   "start_epoch": 0,
+   "started": 1793408308.6894941,
+   "torch": "2.11.0+cu128",
+   "timm": "1.0.30",
+   "git_commit": "7dda2c9"
+  }
+ ],
+ "artifacts": {},
+ "env": {
+  "host": "478b981d589b",
+  "python": "3.13.15",
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "gpu": "Tesla T4",
+  "git_commit": "7dda2c9",
+  "torchvision": "0.26.0+cu128",
+  "timm": "1.0.30",
+  "PIL": "13.0.0",
+  "numpy": "2.1.3",
+  "gpu_mem_gb": 14.6
+ },
+ "finished_at": 1793408604.343625,
+ "finished_by": "dat",
+ "worker": "dat-1031-0041-g1",
+ "smoke": false,
+ "fake": false
+}

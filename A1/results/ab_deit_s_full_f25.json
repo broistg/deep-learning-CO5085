@@ -1,0 +1,298 @@
+{
+ "run_id": "ab_deit_s_full_f25",
+ "kind": "ablation",
+ "config": {
+  "run_id": "ab_deit_s_full_f25",
+  "model": "deit_small_patch16_224.fb_in1k",
+  "mode": "full",
+  "epochs": 10,
+  "seed": 0,
+  "kind": "ablation",
+  "pretrained": true,
+  "data_fraction": 0.25,
+  "lr_peak": 0.0003,
+  "batch_size": 64,
+  "warmup_frac": 0.05,
+  "warmup_start_frac": 0.01,
+  "min_lr_frac": 0.01,
+  "weight_decay": 0.05,
+  "betas": [
+   0.9,
+   0.999
+  ],
+  "eps": 1e-08,
+  "drop_rate": 0.0,
+  "drop_path_rate": 0.0,
+  "amp": "fp16",
+  "workers": 2,
+  "img_size": 224,
+  "augmentation": {
+   "random_resized_crop": {
+    "size": 224,
+    "scale": [
+     0.25,
+     1.0
+    ],
+    "ratio": [
+     0.75,
+     1.3333333333333333
+    ],
+    "interpolation": "bilinear"
+   },
+   "hflip_p": 0.5,
+   "randaugment": {
+    "num_ops": 2,
+    "magnitude": 9,
+    "num_magnitude_bins": 31,
+    "interpolation": "nearest"
+   },
+   "mixup": {
+    "mixup_alpha": 0.8,
+    "cutmix_alpha": 1.0,
+    "prob": 1.0,
+    "switch_prob": 0.5,
+    "mode": "batch",
+    "correct_lam": true,
+    "label_smoothing": 0.1
+   },
+   "eval": {
+    "resize": 256,
+    "crop": 224
+   }
+  },
+  "split_json_sha256_16": "75ed81bfe380c089",
+  "notes": ""
+ },
+ "config_hash": "aa612b527c67",
+ "split_json_sha256_16": "75ed81bfe380c089",
+ "n_train_images": 17675,
+ "n_val": 5050,
+ "n_test": 25250,
+ "trainable_M": 21.705,
+ "total_M": 21.705,
+ "trainable_pct": 100.0,
+ "final": {
+  "val": {
+   "top1": 0.7510891089108911,
+   "top5": 0.9267326732673268,
+   "nll": 1.0578004698992867,
+   "ece": 0.13226201091712358,
+   "brier": 0.35866160960590315,
+   "macro_f1": 0.7505049688798208,
+   "n": 5050
+  },
+  "test": {
+   "top1": 0.8083564356435644,
+   "top5": 0.9547326732673267,
+   "nll": 0.8515555200473812,
+   "ece": 0.15690447416869813,
+   "brier": 0.2982068567525494,
+   "macro_f1": 0.8077927295374258,
+   "n": 25250
+  }
+ },
+ "history": [
+  {
+   "epoch": 1,
+   "train_loss": 3.94485,
+   "train_s": 65.27959,
+   "data_wait_s": 13.0636,
+   "train_ips": 270.58992,
+   "lr_end": 0.0003,
+   "val_s": 6.17,
+   "val_top1": 0.46277,
+   "val_top5": 0.74376,
+   "val_nll": 2.36464,
+   "peak_mem_mb": 2550,
+   "owner": "dat",
+   "worker": "dat-1030-1823-g1",
+   "gpu": "Tesla T4"
+  },
+  {
+   "epoch": 2,
+   "train_loss": 3.32553,
+   "train_s": 67.1612,
+   "data_wait_s": 13.74631,
+   "train_ips": 263.009,
+   "lr_end": 0.00028,
+   "val_s": 6.05,
+   "val_top1": 0.5699,
+   "val_top5": 0.82792,
+   "val_nll": 1.8398,
+   "peak_mem_mb": 2550,
+   "owner": "dat",
+   "worker": "dat-1030-1823-g1",
+   "gpu": "Tesla T4"
+  },
+  {
+   "epoch": 3,
+   "train_loss": 3.11064,
+   "train_s": 65.84151,
+   "data_wait_s": 11.16456,
+   "train_ips": 268.2806,
+   "lr_end": 0.00025,
+   "val_s": 6.13,
+   "val_top1": 0.63426,
+   "val_top5": 0.86059,
+   "val_nll": 1.55608,
+   "peak_mem_mb": 2550,
+   "owner": "dat",
+   "worker": "dat-1030-1823-g1",
+   "gpu": "Tesla T4"
+  },
+  {
+   "epoch": 4,
+   "train_loss": 2.92591,
+   "train_s": 66.05571,
+   "data_wait_s": 11.25701,
+   "train_ips": 267.41063,
+   "lr_end": 0.00021,
+   "val_s": 6.0,
+   "val_top1": 0.66752,
+   "val_top5": 0.88871,
+   "val_nll": 1.4074,
+   "peak_mem_mb": 2550,
+   "owner": "dat",
+   "worker": "dat-1030-1823-g1",
+   "gpu": "Tesla T4"
+  },
+  {
+   "epoch": 5,
+   "train_loss": 2.84876,
+   "train_s": 65.37958,
+   "data_wait_s": 10.72224,
+   "train_ips": 270.1761,
+   "lr_end": 0.00016,
+   "val_s": 6.06,
+   "val_top1": 0.6998,
+   "val_top5": 0.90099,
+   "val_nll": 1.29003,
+   "peak_mem_mb": 2550,
+   "owner": "dat",
+   "worker": "dat-1030-1823-g1",
+   "gpu": "Tesla T4"
+  },
+  {
+   "epoch": 6,
+   "train_loss": 2.61325,
+   "train_s": 64.85609,
+   "data_wait_s": 10.02557,
+   "train_ips": 272.35685,
+   "lr_end": 0.00012,
+   "val_s": 6.12,
+   "val_top1": 0.71703,
+   "val_top5": 0.91505,
+   "val_nll": 1.19586,
+   "peak_mem_mb": 2550,
+   "owner": "dat",
+   "worker": "dat-1030-1823-g1",
+   "gpu": "Tesla T4"
+  },
+  {
+   "epoch": 7,
+   "train_loss": 2.48949,
+   "train_s": 66.52505,
+   "data_wait_s": 11.50591,
+   "train_ips": 265.52405,
+   "lr_end": 7e-05,
+   "val_s": 6.03,
+   "val_top1": 0.72871,
+   "val_top5": 0.91604,
+   "val_nll": 1.14217,
+   "peak_mem_mb": 2550,
+   "owner": "dat",
+   "worker": "dat-1030-1823-g1",
+   "gpu": "Tesla T4"
+  },
+  {
+   "epoch": 8,
+   "train_loss": 2.41611,
+   "train_s": 65.9849,
+   "data_wait_s": 11.24899,
+   "train_ips": 267.6976,
+   "lr_end": 3e-05,
+   "val_s": 5.88,
+   "val_top1": 0.74376,
+   "val_top5": 0.92475,
+   "val_nll": 1.09089,
+   "peak_mem_mb": 2550,
+   "owner": "dat",
+   "worker": "dat-1030-1823-g1",
+   "gpu": "Tesla T4"
+  },
+  {
+   "epoch": 9,
+   "train_loss": 2.33088,
+   "train_s": 66.49889,
+   "data_wait_s": 11.57584,
+   "train_ips": 265.6285,
+   "lr_end": 1e-05,
+   "val_s": 5.92,
+   "val_top1": 0.75327,
+   "val_top5": 0.92891,
+   "val_nll": 1.0588,
+   "peak_mem_mb": 2550,
+   "owner": "dat",
+   "worker": "dat-1030-1823-g1",
+   "gpu": "Tesla T4"
+  },
+  {
+   "epoch": 10,
+   "train_loss": 2.37421,
+   "train_s": 65.82228,
+   "data_wait_s": 10.70617,
+   "train_ips": 268.35899,
+   "lr_end": 0.0,
+   "val_s": 6.12,
+   "val_top1": 0.75109,
+   "val_top5": 0.92673,
+   "val_nll": 1.0578,
+   "peak_mem_mb": 2550,
+   "owner": "dat",
+   "worker": "dat-1030-1823-g1",
+   "gpu": "Tesla T4"
+  }
+ ],
+ "timing": {
+  "train_s_total": 659.4,
+  "val_s_total": 60.5,
+  "note": "wall-clock on the session (loader-bound for head/partial); use cost_bench.py for architecture comparison"
+ },
+ "peak_mem_mb_max": 2550,
+ "sessions": [
+  {
+   "owner": "dat",
+   "worker": "dat-1030-1823-g1",
+   "host": "55a71d8037f3",
+   "gpu": "Tesla T4",
+   "start_epoch": 0,
+   "started": 1793384865.3255954,
+   "torch": "2.11.0+cu128",
+   "timm": "1.0.30",
+   "git_commit": "7e8201f"
+  }
+ ],
+ "artifacts": {
+  "logits_val": "logits_val.pt",
+  "logits_test": "logits_test.pt",
+  "weights": "model_final.pt"
+ },
+ "env": {
+  "host": "55a71d8037f3",
+  "python": "3.13.15",
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "gpu": "Tesla T4",
+  "git_commit": "7e8201f",
+  "torchvision": "0.26.0+cu128",
+  "timm": "1.0.30",
+  "PIL": "13.0.0",
+  "numpy": "2.1.3",
+  "gpu_mem_gb": 14.6
+ },
+ "finished_at": 1793385639.9510455,
+ "finished_by": "dat",
+ "worker": "dat-1030-1823-g1",
+ "smoke": false,
+ "fake": false
+}
