@@ -50,6 +50,15 @@
    "needs_lr": false
   },
   {
+   "run_id": "sw_convnext_t_finetune_lr9e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.057,
+   "config": "configs/sw_convnext_t_finetune_lr9e-4.yaml",
+   "needs_lr": false
+  },
+  {
    "run_id": "sw_convnext_t_head_lr1e-3",
    "stage": 0,
    "kind": "sweep",
@@ -77,6 +86,15 @@
    "needs_lr": false
   },
   {
+   "run_id": "sw_convnext_t_head_lr9e-3",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.039,
+   "config": "configs/sw_convnext_t_head_lr9e-3.yaml",
+   "needs_lr": false
+  },
+  {
    "run_id": "sw_convnext_t_scratch_lr1e-3",
    "stage": 0,
    "kind": "sweep",
@@ -92,6 +110,15 @@
    "owner": "dat",
    "est_hours": 0.057,
    "config": "configs/sw_convnext_t_scratch_lr1e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_convnext_t_scratch_lr3e-3",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.057,
+   "config": "configs/sw_convnext_t_scratch_lr3e-3.yaml",
    "needs_lr": false
   },
   {
@@ -338,6 +365,15 @@
    "needs_lr": false
   },
   {
+   "run_id": "sw_swin_t_finetune_lr9e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.073,
+   "config": "configs/sw_swin_t_finetune_lr9e-4.yaml",
+   "needs_lr": false
+  },
+  {
    "run_id": "sw_swin_t_head_lr1e-3",
    "stage": 0,
    "kind": "sweep",
@@ -365,6 +401,15 @@
    "needs_lr": false
   },
   {
+   "run_id": "sw_swin_t_head_lr9e-3",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.042,
+   "config": "configs/sw_swin_t_head_lr9e-3.yaml",
+   "needs_lr": false
+  },
+  {
    "run_id": "sw_swin_t_scratch_lr1e-3",
    "stage": 0,
    "kind": "sweep",
@@ -389,6 +434,15 @@
    "owner": "ly",
    "est_hours": 0.073,
    "config": "configs/sw_swin_t_scratch_lr3e-4.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "sw_swin_t_scratch_lr3e-5",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "ly",
+   "est_hours": 0.073,
+   "config": "configs/sw_swin_t_scratch_lr3e-5.yaml",
    "needs_lr": false
   },
   {

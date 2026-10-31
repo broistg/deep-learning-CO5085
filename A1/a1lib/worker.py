@@ -129,7 +129,10 @@ def cmd_run(paths, plan, a, me):
             continue
         break
     if blocked:
-        log(f"blocked on lr_choice: {[e['run_id'] for e in blocked][:6]} ... (run `python -m a1lib.plan choose-lr` once the sweep is complete)")
+        keys = sorted({f"{c.model}|{lr_group(c.mode)}" for c in (load_config(Path(plan["_a1"]) / e["config"]) for e in blocked)})
+        log(f"blocked on lr_choice for {len(blocked)} run(s); missing LR groups: {keys}\n"
+            "   -> their sweep runs must be done first (`worker status`, rows sw_*); then the coordinator runs `python -m a1lib.plan choose-lr` "
+            "(it lists every group: 'sweep not finished yet' means some sw_* runs of that group are still missing or failed)")
     if failed:
         log(f"FAILED: {sorted(failed)}  -> read status.json message, tell the team; rerun the worker to retry only after the cause is fixed")
     if not ready and not blocked and not failed:

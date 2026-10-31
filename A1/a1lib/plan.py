@@ -159,7 +159,7 @@ def main():
     _paths_args(s)
     c = sub.add_parser("choose-lr")
     _paths_args(c)
-    c.add_argument("--models", default="pair1", choices=["pair1", "all"])
+    c.add_argument("--models", default="all", choices=["pair1", "all"], help="all (default): pair 1 and the stretch pair; groups whose sweep is unfinished are only listed")
     e = sub.add_parser("extend")
     _paths_args(e)
     e.add_argument("--model", required=True)
@@ -204,7 +204,9 @@ def main():
                     chosen.pop(key, None)
                 else:
                     chosen[key] = res
+        n_before = len(paths.store.read_json("lr_choice.json", {}, fresh=True) or {})
         paths.store.put({"lr_choice.json": json.dumps(chosen, indent=1)}, "lr_choice")
+        print(f"lr_choice.json: {n_before} -> {len(chosen)} groups chosen")
         write_json(a1 / "results" / "lr_choice.json", chosen)
         print(f"wrote lr_choice.json to the store {paths.store.describe()} and {a1 / 'results' / 'lr_choice.json'} (commit the latter)")
     elif a.cmd == "extend":
