@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 522 62" width="522" height="62" role="img" aria-labelledby="title desc">
+  <title id="title">Hình 3.1: Kiến trúc MLP</title>
+  <desc id="desc">Ảnh 32 × 32 × 3 được làm phẳng thành vector 3072 chiều, đi qua hai lớp ẩn FC và ReLU với 64 rồi 32 nút, sau đó qua lớp Linear tạo 10 logits.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 7 7" refX="6" refY="3.5" markerWidth="7" markerHeight="7" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0.5 0.5 6 3.5 0.5 6.5" fill="none" stroke="#1A1814" stroke-width="1"/>
+    </marker>
+  </defs>
+  <rect width="522" height="62" fill="#fff"/>
+  <g font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#1A1814">
+    <text x="40" y="25" text-anchor="middle" font-weight="700">Input Image</text>
+    <text x="40" y="42" text-anchor="middle">32 × 32 × 3</text>
+    <path d="M81 30 H119" fill="none" stroke="#1A1814" stroke-width="1" marker-end="url(#arrow)"/>
+
+    <rect x="120.5" y="0.5" width="120" height="61" fill="#F0EDE8" stroke="#A8A49F"/>
+    <text x="180.5" y="25" text-anchor="middle" font-weight="700">Flatten</text>
+    <text x="180.5" y="43" text-anchor="middle">32 × 32 × 3 → 3072</text>
+    <path d="M241 30 H279" fill="none" stroke="#1A1814" stroke-width="1" marker-end="url(#arrow)"/>
+
+    <rect x="280.5" y="0.5" width="120" height="61" fill="#FBE8DF" stroke="#C5440A"/>
+    <text x="340.5" y="20" text-anchor="middle" font-weight="700">2 × Hidden Blocks</text>
+    <text x="340.5" y="35" text-anchor="middle" font-weight="700">FC + ReLU</text>
+    <text x="340.5" y="51" text-anchor="middle">3072 → 64 → 32</text>
+    <path d="M401 30 H439" fill="none" stroke="#1A1814" stroke-width="1" marker-end="url(#arrow)"/>
+
+    <rect x="440.5" y="0.5" width="80" height="61" fill="#FBE8DF" stroke="#C5440A"/>
+    <text x="480.5" y="27" text-anchor="middle" font-weight="700">Linear</text>
+    <text x="480.5" y="43" text-anchor="middle">32 → 10</text>
+  </g>
+</svg>
