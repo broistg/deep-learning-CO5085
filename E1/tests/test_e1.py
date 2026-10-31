@@ -1,9 +1,11 @@
 """Run from the repo root:  PYTHONPATH=.:E1 python -m unittest discover -s E1/tests -v
 The summary test needs only numpy; the others are skipped when torch is not installed."""
+import dataclasses
 import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 
@@ -18,6 +20,7 @@ except ImportError:  # pragma: no cover
     HAVE_TORCH = False
 
 from e1lib import summary
+from common.repro import config_hash
 
 
 @unittest.skipUnless(HAVE_TORCH, "torch not installed")
@@ -82,6 +85,28 @@ class EndToEnd(unittest.TestCase):
             self.assertTrue(0.0 <= r["final"]["test_acc"] <= 1.0)
             self.assertEqual(len(r["history"]), 1)
             self.assertEqual(r["split_sha256_16"], "fake")
+
+    def test_cached_run_requires_matching_configuration_and_predictions(self):
+        cfg = Cfg(model="mlp", seed=0)
+        saved = {"run_id": cfg.run_id, "config": dataclasses.asdict(cfg),
+                 "config_hash": config_hash(dataclasses.asdict(cfg)), "fake": False, "smoke": False}
+        with tempfile.TemporaryDirectory() as td:
+            out = Path(td)
+            result = out / f"{cfg.run_id}.json"
+            preds = out / f"{cfg.run_id}_preds.npz"
+            result.write_text(json.dumps(saved), encoding="utf8")
+            preds.touch()
+            with patch("e1lib.run.get_splits", side_effect=AssertionError("cache should skip data loading")):
+                self.assertEqual(run(cfg, out_dir=out), saved)
+                with self.assertRaisesRegex(ValueError, "does not match"):
+                    run(Cfg(model="mlp", seed=0, epochs=10), out_dir=out)
+                with self.assertRaisesRegex(ValueError, "does not match"):
+                    run(Cfg(model="mlp", seed=0, workers=2), out_dir=out)
+                with self.assertRaisesRegex(ValueError, "does not match"):
+                    run(cfg, out_dir=out, fake=True)
+                preds.unlink()
+                with self.assertRaisesRegex(ValueError, "predictions are missing"):
+                    run(cfg, out_dir=out)
 
 
 class Summary(unittest.TestCase):

@@ -1,6 +1,4 @@
-"""E1 plots. The functions below are Ly's notebook code, moved unchanged except that `plt.show()` became `_show()`:
-it saves the figure when a path was set (scripts, `python -m e1lib.analysis`) and shows it otherwise (notebook).
-`load_results` rebuilds the `results` dict of the notebook from E1/results/*.json and the saved predictions."""
+"""E1 figures from saved JSON histories and test predictions; no retraining or inference."""
 import argparse
 import json
 from pathlib import Path
@@ -11,14 +9,23 @@ import seaborn as sns
 import sklearn.metrics as metrics
 import torch
 
+from .summary import NAMES
+
+SEEDS = (0, 1, 2)
+
 E1_DIR = Path(__file__).resolve().parents[1]
 DISPLAY = {"softmax": "SoftmaxClassifier", "mlp": "MLP", "minivgg": "MiniVGG"}
 _SAVE = {"path": None}
+COLORS = {"softmax": "#2a78d6", "mlp": "#1baf7a", "minivgg": "#eb6834"}
+TRAIN_COLOR, VAL_COLOR = "#2a78d6", "#eb6834"
+
 
 
 def _show():
     if _SAVE["path"]:
-        plt.savefig(_SAVE["path"], dpi=150, bbox_inches="tight")
+        path = Path(_SAVE["path"])
+        plt.savefig(path.with_suffix(".pdf"), bbox_inches="tight")
+        plt.savefig(path, dpi=200, bbox_inches="tight")
         plt.close("all")
         _SAVE["path"] = None
     else:
@@ -316,6 +323,93 @@ def plot_number_of_parameters(results):
 
 # ---------------------------------------------------------------- new: rebuild `results`, write all figures ---------------------
 
+def load_seed_groups(results_dir, suffix=""):
+    """Read the three saved histories for every model; no predictions or training needed."""
+    groups = {}
+    for model in NAMES:
+        runs = []
+        for seed in SEEDS:
+            path = Path(results_dir) / f"{model}_s{seed}{suffix}.json"
+            run = json.loads(path.read_text(encoding="utf8"))
+            if run.get("fake") or run.get("smoke"):
+                raise ValueError(f"{path}: expected a completed real-data run")
+            if run["config"]["seed"] != seed or run["config"]["model"] != model:
+                raise ValueError(f"{path}: model or seed does not match its filename")
+            runs.append(run)
+        epochs = [[row["epoch"] for row in run["history"]] for run in runs]
+        if not epochs[0] or any(values != epochs[0] for values in epochs[1:]):
+            raise ValueError(f"{model}: the three seeds must have the same epoch history")
+        groups[(model, suffix != "_noaug")] = runs
+    return groups
+
+
+def curve_stats(runs, field):
+    """Per-epoch mean and sample standard deviation over the three saved seeds."""
+    values = np.asarray([[row[field] for row in r["history"]] for r in runs], dtype=float)
+    if values.shape[0] != len(SEEDS):
+        raise ValueError(f"{field}: expected {len(SEEDS)} seeds, found {values.shape[0]}")
+    return values.mean(axis=0), values.std(axis=0, ddof=1)
+
+
+def save_figure(fig, fig_dir, name):
+    fig.savefig(fig_dir / f"{name}.pdf", bbox_inches="tight")
+    fig.savefig(fig_dir / f"{name}.png", dpi=200, bbox_inches="tight")
+    plt.close(fig)
+
+
+def plot_mean_curves(groups, fig_dir, augment=True):
+    """Three models by two metrics, with mean and sample-std ribbons from seeds 0–2."""
+    fig, axes = plt.subplots(3, 2, figsize=(10.2, 10.0))
+    for row_idx, model in enumerate(NAMES):
+        runs = groups[(model, augment)]
+        epochs = [row["epoch"] for row in runs[0]["history"]]
+        for col_idx, fields in enumerate((("train_loss", "val_loss"), ("train_acc", "val_acc"))):
+            ax = axes[row_idx, col_idx]
+            for field, label, color, style in ((fields[0], "Training", TRAIN_COLOR, "-"),
+                                               (fields[1], "Validation", VAL_COLOR, "--")):
+                mean, std = curve_stats(runs, field)
+                scale = 100 if col_idx == 1 else 1
+                ax.plot(epochs, mean * scale, label=label, color=color, ls=style, lw=1.7)
+                ax.fill_between(epochs, (mean - std) * scale, (mean + std) * scale,
+                                color=color, alpha=0.16, linewidth=0)
+            ax.set_title(f"{NAMES[model]} — {'Loss' if col_idx == 0 else 'Accuracy'}", loc="left")
+            ax.set_xlabel("Epoch")
+            ax.set_ylabel("Loss" if col_idx == 0 else "Accuracy (%)")
+            ax.legend(frameon=False, fontsize=8)
+    fig.suptitle("Mean ± sample std (3 seeds: 0, 1, 2)", fontsize=12, y=0.995)
+    note = ("Training metrics use randomly augmented images; validation metrics use unaugmented images."
+            if augment else "Training and validation metrics use unaugmented images.")
+    fig.text(0.5, 0.006, note,
+             ha="center", fontsize=8, color="#52514e")
+    fig.tight_layout(rect=(0, 0.025, 1, 0.98))
+    save_figure(fig, fig_dir, "curves")
+
+
+def plot_aggregate_bars(groups, fig_dir, augment=True):
+    """Cost and final-accuracy charts use all three seeds, matching the summary table."""
+    specs = (
+        ("accuracy", "Final-epoch test accuracy", "Accuracy (%)", lambda r: 100 * r["final"]["test_acc"]),
+        ("training_time", "Training time", "Total training seconds", lambda r: sum(h["train_s"] for h in r["history"])),
+        ("inference_time", "Test prediction pipeline", "Amortized ms/image at batch 64", lambda r: r["inference_ms_per_image"]),
+        ("parameters", "Trainable parameters", "Parameters", lambda r: r["n_params"]),
+    )
+    models = list(NAMES)
+    for filename, title, ylabel, get_value in specs:
+        values = [np.asarray([get_value(r) for r in groups[(model, augment)]], dtype=float) for model in models]
+        means = [v.mean() for v in values]
+        stds = [v.std(ddof=1) for v in values]
+        fig, ax = plt.subplots(figsize=(6.4, 3.6))
+        x = np.arange(len(models))
+        ax.bar(x, means, yerr=stds if filename != "parameters" else None, capsize=4,
+               color=[COLORS[m] for m in models], alpha=0.9)
+        ax.set_xticks(x, [NAMES[m] for m in models])
+        ax.set_ylabel(ylabel)
+        ax.set_title(f"{title} — {'3-seed mean ± sample std' if filename != 'parameters' else 'model capacity'}", loc="left")
+        ax.set_ylim(bottom=0)
+        fig.tight_layout()
+        save_figure(fig, fig_dir, filename)
+
+
 def load_results(results_dir=None, seed=0, suffix=""):
     """-> {display name: {history, y_true, y_pred, y_prob, inference_time}}, the structure `run_experiment` returned in the notebook."""
     results_dir = Path(results_dir or E1_DIR / "results")
@@ -337,15 +431,18 @@ def load_results(results_dir=None, seed=0, suffix=""):
 
 
 def make_figures(results_dir=None, fig_dir=None, seed=0, suffix=""):
-    """Write the notebook's charts for one seed to E1/figures/*.png (EDA charts need the data download)."""
+    """Write three-seed comparison charts; EDA and seed-specific examples use the original pipeline."""
     from common.cifar import CLASSES, DATA_ROOT, SPLIT_PATH, channel_stats, get_splits
     from .data import CifarArrays
     results_dir = Path(results_dir or E1_DIR / "results")
     fig_dir = Path(fig_dir or E1_DIR / "figures")
     fig_dir.mkdir(parents=True, exist_ok=True)
+    groups = load_seed_groups(results_dir, suffix)
+    augment = suffix != "_noaug"
+    plot_mean_curves(groups, fig_dir, augment)
+    plot_aggregate_bars(groups, fig_dir, augment)
+
     results = load_results(results_dir, seed, suffix)
-    if not results:
-        raise SystemExit(f"no results for seed {seed} in {results_dir}: run `python -m e1lib.run` first")
     splits, _ = get_splits(DATA_ROOT, SPLIT_PATH)
     mean, std = channel_stats(splits["train"][0])
     train_ds, test_ds = CifarArrays(*splits["train"], mean, std), CifarArrays(*splits["test"], mean, std)
@@ -357,33 +454,17 @@ def make_figures(results_dir=None, fig_dir=None, seed=0, suffix=""):
     plot_class_distribution(train_ds, title="Training Class Distribution (45,000 images)")
     save("eda_samples")
     plot_samples_per_class(train_ds, samples_per_class=10)
-
-    fig, axes = plt.subplots(len(results), 2, figsize=(16, 5 * len(results)))
-    axes = np.atleast_2d(axes)
-    for idx, (name, res) in enumerate(results.items()):
-        h = res["history"]
-        plot_loss_accuracy_curves(h["train_losses"], h["train_accuracies"], h["val_losses"], h["val_accuracies"],
-                                  title=name, axes=axes[idx])
-    plt.tight_layout()
-    fig.savefig(fig_dir / "curves.png", dpi=150, bbox_inches="tight")
-    plt.close(fig)
-
     for name, res in results.items():
         save(f"confusion_{name}")
-        plot_confusion_matrix(res["y_true"], res["y_pred"], CLASSES, normalize=False, title=f"Confusion Matrix - {name}")
+        plot_confusion_matrix(res["y_true"], res["y_pred"], CLASSES, normalize=False,
+                              title=f"Confusion Matrix - {name} (seed {seed})")
         save(f"errors_{name}")
         show_errors(test_ds, res["y_true"], res["y_pred"], res["y_prob"], CLASSES, n=8, num_cols=4,
-                    title=f"Top Prediction Errors - {name}", mean=list(mean), std=list(std))
-    for fn, name in ((plot_accuracy, "accuracy"), (plot_training_time, "training_time"), (plot_number_of_parameters, "parameters")):
-        save(name)
-        fn(results)
-    save("inference_time")
-    plot_inference_time(results, test_ds)
+                    title=f"Top Prediction Errors - {name} (seed {seed})", mean=list(mean), std=list(std))
     print(f"figures -> {fig_dir}")
 
-
 def main():
-    ap = argparse.ArgumentParser(description="Write the E1 figures for one seed")
+    ap = argparse.ArgumentParser(description="Write three-seed E1 comparison charts and seed-specific examples")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--suffix", default="", help="'_noaug' for the no-augmentation runs")
     ap.add_argument("--results", help="folder with the run JSONs and *_preds.npz (default E1/results)")

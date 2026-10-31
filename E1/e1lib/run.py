@@ -1,5 +1,5 @@
 """Train and evaluate one E1 model: python -m e1lib.run --model mlp --seed 0     (run from the repo root, PYTHONPATH=.:E1)
-    --all      softmax, mlp, minivgg x seeds 0,1,2 (finished runs are skipped)
+    --all      softmax, mlp, minivgg x seeds 0,1,2 (matching finished runs are skipped)
     --fake     synthetic data, no download          --smoke   1 epoch on --fake data, nothing saved
     --no-aug   no augmentation (the original notebook's setting; run id gets the suffix _noaug)
 Outputs: E1/results/<run_id>.json (commit), <run_id>_preds.npz (commit, ~0.5 MB), E1/artifacts/<run_id>/ (weights; not committed)."""
@@ -30,7 +30,7 @@ class Cfg:
     batch_size: int = 64        # as in the original notebook
     lr: float = 1e-3            # Adam, as in the original notebook
     augment: bool = True        # RandomCrop(32, padding=4) + horizontal flip, train only (same as E2)
-    workers: int = 2
+    workers: int = 0          # matches the committed runs; set explicitly to change the loader count
 
     @property
     def run_id(self):
@@ -44,9 +44,23 @@ def ce_from_probs(y_true, y_prob):
 def run(cfg, out_dir=None, data_root=None, fake=False, smoke=False, force=False):
     out_dir = Path(out_dir or E1_DIR / "results")
     result_path = out_dir / f"{cfg.run_id}.json"
+    preds_path = out_dir / f"{cfg.run_id}_preds.npz"
     if result_path.exists() and not force and not smoke:
-        print(f"{cfg.run_id}: result exists -> skip")
-        return read_json(result_path)
+        saved = read_json(result_path)
+        expected_cfg = dataclasses.asdict(cfg)
+        if (not isinstance(saved, dict) or saved.get("run_id") != cfg.run_id
+                or saved.get("config") != expected_cfg
+                or saved.get("config_hash") != config_hash(expected_cfg)
+                or saved.get("fake") is not fake
+                or saved.get("smoke") is not False
+                or not preds_path.is_file()):
+            raise ValueError(
+                f"{cfg.run_id}: saved result does not match the requested configuration/data "
+                f"or its predictions are missing: {result_path}. "
+                "Use matching options, a different output directory, or --force to rerun."
+            )
+        print(f"{cfg.run_id}: matching result exists -> skip")
+        return saved
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     set_seed(cfg.seed)                                                  # before EACH model: its init does not depend on run order
     splits, split_hash = get_splits(data_root or DATA_ROOT, SPLIT_PATH, fake=fake)
@@ -86,7 +100,7 @@ def run(cfg, out_dir=None, data_root=None, fake=False, smoke=False, force=False)
         art.mkdir(parents=True, exist_ok=True)
         torch.save(model.state_dict(), art / "model_final.pt")
         torch.save(best["state"], art / "model_best_val_loss.pt")
-        np.savez_compressed(out_dir / f"{cfg.run_id}_preds.npz", y_true=y_true, y_pred=y_pred, y_prob=y_prob.astype(np.float32))
+        np.savez_compressed(preds_path, y_true=y_true, y_pred=y_pred, y_prob=y_prob.astype(np.float32))
         write_json(result_path, result)
     return result
 
@@ -97,7 +111,7 @@ def main():
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--epochs", type=int, default=30)
     ap.add_argument("--no-aug", action="store_true")
-    ap.add_argument("--workers", type=int, default=2)
+    ap.add_argument("--workers", type=int, default=0)
     ap.add_argument("--all", action="store_true", help="3 models x seeds 0,1,2")
     ap.add_argument("--data-root", default=None)
     ap.add_argument("--fake", action="store_true")
