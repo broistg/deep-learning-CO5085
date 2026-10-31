@@ -1,9 +1,11 @@
 """Run from the repo root:  PYTHONPATH=.:E1 python -m unittest discover -s E1/tests -v
 The summary test needs only numpy; the others are skipped when torch is not installed."""
+import dataclasses
 import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 
@@ -18,6 +20,7 @@ except ImportError:  # pragma: no cover
     HAVE_TORCH = False
 
 from e1lib import summary
+from common.repro import config_hash
 
 
 @unittest.skipUnless(HAVE_TORCH, "torch not installed")
@@ -83,13 +86,37 @@ class EndToEnd(unittest.TestCase):
             self.assertEqual(len(r["history"]), 1)
             self.assertEqual(r["split_sha256_16"], "fake")
 
+    def test_cached_run_requires_matching_configuration_and_predictions(self):
+        cfg = Cfg(model="mlp", seed=0)
+        saved = {"run_id": cfg.run_id, "config": dataclasses.asdict(cfg),
+                 "config_hash": config_hash(dataclasses.asdict(cfg)), "fake": False, "smoke": False}
+        with tempfile.TemporaryDirectory() as td:
+            out = Path(td)
+            result = out / f"{cfg.run_id}.json"
+            preds = out / f"{cfg.run_id}_preds.npz"
+            result.write_text(json.dumps(saved), encoding="utf8")
+            preds.touch()
+            with patch("e1lib.run.get_splits", side_effect=AssertionError("cache should skip data loading")):
+                self.assertEqual(run(cfg, out_dir=out), saved)
+                with self.assertRaisesRegex(ValueError, "does not match"):
+                    run(Cfg(model="mlp", seed=0, epochs=10), out_dir=out)
+                with self.assertRaisesRegex(ValueError, "does not match"):
+                    run(Cfg(model="mlp", seed=0, workers=2), out_dir=out)
+                with self.assertRaisesRegex(ValueError, "does not match"):
+                    run(cfg, out_dir=out, fake=True)
+                preds.unlink()
+                with self.assertRaisesRegex(ValueError, "predictions are missing"):
+                    run(cfg, out_dir=out)
+
 
 class Summary(unittest.TestCase):
     def test_mean_std_over_seeds_and_table(self):
         with tempfile.TemporaryDirectory() as td:
             td = Path(td)
             for seed, (fin, best) in enumerate([(0.70, 0.71), (0.72, 0.72), (0.74, 0.73)]):
-                r = {"config": {"model": "mlp", "seed": seed, "augment": True}, "n_params": 199_082, "smoke": False, "fake": False,
+                r = {"config": {"model": "mlp", "seed": seed, "augment": True, "epochs": 1},
+                     "history": [{"epoch": 1}], "channel_mean": [0.5] * 3, "channel_std": [0.2] * 3,
+                     "peak_mem_mb": 20.0 + seed, "n_params": 199_082, "smoke": False, "fake": False,
                      "final": {"test_acc": fin}, "best": {"test_acc": best}, "train_s_per_epoch_median": 2.0,
                      "inference_ms_per_image": 0.01, "split_sha256_16": "abc"}
                 (td / f"mlp_s{seed}.json").write_text(json.dumps(r), encoding="utf8")
@@ -97,9 +124,11 @@ class Summary(unittest.TestCase):
             s = json.loads((td / "summary.json").read_text(encoding="utf8"))["mlp"]
             self.assertAlmostEqual(s["test_acc_final_mean_std"][0], 0.72)
             self.assertAlmostEqual(s["test_acc_final_mean_std"][1], 0.02)            # sample std, ddof = 1
+            self.assertEqual(s["peak_mem_mb_max"], 22.0)
             tab = (td / "tab_e1_summary.tex").read_text(encoding="utf8")
             self.assertIn("199\\,082", tab)
             self.assertIn("72{,}00", tab)
+            self.assertIn("22{,}0", tab)
 
 
 if __name__ == "__main__":
