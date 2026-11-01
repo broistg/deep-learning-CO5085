@@ -250,6 +250,74 @@ def table_lr(runs, choice):
     return tex_rows(rows)
 
 
+# ---- follow-up (diag) experiments; see the decision rules in plan.py ---------------------------------------------------
+DIAG_LABEL = {"nomix": "Không Mixup/CutMix, label smoothing 0{,}1", "plain": "Không Mixup/CutMix, không label smoothing",
+              "llrd75": "Layer-wise LR decay 0{,}75"}
+
+
+def table_diag_lr(runs, choice):
+    """Follow-up LR points next to the protocol sweep of the same (model, mode): which LR wins, and by how much."""
+    group_of = {"head": "head", "full": "finetune", "partial": "finetune"}
+    pts = {}
+    for r in runs.values():
+        c = r["config"]
+        if c["kind"] == "diag_sweep":
+            pts.setdefault((c["model"], c["mode"]), {})[float(c["lr_peak"])] = (r["final"]["val"]["top1"] * 100, "bổ sung")
+    for (model, mode), d in pts.items():
+        for r in runs.values():
+            c = r["config"]
+            if c["kind"] == "sweep" and c["model"] == model and c["mode"] == mode:
+                d.setdefault(float(c["lr_peak"]), (r["final"]["val"]["top1"] * 100, "giao thức"))
+    rows = []
+    for (model, mode), d in sorted(pts.items(), key=lambda kv: (NAME[kv[0][0]], ORDER_MODE.index(kv[0][1]))):
+        ch = (choice.get(f"{model}|{group_of[mode]}") or {}).get("lr")
+        best = max(d, key=lambda x: d[x][0])
+        for x in sorted(d):
+            v, src = d[x]
+            mark = "$^{*}$" if (mode != "partial" and ch is not None and abs(x - ch) < 1e-12) else ""
+            rows.append(f"{NAME[model]} & {MODE[mode]} & {_lr_tex(x)} & {num(v)}{mark}{' (tốt nhất)' if x == best else ''} & {src} \\\\")
+    return tex_rows(rows)
+
+
+def table_diag(runs):
+    """10-epoch follow-up runs against the protocol run of the same model and mode (test top-1, ECE, NLL; no logits needed)."""
+    rows = []
+    for model in ("resnet50.a1_in1k", "deit_small_patch16_224.fb_in1k"):
+        base = runs.get(f"m_{SHORT[model]}_full_s0")
+        mine = sorted((r for r in runs.values() if r["config"]["kind"] == "diag" and r["config"]["model"] == model), key=lambda r: r["run_id"])
+        if not mine or base is None:
+            continue
+        def line(label, r):
+            t = r["final"]["test"]
+            return f"{NAME[model]} & {label} & {num(100 * t['top1'])} & {num(100 * t['ece'])} & {num(t['nll'], 3)} \\\\"
+        rows.append(line("Giao thức (Mixup/CutMix, label smoothing 0{,}1)", base))
+        for r in mine:
+            rid = r["run_id"]
+            if rid.startswith("dg_m_"):
+                lab = f"{MODE[r['config']['mode']]}, LR {_lr_tex(float(r['config']['lr_peak']))} (độ nhạy)"
+            else:
+                lab = DIAG_LABEL.get(rid.rsplit("_", 1)[-1], rid)
+            rows.append(line(lab, r))
+    return tex_rows(rows)
+
+
+def table_robust_seeds(rob0, rob_extra):
+    """Mean +- std over seeds of the share of clean accuracy kept at severity 3 (the seed-0 file and the file with seeds 1 and 2)."""
+    from a1lib.corruptions import TYPES
+    models = {**rob0["models"], **rob_extra["models"]}
+    by = {}
+    for rid, m in models.items():
+        parts = rid.split("_")
+        by.setdefault((parts[1], parts[-2]), []).append({t: 100 * m[t]["3"] / m["clean"] for t in TYPES if t in m})
+    rows = []
+    for (a_, mode), vs in sorted(by.items(), key=lambda kv: (kv[0][0] != "resnet50", ORDER_MODE.index(kv[0][1]))):
+        if len(vs) < 2 or mode == "scratch":
+            continue
+        cells = [f"{num(np.mean([v[t] for v in vs]), 1)} $\\pm$ {num(np.std([v[t] for v in vs], ddof=1), 1)}" for t in TYPES]
+        rows.append(f"{'ResNet-50' if a_ == 'resnet50' else 'DeiT-S'} & {MODE[mode]} & {len(vs)} & " + " & ".join(cells) + " \\\\")
+    return tex_rows(rows)
+
+
 def table_stretch(runs):
     rows = []
     for r in stretch_runs(runs):
@@ -578,7 +646,7 @@ def main(argv=None):
     names = class_names(a.split)
     g = main_groups(runs)
     print(f"{len(runs)} finished runs ({sum(len(v) for v in g.values())} in the main protocol); logits dir: {art} ({'found' if art.exists() else 'missing'})")
-    summ = {"n_runs": len(runs), "kinds": {k: sum(1 for r in runs.values() if r["config"]["kind"] == k) for k in ("sweep", "main", "seed", "ablation", "stretch")}}
+    summ = {"n_runs": len(runs), "kinds": {k: sum(1 for r in runs.values() if r["config"]["kind"] == k) for k in ("sweep", "main", "seed", "ablation", "stretch", "diag_sweep", "diag")}}
     summ["main"] = {f"{a_}|{m}": {"seeds": [r["config"]["seed"] for r in rs], "top1": [r["final"]["test"]["top1"] for r in rs],
                                   "top5": [r["final"]["test"]["top5"] for r in rs], "macro_f1": [r["final"]["test"]["macro_f1"] for r in rs],
                                   "val_top1": [r["final"]["val"]["top1"] for r in rs], "hours": [hours(r) for r in rs],
@@ -597,6 +665,12 @@ def main(argv=None):
     infer_p, rob_p = res / "cost_infer.json", res / "posthoc_robustness.json"
     if infer_p.exists():
         write_table(out, "tab_infercost.tex", table_infer(json.loads(infer_p.read_text(encoding="utf8"))))
+    if any(r["config"]["kind"] in ("diag", "diag_sweep") for r in runs.values()):
+        write_table(out, "tab_diag_lr.tex", table_diag_lr(runs, choice))
+        write_table(out, "tab_diag.tex", table_diag(runs))
+    if rob_p.exists() and (res / "posthoc_robustness_seeds.json").exists():
+        write_table(out, "tab_robust_seeds.tex", table_robust_seeds(json.loads(rob_p.read_text(encoding="utf8")),
+                                                                    json.loads((res / "posthoc_robustness_seeds.json").read_text(encoding="utf8"))))
     if rob_p.exists():
         rob = json.loads(rob_p.read_text(encoding="utf8"))
         write_table(out, "tab_robust.tex", table_robust(rob, summ))

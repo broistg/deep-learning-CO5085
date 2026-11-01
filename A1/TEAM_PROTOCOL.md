@@ -85,3 +85,22 @@ Only for development and smoke tests (`--smoke --fake` with `A1_STORE=<some fold
 
 ## 12. AI-use disclosure
 Claude was used to write and review this code and protocol. Each member must be able to explain every file; the README declares the use. Run the smoke test and read `train.py` once before you start.
+
+## 13. Follow-up experiments (after the 88 protocol runs)
+
+Added on top of the finished protocol; they never change `lr_choice.json`, the committed results or the Release weights. The decision rules are written in `a1lib/plan.py` (comment above `DIAG_SWEEP`) before any of these runs exists.
+
+| Question | Runs | Cost |
+|---|---|---|
+| Were the edge LRs too small? (ResNet-50 head and full, DeiT-S head) | 3 sweep points, one level further | ~15 min |
+| Does partial freeze need its own LR? (DeiT-S, ResNet-50) | 7 sweep points | ~30 min |
+| Is under-confidence caused by Mixup/CutMix or label smoothing? | 10 epochs full fine-tuning x {no Mixup, no Mixup and no smoothing} x 2 models | ~3.3 h |
+| Does full fine-tuning damage the early ViT blocks? | DeiT-S full, layer-wise LR decay 0.75 | ~0.8 h |
+| Is ResNet-50 full fragile to noise on every seed? | robustness on seeds 1 and 2 (post-hoc, no training) | ~30 min |
+
+Steps (coordinator once, then both members `git pull` and run the usual worker notebook; these runs have the highest stage numbers, so they come after everything else):
+
+1. `python -m a1lib.plan make-diag` (writes `configs/dg_*.yaml`, extends `plan.json`; idempotent) and commit both.
+2. When the `dg_sw_*` runs are done and collected: `python -m a1lib.analyze` prints `tab_diag_lr.tex`. If a new LR beats the chosen one by at least 0.5 points of validation top-1, add ONE 10-epoch sensitivity run: `python -m a1lib.plan add-diag --model resnet50 --mode full --lr 0.0027` (commit, pull, run). Do not edit `lr_choice.json` and do not rerun the protocol runs.
+3. Robustness on seeds 1 and 2: last cells (8) of `notebooks/kaggle_posthoc.ipynb` on Kaggle (T4, Internet on, `HF_TOKEN`; about 30 min). Do it AFTER the protocol and follow-up runs are collected and `A1/results/*.json` is committed and pushed (the notebook reads the run configs from the git checkout), and never while a worker runs on the same GPU (it is not a speed measurement, but it shares the GPU). Download `a1_posthoc.zip` and commit `posthoc_robustness_seeds.json` into `A1/results/`.
+4. `collect results`, then `python -m a1lib.analyze` again: `tab_diag_lr.tex`, `tab_diag.tex` (test top-1, ECE, NLL against the protocol run) and `tab_robust_seeds.tex` (mean and std over 3 seeds). Commit them with the new `results/dg_*.json`; their logits go into `a1_logits.zip`; their weights are not packed.

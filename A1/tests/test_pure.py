@@ -88,3 +88,49 @@ class Metrics(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class FollowUp(unittest.TestCase):
+    def test_llrd_scale(self):
+        from a1lib.schedule import llrd_scale
+        self.assertEqual(llrd_scale("head.weight", 12, 0.75), 1.0)
+        self.assertEqual(llrd_scale("norm.bias", 12, 0.75), 1.0)
+        self.assertAlmostEqual(llrd_scale("blocks.11.attn.qkv.weight", 12, 0.75), 0.75)
+        self.assertAlmostEqual(llrd_scale("blocks.0.mlp.fc1.weight", 12, 0.75), 0.75 ** 12)
+        self.assertAlmostEqual(llrd_scale("patch_embed.proj.weight", 12, 0.75), 0.75 ** 13)
+        self.assertEqual(llrd_scale("cls_token", 12, 1.0), 1.0)
+
+    def test_hash_unchanged_by_llrd_default(self):
+        from a1lib.config import stable_hash
+        cfg = P._cfg("x", P.PAIR1[0], "full", 10, "main", lr=1e-3).to_dict()
+        old = {k: v for k, v in cfg.items() if k != "llrd"}          # a result written before the field existed
+        self.assertEqual(stable_hash(cfg), stable_hash(old))
+        self.assertNotEqual(stable_hash(cfg), stable_hash({**cfg, "llrd": 0.75}))
+
+    def test_diag_runs(self):
+        runs = P.build_diag_runs()
+        ids = [r.run_id for r in runs]
+        self.assertEqual(len(ids), len(set(ids)))
+        self.assertEqual(sum(r.kind == "diag_sweep" for r in runs), 10)
+        self.assertEqual(sum(r.kind == "diag" for r in runs), 5)
+        by = {r.run_id: r for r in runs}
+        self.assertEqual(by["dg_resnet50_full_nomix"].augmentation["mixup"]["prob"], 0.0)
+        self.assertEqual(by["dg_resnet50_full_nomix"].augmentation["mixup"]["label_smoothing"], 0.1)
+        self.assertEqual(by["dg_deit_s_full_plain"].augmentation["mixup"]["label_smoothing"], 0.0)
+        self.assertEqual(by["dg_deit_s_full_llrd75"].llrd, 0.75)
+        self.assertTrue(all(r.lr_peak != "auto" for r in runs if r.kind == "diag_sweep"))
+
+    def test_append_to_plan_is_idempotent_and_leaves_old_entries(self):
+        with tempfile.TemporaryDirectory() as d:
+            a1 = Path(d)
+            old = P.build_runs()
+            plan = {"version": 1, "owners": ["dat", "ly"], "grids": P.LR_GRID, "runs": P.assign(old, ["dat", "ly"])}
+            before = list(plan["runs"])
+            new1 = P._append_to_plan(plan, P.build_diag_runs(), a1)
+            new2 = P._append_to_plan(plan, P.build_diag_runs(), a1)
+            self.assertEqual(len(new1), 15)
+            self.assertEqual(new2, [])
+            self.assertTrue(all(e in plan["runs"] for e in before))
+            self.assertEqual(len(plan["runs"]), len(before) + 15)
+            self.assertTrue((a1 / "configs" / "dg_deit_s_full_llrd75.yaml").exists())
+            self.assertEqual(load_config(a1 / "configs" / "dg_deit_s_full_llrd75.yaml").llrd, 0.75)

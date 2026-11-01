@@ -1,5 +1,6 @@
 """timm model factory, the four freeze modes, parameter groups. Reuses the logic validated by bench2.py on Colab."""
 import timm
+from a1lib.schedule import vit_layer_id
 
 N_CLASSES = 101
 FAMILY = {  # timm name -> family (only used for channels_last)
@@ -60,8 +61,19 @@ def count_params(model):
     return tr, sum(p.numel() for p in model.parameters())
 
 
-def param_groups(model, weight_decay):
-    """AdamW: weight decay on trainable parameters with >= 2 dims only (not biases / norm parameters)."""
+def param_groups(model, weight_decay, lr=None, llrd=1.0):
+    """AdamW: weight decay on trainable parameters with >= 2 dims only (not biases / norm parameters).
+    llrd < 1 (ViT only, follow-up experiments): one group per (layer, decay) with lr = lr * llrd ** (distance to the head)."""
+    if llrd < 1.0:
+        if not hasattr(model, "blocks"):
+            raise ValueError("llrd < 1 is implemented for timm ViT models (DeiT) only")
+        depth, groups = len(model.blocks), {}
+        for n, p in model.named_parameters():
+            if p.requires_grad:
+                key = (vit_layer_id(n, depth), p.ndim >= 2)
+                groups.setdefault(key, {"params": [], "weight_decay": weight_decay if p.ndim >= 2 else 0.0,
+                                        "lr": lr * llrd ** (depth + 1 - key[0])})["params"].append(p)
+        return [groups[k] for k in sorted(groups)]
     decay, no_decay = [], []
     for p in model.parameters():
         if p.requires_grad:

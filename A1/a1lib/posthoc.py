@@ -1,5 +1,6 @@
 """Post-hoc analyses that need the trained weights and a GPU (Kaggle/Colab, about 1 h in total). No training.
 
+    python -m a1lib.posthoc robustness --runs m_resnet50_full_s1,... --tag seeds   # other runs (e.g. seeds 1 and 2) -> posthoc_robustness_seeds.json
     python -m a1lib.posthoc robustness   # 8 core models x 6 corruptions x 3 severities on a fixed 50-images-per-class test subset
     python -m a1lib.posthoc gradcam      # Grad-CAM of ResNet-50 and DeiT-S (full fine-tuning) on 12 images chosen by a fixed rule
     python -m a1lib.posthoc toploss      # training images with the highest loss under the fine-tuned models (label-noise check)
@@ -72,7 +73,7 @@ class CorruptedSet(torch.utils.data.Dataset):
         arr = np.asarray(x).copy()
         if self.ctype:
             arr = corrupt(arr, self.ctype, self.sev, i)
-        return torch.from_numpy(np.array(arr)).permute(2, 0, 1), self.labels[i]
+        return torch.from_numpy(np.array(arr)).permute(2, 0, 1), self.labels[i]   # np.array copies: PIL-backed arrays are read-only
 
 
 @torch.inference_mode()
@@ -104,8 +105,9 @@ def robustness(a):
             else:
                 out["models"][rid].setdefault(ctype, {})[str(sev)] = acc
         log(f"{ctype or 'clean'} {sev or ''}: " + "  ".join(f"{rid.split('_s0')[0][2:]} {100 * hit[rid] / len(ds):.1f}" for rid in runs))
-    (Path(a.results) / "posthoc_robustness.json").write_text(json.dumps(out, indent=1), encoding="utf8")
-    log("wrote posthoc_robustness.json")
+    name = "posthoc_robustness.json" if not a.runs else f"posthoc_robustness_{a.tag}.json"     # --runs: never overwrite the seed-0 file
+    (Path(a.results) / name).write_text(json.dumps(out, indent=1), encoding="utf8")
+    log(f"wrote {name}")
 
 
 # ------------------------------------------------------------------------------------------------------------ Grad-CAM
@@ -143,7 +145,7 @@ def gradcam(a):
             cam = GradCAM(model=model, target_layers=[model.blocks[-1].norm1], reshape_transform=vit_reshape)
         maps, preds = [], []
         for arr in imgs:
-            x = gpu_normalize(torch.from_numpy(np.array(arr)).permute(2, 0, 1)[None], device)
+            x = gpu_normalize(torch.from_numpy(arr).permute(2, 0, 1)[None], device)
             with torch.no_grad():
                 preds.append(int(model(x).argmax(1)))
             maps.append(cam(input_tensor=x, targets=None)[0])
@@ -226,6 +228,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("cmd", choices=["robustness", "gradcam", "toploss", "all"])
     ap.add_argument("--runs", default="", help="robustness: comma list (default: the 8 core runs)")
+    ap.add_argument("--tag", default="seeds", help="robustness with --runs: output is posthoc_robustness_<tag>.json")
     ap.add_argument("--results", default=str(A1 / "results"))
     ap.add_argument("--artifacts", default=str(A1 / "artifacts"))
     ap.add_argument("--data-root", default=None)

@@ -27,7 +27,7 @@ import re  # noqa: E402
 ASSETS = {   # name: (folder, files, optional predicate on the run folder name)
     "e1_artifacts.zip": ("E1/artifacts", ("model_final.pt", "model_best_val_loss.pt")),
     "e2_artifacts.zip": ("E2/artifacts", ("logits_test.pt", "model_final.pt")),
-    "a1_logits.zip": ("A1/artifacts", ("logits_val.npz", "logits_test.npz"), lambda n: not n.startswith("sw_")),
+    "a1_logits.zip": ("A1/artifacts", ("logits_val.npz", "logits_test.npz"), lambda n: not n.startswith(("sw_", "dg_sw_"))),
     "a1_weights_core.zip": ("A1/artifacts", ("model_final.pt",), lambda n: re.fullmatch(r"m_.*_s0", n) is not None),
     "a1_weights_seeds.zip": ("A1/artifacts", ("model_final.pt",), lambda n: re.fullmatch(r"m_.*_s[12]", n) is not None),
     "a1_weights_extra.zip": ("A1/artifacts", ("model_final.pt",), lambda n: n.startswith(("ab_", "x_"))),

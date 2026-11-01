@@ -77,7 +77,7 @@ class Analyze(unittest.TestCase):
         for f in ("curves", "ablation", "pareto", "lr_sweep", "reliability", "perclass"):
             self.assertTrue((self.out / "figures" / f"{f}.png").exists(), f)
         s = json.loads((self.out / "summary.json").read_text())
-        self.assertEqual(s["kinds"], {"sweep": 36, "main": 8, "seed": 12, "ablation": 12, "stretch": 9})
+        self.assertEqual(s["kinds"], {"sweep": 36, "main": 8, "seed": 12, "ablation": 12, "stretch": 9, "diag_sweep": 0, "diag": 0})
 
     def test_no_trailing_backslashes_and_column_count(self):
         for p in self.out.glob("tab_*.tex"):
@@ -136,3 +136,35 @@ class Analyze(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class FollowUpTables(unittest.TestCase):
+    def _run(self, rid, kind, model, mode, lr, top1=0.8, ece=0.1, val=0.7):
+        return {"run_id": rid, "config": {"kind": kind, "model": model, "mode": mode, "lr_peak": lr, "epochs": 10, "data_fraction": 1.0, "seed": 0},
+                "final": {"val": {"top1": val}, "test": {"top1": top1, "ece": ece, "nll": 0.5}}}
+
+    def test_tables(self):
+        R, D = "resnet50.a1_in1k", "deit_small_patch16_224.fb_in1k"
+        runs = {r["run_id"]: r for r in [
+            self._run("sw_resnet50_head_lr9e-3", "sweep", R, "head", 0.009, val=0.60),
+            self._run("dg_sw_resnet50_head_lr2.7e-2", "diag_sweep", R, "head", 0.027, val=0.62),
+            self._run("m_resnet50_full_s0", "main", R, "full", 0.0009, top1=0.86, ece=0.24),
+            self._run("dg_resnet50_full_nomix", "diag", R, "full", 0.0009, top1=0.85, ece=0.05),
+            self._run("dg_m_resnet50_head_lr2.7e-2", "diag", R, "head", 0.027, top1=0.7, ece=0.2)]}
+        lr = AN.table_diag_lr(runs, {f"{R}|head": {"lr": 0.009}})
+        self.assertIn("tốt nhất", lr)
+        self.assertIn("bổ sung", lr)
+        d = AN.table_diag(runs)
+        self.assertIn("Giao thức", d)
+        self.assertIn("Không Mixup/CutMix", d)
+        self.assertIn("độ nhạy", d)
+
+    def test_robust_seeds(self):
+        from a1lib.corruptions import TYPES
+        def m(c):
+            return {"clean": 0.8, **{t: {"1": 0.7, "2": 0.6, "3": c} for t in TYPES}}
+        r0 = {"models": {"m_resnet50_full_s0": m(0.4)}}
+        r1 = {"models": {"m_resnet50_full_s1": m(0.5), "m_resnet50_full_s2": m(0.6)}}
+        out = AN.table_robust_seeds(r0, r1)
+        self.assertIn("ResNet-50 & Full fine-tuning & 3", out)
+        self.assertIn("pm", out)

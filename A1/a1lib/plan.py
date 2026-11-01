@@ -26,7 +26,7 @@ LR_GRID = {"head": [3e-4, 1e-3, 3e-3], "finetune": [3e-5, 1e-4, 3e-4], "scratch"
 SWEEP_MODE = {"head": "head", "finetune": "full", "scratch": "scratch"}   # the sweep trains with these modes
 PRETRAINED_EPOCHS, SCRATCH_EPOCHS, SWEEP_EPOCHS, SWEEP_FRACTION = 10, 40, 3, 0.2
 FRACTIONS = (0.1, 0.25, 0.5)
-STAGES = {"sweep": 0, "main": 1, "seed": 2, "ablation": 3, "stretch": 4}
+STAGES = {"sweep": 0, "main": 1, "seed": 2, "ablation": 3, "stretch": 4, "diag_sweep": 5, "diag": 6}
 
 
 def lr_tag(lr):
@@ -76,6 +76,72 @@ def build_runs():
     for m in PAIR2:  # stretch 3
         runs.append(_cfg(f"x_{SHORT[m]}_scratch_s0", m, "scratch", SCRATCH_EPOCHS, "stretch"))
     return runs
+
+
+# ----------------------------------------------------------------------------------------------------------
+# Follow-up experiments (diag): added AFTER the protocol runs, on top of the 88 finished runs. They never touch lr_choice.json, the
+# committed results of the protocol, or the Release weights. The decision rules are fixed here, before any diag run exists:
+#   LR continuation  : the main-pair groups whose chosen LR sat at the edge of the (extended) grid get one more level (x3), 3 epochs / 20%.
+#                      If the new level beats the chosen LR by >= 0.5 points of val top-1, run ONE 10-epoch sensitivity run at that LR
+#                      (`plan add-diag`), seed 0, and report it next to the protocol result. Protocol results are not replaced.
+#   Own LR for partial: DeiT-S / ResNet-50 partial freeze get their own 3-epoch sweep (the protocol shared the full fine-tuning LR).
+#   Regularisation   : 10-epoch full fine-tuning without Mixup/CutMix (label smoothing kept), and without both (hard labels), per model.
+#                      Tests whether the under-confidence of the protocol runs comes from the soft targets.
+#   LLRD             : DeiT-S full fine-tuning with layer-wise LR decay 0.75, same peak LR. Tests whether the early blocks are what
+#                      full fine-tuning damages (partial freeze > full fine-tuning).
+# ----------------------------------------------------------------------------------------------------------
+DIAG_SWEEP = [  # (model, mode, lr)
+    ("resnet50.a1_in1k", "head", 0.027), ("resnet50.a1_in1k", "full", 0.0027), ("deit_small_patch16_224.fb_in1k", "head", 0.027),
+    ("deit_small_patch16_224.fb_in1k", "partial", 1e-4), ("deit_small_patch16_224.fb_in1k", "partial", 3e-4),
+    ("deit_small_patch16_224.fb_in1k", "partial", 1e-3), ("deit_small_patch16_224.fb_in1k", "partial", 3e-3),
+    ("resnet50.a1_in1k", "partial", 3e-4), ("resnet50.a1_in1k", "partial", 9e-4), ("resnet50.a1_in1k", "partial", 2.7e-3),
+]
+DIAG_MIN_GAIN = 0.005   # val top-1 (fraction) a new LR must gain over the chosen one to justify a 10-epoch sensitivity run
+
+
+def diag_sweep_run(model, mode, lr):
+    rid = f"dg_sw_{SHORT[model]}_{mode}_lr{lr_tag(lr)}"
+    return _cfg(rid, model, mode, SWEEP_EPOCHS, "diag_sweep", 0, SWEEP_FRACTION, lr,
+                notes=f"follow-up LR sweep point for mode '{mode}' (3 epochs, 20% of train, seed 0, val only)")
+
+
+def diag_run(run_id, model, mode, notes, lr="auto", llrd=1.0, mixup_prob=None, label_smoothing=None):
+    import dataclasses
+    from a1lib.config import default_augmentation
+    aug = default_augmentation()
+    if mixup_prob is not None:
+        aug["mixup"]["prob"] = mixup_prob
+    if label_smoothing is not None:
+        aug["mixup"]["label_smoothing"] = label_smoothing
+    return dataclasses.replace(_cfg(run_id, model, mode, PRETRAINED_EPOCHS, "diag", 0, 1.0, lr, notes), augmentation=aug, llrd=llrd)
+
+
+def build_diag_runs():
+    runs = [diag_sweep_run(*t) for t in DIAG_SWEEP]
+    for m in PAIR1:
+        k = SHORT[m]
+        runs.append(diag_run(f"dg_{k}_full_nomix", m, "full", "follow-up: no Mixup/CutMix, label smoothing 0.1 kept", mixup_prob=0.0))
+        runs.append(diag_run(f"dg_{k}_full_plain", m, "full", "follow-up: no Mixup/CutMix, no label smoothing (hard labels)", mixup_prob=0.0, label_smoothing=0.0))
+    runs.append(diag_run("dg_deit_s_full_llrd75", PAIR1[1], "full", "follow-up: layer-wise LR decay 0.75 over the 12 blocks, same peak LR", llrd=0.75))
+    return runs
+
+
+def _append_to_plan(plan, runs, a1):
+    """Write configs that do not exist yet and add plan entries (balanced onto the owner with the least diag load)."""
+    have = {e["run_id"] for e in plan["runs"]}
+    new = [r for r in runs if r.run_id not in have]
+    for r in new:
+        dump_config(r, a1 / "configs" / f"{r.run_id}.yaml")
+    owners = plan["owners"]
+    load = {o: sum(e["est_hours"] for e in plan["runs"] if e["owner"] == o and e["stage"] >= 5) for o in owners}
+    for r in sorted(new, key=lambda r: (STAGES[r.kind], -est_hours(r.model, r.mode, r.epochs, r.data_fraction), r.run_id)):
+        o = min(owners, key=lambda o: (load[o], o))
+        h = est_hours(r.model, r.mode, r.epochs, r.data_fraction)
+        load[o] += h
+        plan["runs"].append({"run_id": r.run_id, "stage": STAGES[r.kind], "kind": r.kind, "owner": o, "est_hours": round(h, 3),
+                             "config": f"configs/{r.run_id}.yaml", "needs_lr": r.lr_peak == "auto"})
+    plan["runs"].sort(key=lambda e: (e["stage"], e["run_id"]))
+    return new
 
 
 def assign(runs, owners):
@@ -160,6 +226,13 @@ def main():
     c = sub.add_parser("choose-lr")
     _paths_args(c)
     c.add_argument("--models", default="all", choices=["pair1", "all"], help="all (default): pair 1 and the stretch pair; groups whose sweep is unfinished are only listed")
+    dg = sub.add_parser("make-diag", help="add the follow-up (diag) runs to configs/ and plan.json (idempotent)")
+    _paths_args(dg)
+    ad = sub.add_parser("add-diag", help="add ONE 10-epoch sensitivity run at a given LR (see the decision rule in plan.py)")
+    _paths_args(ad)
+    ad.add_argument("--model", required=True, choices=sorted(SHORT.values()))
+    ad.add_argument("--mode", required=True, choices=["head", "partial", "full"])
+    ad.add_argument("--lr", required=True, type=float)
     e = sub.add_parser("extend")
     _paths_args(e)
     e.add_argument("--model", required=True)
@@ -209,6 +282,17 @@ def main():
         print(f"lr_choice.json: {n_before} -> {len(chosen)} groups chosen")
         write_json(a1 / "results" / "lr_choice.json", chosen)
         print(f"wrote lr_choice.json to the store {paths.store.describe()} and {a1 / 'results' / 'lr_choice.json'} (commit the latter)")
+    elif a.cmd == "make-diag":
+        new = _append_to_plan(plan, build_diag_runs(), a1)
+        write_json(plan_path, plan)
+        print(f"added {len(new)} follow-up runs ({sum(r.kind == 'diag_sweep' for r in new)} LR points, {sum(r.kind == 'diag' for r in new)} 10-epoch runs); "
+              f"commit configs/ and plan.json, then both members `git pull`")
+    elif a.cmd == "add-diag":
+        full = {v: k for k, v in SHORT.items()}[a.model]
+        r = diag_run(f"dg_m_{a.model}_{a.mode}_lr{lr_tag(a.lr)}", full, a.mode, f"follow-up: sensitivity run at lr {a.lr:g} (seed 0)", lr=a.lr)
+        new = _append_to_plan(plan, [r], a1)
+        write_json(plan_path, plan)
+        print(f"added {r.run_id}" if new else f"{r.run_id} already exists")
     elif a.cmd == "extend":
         run = sweep_run(a.model, a.group, a.lr)
         dump_config(run, a1 / "configs" / f"{run.run_id}.yaml")

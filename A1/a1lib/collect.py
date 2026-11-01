@@ -40,7 +40,7 @@ def bundle(paths, out_dir):
         with zipfile.ZipFile(zp, "w", zipfile.ZIP_STORED) as z:
             for rel, _ in files:
                 rid, name = rel.split("/")[1], rel.split("/")[2]
-                if rid.startswith("sw_") or pat not in "/" + name:
+                if rid.startswith(("sw_", "dg_sw_")) or pat not in "/" + name:
                     continue
                 z.write(paths.store.get(rel, tmp / rid / name), f"{rid}/{name}")
                 (tmp / rid / name).unlink()
@@ -94,6 +94,7 @@ def main():
     ap.add_argument("cmd", choices=["results", "bundle", "artifacts", "fetch-core"])
     ap.add_argument("--bundle", default="release", help="artifacts: folder with a1_logits.zip / a1_weights.zip")
     ap.add_argument("--a1-dir", default="A1")
+    ap.add_argument("--runs", default="", help="fetch-core: comma list of run ids instead of the 8 core seed-0 runs")
     ap.add_argument("--out", default=None)
     a = ap.parse_args()
     if a.cmd == "artifacts":
@@ -101,7 +102,7 @@ def main():
     paths = Paths.from_env()
     if a.cmd == "fetch-core":
         core = [f"m_{x}_{m}_s0" for x in ("resnet50", "deit_s") for m in ("head", "partial", "full", "scratch")]
-        return fetch_weights(paths, core, a.out or str(Path(a.a1_dir) / "artifacts"))
+        return fetch_weights(paths, [r for r in a.runs.split(",") if r] or core, a.out or str(Path(a.a1_dir) / "artifacts"))
     collect_results(paths, a.a1_dir) if a.cmd == "results" else bundle(paths, a.out or "release")
 
 

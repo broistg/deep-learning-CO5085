@@ -28,7 +28,7 @@ from common.repro import append_jsonl, config_hash, env_info, read_json, set_see
 
 from a1lib import metrics as M
 from a1lib.augment import eval_transform, gpu_normalize, make_mixup, soft_target_ce, train_transform
-from a1lib.config import dump_config, from_dict, load_config, resolve_lr
+from a1lib.config import dump_config, from_dict, load_config, resolve_lr, stable_hash
 from a1lib.data import FoodDataset, N_CLASSES, SPLIT_SHA16, ensure_data, load_split, make_fake_cache, subset_per_class
 from a1lib.models import FAMILY, apply_freeze, count_params, make_model, param_groups, set_train_mode
 from a1lib.paths import Paths
@@ -151,13 +151,13 @@ def run_training(cfg, paths, owner, worker=None, data_root=None, max_batches=Non
         return done
 
     cfg_dict = cfg.to_dict()
-    chash = config_hash({k: v for k, v in cfg_dict.items() if k != "notes"})
+    chash = stable_hash(cfg_dict)
     remote_cfg = store.read_bytes_fresh(f"{rel}/config.yaml")
     local_cfg = ldir / "config.yaml"
     if remote_cfg is not None:
         (ldir / "config.remote.yaml").write_bytes(remote_cfg)
         old = load_config(ldir / "config.remote.yaml")
-        if config_hash({k: v for k, v in old.to_dict().items() if k != "notes"}) != chash and not force:
+        if stable_hash(old.to_dict()) != chash and not force:
             raise RuntimeError(f"{rid}: config.yaml in the store differs from this config (hash). "
                                f"Same run_id must mean the same settings. Use a new run_id, or --force if you are sure.")
     dump_config(cfg, local_cfg)
@@ -240,7 +240,7 @@ def _train(cfg, chash, paths, owner, sync, ldir, status, device, env, data_root,
     if channels_last:
         model = model.to(memory_format=torch.channels_last)
     trainable, total = count_params(model)
-    opt = torch.optim.AdamW(param_groups(model, cfg.weight_decay), lr=float(cfg.lr_peak), betas=tuple(cfg.betas), eps=cfg.eps)
+    opt = torch.optim.AdamW(param_groups(model, cfg.weight_decay, float(cfg.lr_peak), cfg.llrd), lr=float(cfg.lr_peak), betas=tuple(cfg.betas), eps=cfg.eps)
     sched = make_scheduler(opt, total_steps, cfg)
     scaler = make_scaler(use_cuda)
     mix = make_mixup(cfg.augmentation, N_CLASSES)
@@ -310,7 +310,7 @@ def _train(cfg, chash, paths, owner, sync, ldir, status, device, env, data_root,
     v_logits, v_y = predict(model, val_loader, device, channels_last, max_batches)
     final = {"val": M.summarize(v_logits.numpy(), v_y.numpy(), N_CLASSES)}
     artifacts, push_files = {}, {}
-    if cfg.kind != "sweep":
+    if cfg.kind not in ("sweep", "diag_sweep"):
         t_logits, t_y = predict(model, make_loader(ds_test, cfg, shuffle=False, batch_size=128), device, channels_last, max_batches)
         final["test"] = M.summarize(t_logits.numpy(), t_y.numpy(), N_CLASSES)
         out = ldir / "final"

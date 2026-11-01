@@ -6,6 +6,8 @@ from pathlib import Path
 
 import yaml
 
+from common.repro import config_hash
+
 MODES = ("scratch", "head", "partial", "full")
 LR_GROUPS = ("head", "finetune", "scratch")
 
@@ -28,7 +30,7 @@ class RunConfig:
     mode: str                      # scratch | head | partial | full
     epochs: int
     seed: int = 0
-    kind: str = "main"             # sweep | main | seed | ablation | stretch
+    kind: str = "main"             # sweep | main | seed | ablation | stretch | diag_sweep | diag (follow-up experiments, see plan.py)
     pretrained: bool = True
     data_fraction: float = 1.0     # class-balanced nested subset of the 70,700 training images
     lr_peak: object = "auto"       # float, or "auto" = look up the sweep result for (model, lr_group)
@@ -41,6 +43,7 @@ class RunConfig:
     eps: float = 1e-8
     drop_rate: float = 0.0
     drop_path_rate: float = 0.0
+    llrd: float = 1.0              # layer-wise LR decay per ViT block (1.0 = off, the protocol default); only used by the follow-up `diag` runs
     amp: str = "fp16"
     workers: int = 2
     img_size: int = 224
@@ -71,6 +74,8 @@ def validate(cfg):
         raise ValueError("batch_size must be even (Mixup/CutMix pairs each sample with the flipped batch)")
     if cfg.lr_peak != "auto" and not (isinstance(cfg.lr_peak, (int, float)) and cfg.lr_peak > 0):
         raise ValueError("lr_peak must be a positive number or 'auto'")
+    if not (0 < cfg.llrd <= 1):
+        raise ValueError("llrd must be in (0, 1]")
     if cfg.epochs < 1:
         raise ValueError("epochs must be >= 1")
     return cfg
@@ -103,3 +108,8 @@ def resolve_lr(cfg, lr_choice):
     v = lr_choice[key]
     lr = float(v["lr"] if isinstance(v, dict) else v)
     return dataclasses.replace(cfg, lr_peak=lr)
+
+
+def stable_hash(d):
+    """Config hash without `notes`; `llrd` is left out while it is 1.0, so results made before the field existed keep their hash."""
+    return config_hash({k: v for k, v in d.items() if k != "notes" and not (k == "llrd" and v == 1.0)})
