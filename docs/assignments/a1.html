@@ -73,7 +73,8 @@
         cáo
         PDF A1</a>
       <a class="link-btn primary" href="../demo.html">⚡ Live Demo</a>
-      <a class="link-btn pending" aria-disabled="true">📓 Notebook (sắp có)</a>
+      <a class="link-btn primary" href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/A1/notebooks/A1.ipynb"
+        target="_blank" rel="noopener noreferrer">📓 Mở bằng Colab</a>
       <a class="link-btn" href="#protocol">📋 Quy trình thực nghiệm</a>
       <a class="link-btn" href="#training-plan">🧪 Kế hoạch huấn luyện</a>
       <a class="link-btn" href="#benchmarks">📊 Bảng kết quả dự kiến</a>
@@ -1044,15 +1045,14 @@
               <td>Tải Food-101 bằng torchvision, resize cạnh ngắn 256 bằng script của repo, chia theo
                 <code>split.json</code> đã commit (kiểm tra SHA-256 và số ảnh khi khởi động)
               </td>
-              <td>Khôi phục bản đã resize từ một file tar trên Drive riêng của nhóm (không phân phối công khai); cùng
+              <td>Khôi phục bản đã resize từ một dataset Kaggle riêng của nhóm (không phân phối công khai); cùng
                 mã, cùng kết quả</td>
             </tr>
             <tr>
               <td>Huấn luyện</td>
               <td>Mỗi lần chạy một file cấu hình YAML đã commit, chạy bằng lệnh CLI; có chế độ smoke test nhỏ (dưới 10
                 phút trên một GPU bất kỳ)</td>
-              <td>Hàng đợi chạy trên Colab, lưu checkpoint nguyên tử lên Drive dùng chung, tự động tiếp tục khi mất
-                phiên (đã kiểm tra: khôi phục RNG cho kết quả trùng khớp từng bit trên mô hình thử)</td>
+              <td>Hàng đợi chạy trên Kaggle (hai GPU T4, mỗi GPU một worker độc lập), checkpoint lưu cục bộ mỗi epoch và đẩy định kỳ lên một kho Hugging Face riêng dùng chung; khóa theo từng run, tự động tiếp tục khi mất phiên (đã kiểm tra: khôi phục RNG cho kết quả trùng khớp từng bit trên mô hình thử)</td>
             </tr>
             <tr>
               <td>Trọng số pretrained</td>
@@ -1064,7 +1064,7 @@
               <td>File <code>results/*.json</code> (số liệu, đường cong, cấu hình, môi trường) trong repo; bảng và hình
                 được sinh lại từ JSON bằng notebook; trọng số cuối và logits đăng trên GitHub Release kèm checksum, có
                 lệnh đánh giá lại để tái hiện số liệu test trong vài phút</td>
-              <td>Checkpoint và log trung gian nằm trên Drive (không phải sản phẩm nộp)</td>
+              <td>Checkpoint và log trung gian nằm trên kho Hugging Face riêng của nhóm (không phải sản phẩm nộp)</td>
             </tr>
           </tbody>
         </table>
@@ -1078,9 +1078,18 @@
           trong báo cáo; kết quả không bảo đảm trùng từng bit giữa các loại GPU khác nhau.</li>
         <li>Mã dùng chung nằm trong một package cài được ở thư mục gốc repo (<code>pip install -e .</code>); thí nghiệm
           là notebook mỏng gọi vào package và các script <code>python -m</code>.</li>
-        <li>Trước khi nộp A1.2, nhóm thực hiện kiểm tra “fresh clone”: clone repo trên một runtime Colab mới, không có
-          Drive hay dữ liệu cache, rồi chỉ làm theo README để chạy smoke test và đánh giá lại các trọng số đã phát hành.
+        <li>Trước khi nộp A1.2, nhóm thực hiện kiểm tra “fresh clone”: mở notebook tái lập trên một runtime Colab mới, không có
+          dữ liệu cache hay kho Hugging Face, rồi chỉ làm theo README để sinh lại bảng và hình, đánh giá lại các trọng số đã phát hành.
         </li>
+        <li><strong>Notebook tái lập</strong>
+          (<a href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/A1/notebooks/A1.ipynb"
+            target="_blank" rel="noopener noreferrer">mở bằng Colab</a>) là notebook mỏng, không chứa logic, có ba chế độ
+          chọn bằng biến <code>MODE</code>: <code>load</code> (CPU miễn phí, vài phút) sinh lại mọi bảng, hình và các phân
+          tích hiệu chỉnh/ensemble/lỗi từ <code>A1/results/*.json</code> và logits đã phát hành, rồi kiểm tra các bảng trùng
+          từng byte với báo cáo; <code>evaluate</code> (GPU, khoảng 40 phút gồm cả dữ liệu) tải trọng số đã phát hành của
+          8 lần chạy lõi và đánh giá lại trên 25.250 ảnh test; <code>rerun</code> (GPU) huấn luyện lại các lần chạy được chọn
+          (mặc định ResNet-50 linear probing) từ cấu hình đã commit và so sánh với kết quả đã công bố. Toàn bộ 77 lần chạy
+          (khoảng 25 GPU-giờ) không được lặp lại trong notebook.</li>
         <li>Mã nguồn: <a href="https://github.com/broistg/deep-learning-CO5085/tree/main/A1" target="_blank"
             rel="noopener noreferrer">thư mục A1 trên GitHub</a>.</li>
       </ul>

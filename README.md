@@ -22,7 +22,7 @@ Repository chính thức chứa các bài tập E1–E3 và các bài tập lớ
 | [E1](E1/) | Softmax, MLP và CNN (MiniVGG) trên CIFAR-10 | hoàn thành (3 mô hình × 3 seed) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E1/notebooks/E1.ipynb) | báo cáo bài tập, [trang E1](https://broistg.github.io/deep-learning-CO5085/exercises/e1.html) |
 | [E2](E2/) | Multi-head self-attention (tự viết so với `nn.MultiheadAttention`) và bốn kiểu tokenization trên CIFAR-10 | hoàn thành (30 lần chạy) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E2/notebooks/E2.ipynb) | báo cáo bài tập, [trang E2](https://broistg.github.io/deep-learning-CO5085/exercises/e2.html) |
 | E3 | LSTM và GRU cho ảnh | **đang thực hiện** | sẽ bổ sung | sẽ bổ sung |
-| [A1](A1/) | CNN và Transformer trên Food-101 (ResNet-50 so với DeiT-S, có và không tiền huấn luyện) | **đang thực hiện** (đã chốt quy trình và đo chi phí, các lần chạy chưa xong) | sẽ bổ sung | trang A1.1 và báo cáo bản nháp |
+| [A1](A1/) | CNN và Transformer trên Food-101 (ResNet-50 so với DeiT-S, có và không tiền huấn luyện) | **đang hoàn thiện báo cáo** (đã chạy xong 77 lần chạy trên Kaggle; kết quả trong `A1/results/`) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/A1/notebooks/A1.ipynb) | [trang A1](https://broistg.github.io/deep-learning-CO5085/assignments/a1.html), báo cáo bản nháp |
 | A2 | SegFormer-B0 so với DeepLabV3+ (MobileNetV2) trên ADE20K | **đang thực hiện** (đã chốt quy trình, đã viết báo cáo mốc A2.1; mã nguồn và các lần chạy chưa có) | sẽ bổ sung | báo cáo A2.1; A2.2 chưa có |
 
 E1–E3 dùng chung một quy trình: phép chia CIFAR-10 cố định và phân tầng (45.000 huấn luyện / 5.000 kiểm định / 10.000 kiểm thử, seed 42, mã băm SHA-256 trong `common/cifar10_split.json`), thống kê chuẩn hóa chỉ tính trên tập huấn luyện, augmentation (cắt ngẫu nhiên và lật ngang) chỉ trên tập huấn luyện, 30 epoch, seed 0, 1, 2 và độ chính xác kiểm thử ở epoch cuối. Vòng lặp huấn luyện được viết tay (không dùng lớp trainer có sẵn).
@@ -31,10 +31,12 @@ E1–E3 dùng chung một quy trình: phép chia CIFAR-10 cố định và phân
 
 ## Tái lập kết quả
 
-Mỗi phần đã hoàn thành có một notebook mỏng (không chứa logic, chỉ gọi mã trong kho) với hai chế độ, chọn bằng biến `MODE` ở ô đầu tiên:
+Mỗi phần đã hoàn thành (E1, E2, A1) có một notebook mỏng (không chứa logic, chỉ gọi mã trong kho) với hai chế độ chính, chọn bằng biến `MODE` ở ô đầu tiên (notebook A1 có thêm chế độ `"evaluate"`, xem dưới):
 
 - `"load"` (mặc định): dùng kết quả đã lưu trong kho, sinh lại mọi bảng và hình, rồi kiểm tra chúng trùng với báo cáo. Mất vài phút, chạy được trên Colab miễn phí chỉ với CPU.
 - `"rerun"`: huấn luyện lại toàn bộ từ đầu vào một thư mục `results/` mới (kết quả đã công bố được giữ lại để đối chiếu). Cần GPU, có thể dừng và chạy tiếp khi bị ngắt kết nối.
+
+Với A1 (77 lần chạy, khoảng 25 GPU-giờ) notebook có ba chế độ: `"load"` (sinh lại bảng, hình và phân tích hiệu chỉnh/ensemble/lỗi từ kết quả và logits đã phát hành), `"evaluate"` (đánh giá lại trọng số đã phát hành của 8 lần chạy lõi trên tập test) và `"rerun"` (huấn luyện lại một số lần chạy được chọn, mặc định ResNet-50 linear probing, rồi so sánh); không lặp lại toàn bộ 77 lần chạy trong notebook.
 
 Trọng số và logit kiểm thử quá lớn để đưa vào git, nên được đính kèm trong GitHub Release `weights-v1`; mã băm SHA-256 nằm trong `common/release_manifest.json`, và notebook tự tải rồi kiểm tra khi cần (cách thiết lập: `common/README.md`).
 
@@ -63,7 +65,7 @@ CIFAR-10 được tải từ Hugging Face Hub (`uoft-cs/cifar10`, qua thư việ
 common/        mã dùng chung: nạp CIFAR-10 và phép chia cố định, checkpoint, tái lập, tiện ích cho notebook, đóng gói Release
 E1/            e1lib (mô hình, vòng lặp huấn luyện, phân tích), kiểm thử, notebook, kết quả
 E2/            e2lib (attention, tokenizer, huấn luyện, phân tích), kiểm thử, notebook, kết quả
-A1/            a1lib (dữ liệu, mô hình, huấn luyện, kế hoạch chạy và worker), cấu hình, kiểm thử, kết quả
+A1/            a1lib (dữ liệu, mô hình, huấn luyện, kế hoạch chạy, worker, phân tích), cấu hình, kiểm thử, notebook (worker Kaggle, hậu kiểm, tái lập), kết quả
 docs/          GitHub Pages: trang tổng quan và một trang cho mỗi bài tập
 reports/       mã LaTeX của các báo cáo (bài tập E1–E3, A1, A2)
 requirements/  danh sách thư viện (không cố định PyTorch vì Colab có bản CUDA riêng)
