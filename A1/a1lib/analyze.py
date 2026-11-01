@@ -159,7 +159,13 @@ def table_seeds(g):
     return tex_rows(rows)
 
 
-def table_cost(g, gpu):
+def _mem(r0, ctrain, m):
+    """Controlled training memory from cost_train.json when present (batch 64, no validation pass), else the peak of the real run."""
+    k = f"{SHORT[r0['config']['model']]}|{m}"
+    return ctrain[k]["peak_mem_mb"] if ctrain.get(k) else r0["peak_mem_mb_max"]
+
+
+def table_cost(g, gpu, ctrain=None):
     rows = []
     for a in ("ResNet-50", "DeiT-S"):
         for m in ORDER_MODE:
@@ -171,11 +177,25 @@ def table_cost(g, gpu):
             sg = gpu.get(f"{SHORT[c['model']]}|{m}")
             rows.append(f"{a} & {MODE[m]} & {num(r0['trainable_M'])} / {num(r0['trainable_pct'], 1)}\\% & {c['epochs']} & "
                         f"{num(sg, 1) if sg else '--'} & {num(s_per_epoch(r0) / 60, 1)} & {num(np.mean([hours(r) for r in rs]), 2)} & "
-                        f"{thou(r0['peak_mem_mb_max'])} \\\\")
+                        f"{thou(_mem(r0, ctrain or {}, m))} \\\\")
     return tex_rows(rows)
 
 
-def table_freeze(g):
+def table_freezecost(ctrain):
+    """Cost of each freeze mode relative to full fine-tuning (controlled benchmark, cost_train.json)."""
+    rows = []
+    for a, k in (("ResNet-50", "resnet50"), ("DeiT-S", "deit_s"), ("ConvNeXt-T", "convnext_t"), ("Swin-T", "swin_t")):
+        full = ctrain.get(f"{k}|full")
+        if not full:
+            continue
+        for m in ("head", "partial", "full"):
+            c = ctrain[f"{k}|{m}"]
+            rows.append(f"{a} & {MODE[m]} & {num(c['s_per_epoch'], 1)} & ${num(full['s_per_epoch'] / c['s_per_epoch'], 1)}\\times$ & "
+                        f"{thou(c['peak_mem_mb'])} & {num(100 * c['peak_mem_mb'] / full['peak_mem_mb'], 0)}\\% \\\\")
+    return tex_rows(rows)
+
+
+def table_freeze(g, ctrain=None):
     """accuracy gained per freeze mode relative to linear probing, with cost: when does freezing pay off?"""
     rows = []
     for a in ("ResNet-50", "DeiT-S"):
@@ -185,7 +205,7 @@ def table_freeze(g):
                 continue
             r0 = g[(a, m)][0]
             rows.append(f"{a} & {MODE[m]} & {num(base[m])} & {num(base[m] - base.get('full', np.nan), 2, True)} & "
-                        f"{num(r0['trainable_pct'], 1)}\\% & {num(s_per_epoch(r0) / 60, 1)} & {thou(r0['peak_mem_mb_max'])} \\\\")
+                        f"{num(r0['trainable_pct'], 1)}\\% & {num(s_per_epoch(r0) / 60, 1)} & {thou(_mem(r0, ctrain or {}, m))} \\\\")
     return tex_rows(rows)
 
 
@@ -206,6 +226,13 @@ def table_ablation(runs, g):
     return tex_rows(rows), data
 
 
+def _lr_tex(x):
+    """Learning rate as LaTeX: 3\\cdot10^{-4}; same format for every value of the grid."""
+    m, e = f"{x:.2e}".split("e")
+    m = m.rstrip("0").rstrip(".")
+    return f"${m}\\cdot10^{{{int(e)}}}$" if m != "1" else f"$10^{{{int(e)}}}$"
+
+
 def table_lr(runs, choice):
     rows = []
     by = {}
@@ -218,7 +245,7 @@ def table_lr(runs, choice):
         lrs = sorted(d)
         ch = (choice.get(f"{model}|{group_of[mode]}") or {}).get("lr")
         cells = " & ".join(f"{num(d[x])}" + ("$^{*}$" if ch is not None and abs(x - ch) < 1e-12 else "") for x in lrs)
-        grid = ", ".join(f"{x:g}".replace("e-0", "e-") for x in lrs)
+        grid = ", ".join(_lr_tex(x) for x in lrs)
         rows.append(f"{NAME[model]} & {MODE[mode]} & {grid} & {cells} \\\\")
     return tex_rows(rows)
 
@@ -546,6 +573,8 @@ def main(argv=None):
     runs = load_runs(res)
     choice = json.loads((res / "lr_choice.json").read_text(encoding="utf8")) if (res / "lr_choice.json").exists() else {}
     gpu = json.loads((res / "cost_gpu.json").read_text(encoding="utf8")) if (res / "cost_gpu.json").exists() else {}
+    ctp = res / "cost_train.json"
+    ctrain = json.loads(ctp.read_text(encoding="utf8")) if ctp.exists() else {}
     names = class_names(a.split)
     g = main_groups(runs)
     print(f"{len(runs)} finished runs ({sum(len(v) for v in g.values())} in the main protocol); logits dir: {art} ({'found' if art.exists() else 'missing'})")
@@ -557,8 +586,10 @@ def main(argv=None):
     write_table(out, "tab_acc.tex", table_accuracy(g))
     write_table(out, "tab_acc_ext.tex", table_accuracy(g, ("ConvNeXt-T", "Swin-T")))
     write_table(out, "tab_seeds.tex", table_seeds(g))
-    write_table(out, "tab_traincost.tex", table_cost(g, gpu))
-    write_table(out, "tab_freeze.tex", table_freeze(g))
+    write_table(out, "tab_traincost.tex", table_cost(g, gpu, ctrain))
+    write_table(out, "tab_freeze.tex", table_freeze(g, ctrain))
+    if ctrain:
+        write_table(out, "tab_freezecost.tex", table_freezecost(ctrain))
     body, abl = table_ablation(runs, g)
     write_table(out, "tab_ablation.tex", body)
     write_table(out, "tab_lr.tex", table_lr(runs, choice))

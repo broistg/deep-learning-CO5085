@@ -14,6 +14,7 @@ Code for assignment A1 (CO5085). Entry points (run from the repo root with `PYTH
 | `python -m a1lib.train --config X.yaml --smoke [--fake]` | 2-epoch smoke test (`--fake` = synthetic data, no download) |
 | `python -m a1lib.cost_bench` | GPU-only training cost per architecture/mode and inference cost (one T4, one session) |
 | `python -m a1lib.posthoc robustness\|gradcam\|toploss` | GPU analyses on the released weights (notebook `kaggle_posthoc.ipynb`, about 1 h) |
+| `python -m a1lib.eda {counts,samples,augment,sizes}` | EDA for report Ch. 2: split sizes per class (`counts`, needs only `split.json`; also run by the replication notebook); sample grid, augmentation grid, original image sizes (need the images; run once on Kaggle/locally, commit the small figures) |
 | `python -m a1lib.analyze` | tables, figures, calibration/ensemble/error analyses from the committed results |
 | `python -m unittest discover -s A1/tests` | torch-free unit tests |
 
