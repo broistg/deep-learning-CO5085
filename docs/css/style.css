@@ -51,6 +51,11 @@
   --container-max: 960px;
   --header-height: 60px;
 
+  /* Interface icons */
+  --ui-icon-size: 16px;
+  --ui-icon-size-small: 15px;
+  --ui-icon-size-large: 24px;
+
   /* Shadows */
   --shadow-sm: 0 2px 8px rgba(26, 24, 20, 0.04);
   --shadow-md: 0 6px 20px rgba(26, 24, 20, 0.07);
@@ -151,6 +156,9 @@ nav.main-nav {
 }
 
 nav.main-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 13.5px;
   font-weight: 500;
   color: var(--ink2);
@@ -158,7 +166,8 @@ nav.main-nav a {
 }
 
 nav.main-nav a:hover,
-nav.main-nav a.active {
+nav.main-nav a.active,
+nav.main-nav a:focus-visible {
   color: var(--ink);
 }
 
@@ -172,7 +181,8 @@ nav.main-nav a.active {
   transition: color var(--transition-fast);
 }
 
-.back-btn:hover {
+.back-btn:hover,
+.back-btn:focus-visible {
   color: var(--accent);
 }
 
@@ -1050,12 +1060,6 @@ h3.section-subhead {
   border: 0;
 }
 
-.status-banner-icon .ui-icon {
-  width: 24px;
-  height: 24px;
-  vertical-align: middle;
-}
-
 /* --- 14. Footer --- */
 footer,
 .site-footer {
@@ -1151,23 +1155,63 @@ footer a:hover,
   }
 }
 
-/* Báo cáo E1–E3 và Dataset dùng chung nhịp dọc, mục lục, biểu thức và icon. */
+/* Decorative interface icons. Add an icon-* class to a ui-icon span. */
 .ui-icon {
-  width: 16px;
-  height: 16px;
+  display: inline-block;
+  width: var(--ui-icon-size);
+  height: var(--ui-icon-size);
   flex: 0 0 auto;
-  vertical-align: middle;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  vertical-align: -0.125em;
+  background-color: currentColor;
+  -webkit-mask: var(--ui-icon-mask) center / contain no-repeat;
+  mask: var(--ui-icon-mask) center / contain no-repeat;
+  pointer-events: none;
 }
-.overview-icon .ui-icon, .status-banner-icon .ui-icon { width: 24px; height: 24px; }
-.progress-checklist .ui-icon { width: 15px; height: 15px; }
+
+.icon-arrow-left { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m12%2019-7-7%207-7M5%2012h14'/%3E%3C/svg%3E"); }
+.icon-bolt { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m13%202-9%2011h7l-1%209%2010-12h-7V2Z'/%3E%3C/svg%3E"); }
+.icon-chart { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M3%203v18h18M7%2016v-5M12%2016V7M17%2016v-8'/%3E%3C/svg%3E"); }
+.icon-check { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Ccircle%20cx='12'%20cy='12'%20r='10'/%3E%3Cpath%20d='m8%2012%203%203%205-6'/%3E%3C/svg%3E"); }
+.icon-circle { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Ccircle%20cx='12'%20cy='12'%20r='9'/%3E%3C/svg%3E"); }
+.icon-clipboard { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Crect%20x='4'%20y='4'%20width='16'%20height='18'%20rx='2'/%3E%3Crect%20x='9'%20y='2'%20width='6'%20height='4'%20rx='1'/%3E%3Cpath%20d='M8%2011h8M8%2015h8'/%3E%3C/svg%3E"); }
+.icon-clock { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Ccircle%20cx='12'%20cy='12'%20r='10'/%3E%3Cpath%20d='M12%206v6l4%202'/%3E%3C/svg%3E"); }
+.icon-external { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M14%204h6v6M20%204%2010%2014M20%2014v5a1%201%200%200%201-1%201H5a1%201%200%200%201-1-1V5a1%201%200%200%201%201-1h5'/%3E%3C/svg%3E"); }
+.icon-file { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M14%202H6a2%202%200%200%200-2%202v16a2%202%200%200%200%202%202h12a2%202%200%200%200%202-2V8Z'/%3E%3Cpath%20d='M14%202v6h6M8%2013h8M8%2017h6'/%3E%3C/svg%3E"); }
+.icon-flask { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M9%203h6M10%203v7L4%2020a1%201%200%200%200%201%202h14a1%201%200%200%200%201-2l-6-10V3M7%2017h10'/%3E%3C/svg%3E"); }
+.icon-folder { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M3%207a2%202%200%200%201%202-2h5l2%202h7a2%202%200%200%201%202%202v10a2%202%200%200%201-2%202H5a2%202%200%200%201-2-2V7Z'/%3E%3C/svg%3E"); }
+.icon-globe { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Ccircle%20cx='12'%20cy='12'%20r='10'/%3E%3Cpath%20d='M2%2012h20M12%202a15%2015%200%200%201%200%2020M12%202a15%2015%200%200%200%200%2020'/%3E%3C/svg%3E"); }
+.icon-library { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M3%204h4v17H3zM9%204h4v17H9zM16%205l4-1%202%2016-4%201z'/%3E%3C/svg%3E"); }
+.icon-lightbulb { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M9%2018h6M10%2022h4M8%2014a6%206%200%201%201%208%200c-1%201-1%202-1%204H9c0-2%200-3-1-4Z'/%3E%3C/svg%3E"); }
+.icon-lock { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Crect%20x='4'%20y='10'%20width='16'%20height='12'%20rx='2'/%3E%3Cpath%20d='M8%2010V7a4%204%200%200%201%208%200v3'/%3E%3C/svg%3E"); }
+.icon-metrics { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M4%2020V10M10%2020V4M16%2020v-7M22%2020H2'/%3E%3C/svg%3E"); }
+.icon-note { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M5%203h10l4%204v14H5zM15%203v4h4M8%2012h8M8%2016h6'/%3E%3C/svg%3E"); }
+.icon-notebook { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Crect%20x='5'%20y='2'%20width='16'%20height='20'%20rx='2'/%3E%3Cpath%20d='M9%202v20M13%207h4M13%2011h4'/%3E%3C/svg%3E"); }
+.icon-pin { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m16%203%205%205-3%201-4%204v4l-2%202-3-6-6-3%202-2h4l4-4%201-3Z'/%3E%3Cpath%20d='m9%2015-5%205'/%3E%3C/svg%3E"); }
+.icon-puzzle { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M20%2013V9h-3a2%202%200%201%200-4%200H9v4a2%202%200%201%200%200%204v3h11v-3a2%202%200%201%200%200-4Z'/%3E%3C/svg%3E"); }
+.icon-refresh { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M20%2011a8%208%200%200%200-14-5L4%208M4%204v4h4M4%2013a8%208%200%200%200%2014%205l2-2M20%2020v-4h-4'/%3E%3C/svg%3E"); }
+.icon-ruler { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m3%2017%2014-14%204%204L7%2021l-4-4ZM7%2013l2%202M10%2010l2%202M13%207l2%202'/%3E%3C/svg%3E"); }
+.icon-search { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Ccircle%20cx='11'%20cy='11'%20r='7'/%3E%3Cpath%20d='m20%2020-4-4'/%3E%3C/svg%3E"); }
+.icon-settings { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M12%202v2M12%2020v2M4.9%204.9l1.4%201.4m11.4%2011.4%201.4%201.4M2%2012h2m16%200h2M4.9%2019.1l1.4-1.4M17.7%206.3l1.4-1.4'/%3E%3Ccircle%20cx='12'%20cy='12'%20r='6'/%3E%3Ccircle%20cx='12'%20cy='12'%20r='2'/%3E%3C/svg%3E"); }
+.icon-split { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M6%204v5a4%204%200%200%200%204%204h4a4%204%200%200%201%204%204v3'/%3E%3Cpath%20d='M6%204v5a4%204%200%200%201-4%204'/%3E%3Cpath%20d='M3%202%206%204l3-2M15%2018l3%202%203-2'/%3E%3C/svg%3E"); }
+.icon-workflow { --ui-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Crect%20x='2'%20y='2'%20width='6'%20height='6'%20rx='1'/%3E%3Crect%20x='16'%20y='2'%20width='6'%20height='6'%20rx='1'/%3E%3Crect%20x='16'%20y='16'%20width='6'%20height='6'%20rx='1'/%3E%3Cpath%20d='M8%205h8M5%208v8a3%203%200%200%200%203%203h8'/%3E%3C/svg%3E"); }
+
+.overview-icon .ui-icon,
+.status-banner-icon .ui-icon {
+  display: block;
+  width: var(--ui-icon-size-large);
+  height: var(--ui-icon-size-large);
+}
+
+.progress-checklist .ui-icon {
+  width: var(--ui-icon-size-small);
+  height: var(--ui-icon-size-small);
+}
+
 .progress-checklist li.done .ui-icon { color: #1E6B37; }
 .progress-checklist li.todo .ui-icon { color: var(--ink3); }
 .progress-checklist li.wip .ui-icon { color: var(--status-wip-text); }
+
+/* Shared report-page layout. */
 .report-page .section { max-width: none; padding: 0; margin: 52px 0 0; scroll-margin-top: 90px; }
 .report-page .section:first-of-type { margin-top: 32px; }
 .report-page .section-header { align-items: baseline; }
@@ -1202,6 +1246,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
   .hero { padding-top: 50px; padding-bottom: 40px; }
   .hero-meta, .page-meta { gap: 16px 24px; }
   .report-page .section { margin-top: 42px; }
+  .overview-icon .ui-icon,
+  .status-banner-icon .ui-icon { width: 20px; height: 20px; }
   .report-page .section { scroll-margin-top: 170px; }
   .report-page .section-header h2 { font-size: 21px; }
   .report-page .equation { padding-right: 48px; font-size: 14px; }

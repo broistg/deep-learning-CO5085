@@ -17,7 +17,7 @@
   <link rel="icon" type="image/png" href="../assets/favicon.png">
 
   <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="../css/style.css?v=20261101-icons">
+  <link rel="stylesheet" href="../css/style.css?v=20261101-css-icons">
 
   <!-- Math: inline $...$ and display $$...$$ -->
   <script>window.MathJax = { tex: { inlineMath: [['$', '$']] } };</script>
@@ -30,14 +30,14 @@
   <header>
     <a class="logo" href="../index.html"><span>CO5085:</span> Deep Learning &amp; Its Applications in Computer
       Vision</a>
-    <a class="back-btn" href="../index.html#exercises"><svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#arrow-left"/></svg> Về trang tổng quan</a>
+    <a class="back-btn" href="../index.html#exercises"><span class="ui-icon icon-arrow-left" aria-hidden="true"></span> Về trang tổng quan</a>
   </header>
 
   <main class="page-container report-page">
 
     <!-- Sub-navigation: Sibling exercises -->
-    <nav class="assignment-parts" aria-label="Exercise Navigation">
-      <span class="label">Exercises ·</span>
+    <nav class="assignment-parts" aria-label="Điều hướng bài tập E">
+      <span class="label">Bài tập ·</span>
       <a href="dataset.html">Dữ liệu E1–E3</a>
       <a href="e1.html">E1 · Softmax / MLP / CNN</a>
       <span class="current" aria-current="page">E2 · Self-Attention</span>
@@ -75,22 +75,21 @@
     <!-- Quick Action Links -->
     <div class="quick-links">
       <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085/tree/main/E2" target="_blank"
-        rel="noopener noreferrer"><svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#external"/></svg> Mã nguồn E2</a>
-      <a class="link-btn primary" href="../reports/exercises.pdf#page=27" target="_blank" rel="noopener noreferrer"><svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#file"/></svg> Báo
-        cáo PDF (E1-E3)</a>
+        rel="noopener noreferrer"><span class="ui-icon icon-external" aria-hidden="true"></span> Mã nguồn E2</a>
+      <a class="link-btn primary" href="../reports/exercises.pdf#page=27" target="_blank" rel="noopener noreferrer"><span class="ui-icon icon-file" aria-hidden="true"></span> Báo cáo PDF · Chương 4</a>
       <a class="link-btn"
         href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E2/notebooks/E2.ipynb"
-        target="_blank" rel="noopener noreferrer"><svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#notebook"/></svg> Mở bằng Colab</a>
-      <a href="#tokenization" class="link-btn"><svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#puzzle"/></svg> Các phương pháp Tokenization</a>
-      <a href="#results" class="link-btn"><svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#chart"/></svg> Kết quả</a>
-      <a href="#reproduce" class="link-btn"><svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#refresh"/></svg> Tái lập</a>
-      <a class="link-btn" href="dataset.html"><svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#chart"/></svg> Dataset E1–E3</a>
+        target="_blank" rel="noopener noreferrer"><span class="ui-icon icon-notebook" aria-hidden="true"></span> Mở bằng Colab</a>
+      <a href="#tokenization" class="link-btn"><span class="ui-icon icon-puzzle" aria-hidden="true"></span> Các phương pháp Tokenization</a>
+      <a href="#results" class="link-btn"><span class="ui-icon icon-chart" aria-hidden="true"></span> Kết quả thực nghiệm</a>
+      <a href="#reproduce" class="link-btn"><span class="ui-icon icon-refresh" aria-hidden="true"></span> Tái lập và khai báo AI</a>
+      <a class="link-btn" href="dataset.html"><span class="ui-icon icon-chart" aria-hidden="true"></span> Dataset E1–E3</a>
     </div>
 
     <nav class="report-toc" aria-label="Mục lục trong trang"><strong>Trong trang</strong><a href="#formulation">4.1 Công thức toán học &amp; Cấu trúc Self-Attention</a><a href="#tokenization">4.2 Các cơ chế Tokenization</a><a href="#setup">4.3 Thiết lập</a><a href="#results">4.4 Kết quả</a><a href="#visualizations"> 4.5 Trực quan hóa</a><a href="#reproduce">A Tái lập và khai báo sử dụng AI</a></nav>
     <!-- Trạng thái thực nghiệm -->
     <div class="status-banner">
-      <div class="status-banner-icon"><svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#check"/></svg></div>
+      <div class="status-banner-icon"><span class="ui-icon icon-check" aria-hidden="true"></span></div>
       <div class="status-banner-content">
         <h4>Đã hoàn tất thực nghiệm · Hạn nộp: 02/11/2026 (W9)</h4>
         <p>
@@ -123,7 +122,7 @@
 
       <div class="overview-grid">
         <div class="overview-card">
-          <div class="overview-icon"><svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#ruler"/></svg></div>
+          <div class="overview-icon"><span class="ui-icon icon-ruler" aria-hidden="true"></span></div>
           <div>
             <div class="overview-title">Hệ số tỉ lệ $1/\sqrt{d_h}$</div>
             <div class="overview-sub">Giữ phương sai của tích vô hướng ổn định theo $d_h$, tránh softmax bão hòa và
@@ -131,7 +130,7 @@
           </div>
         </div>
         <div class="overview-card">
-          <div class="overview-icon"><svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#workflow"/></svg></div>
+          <div class="overview-icon"><span class="ui-icon icon-workflow" aria-hidden="true"></span></div>
           <div>
             <div class="overview-title">Multi-Head Projection</div>
             <div class="overview-sub">Mỗi head dùng một phép chiếu riêng, cho phép quan sát các quan hệ khác nhau giữa
@@ -139,7 +138,7 @@
           </div>
         </div>
         <div class="overview-card">
-          <div class="overview-icon"><svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#bolt"/></svg></div>
+          <div class="overview-icon"><span class="ui-icon icon-bolt" aria-hidden="true"></span></div>
           <div>
             <div class="overview-title">Độ phức tạp $O(N^2 D + N D^2)$</div>
             <div class="overview-sub">Bộ nhớ ma trận chú ý tăng theo $N^2$; số token $N$ là đại lượng quyết định chi
