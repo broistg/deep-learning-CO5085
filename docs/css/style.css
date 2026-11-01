@@ -1056,155 +1056,7 @@ h3.section-subhead {
   vertical-align: middle;
 }
 
-/* --- 14. Interactive Demo Styles (Used in demo.html) --- */
-.demo-shell {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 48px 48px 80px;
-  animation: fadeUp 0.65s ease both;
-  width: 100%;
-}
-
-.demo-tabs {
-  display: flex;
-  gap: 8px;
-  margin: 24px 0 32px;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 8px;
-}
-
-.demo-tab {
-  background: none;
-  border: none;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--ink2);
-  padding: 8px 18px;
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.demo-tab:hover {
-  color: var(--ink);
-  background: var(--bg2);
-}
-
-.demo-tab--active {
-  background: var(--ink);
-  color: #FFF;
-}
-
-.demo-tab--active:hover {
-  background: var(--ink);
-  color: #FFF;
-}
-
-.demo-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 32px;
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 24px;
-}
-
-.drop-zone {
-  border: 2px dashed var(--border-strong);
-  border-radius: var(--radius);
-  padding: 40px 24px;
-  text-align: center;
-  background: var(--bg);
-  cursor: pointer;
-  transition: border-color var(--transition-fast), background var(--transition-fast);
-}
-
-.drop-zone:hover,
-.drop-zone.dragover {
-  border-color: var(--accent);
-  background: #FFF;
-}
-
-.drop-zone-icon {
-  font-size: 32px;
-  margin-bottom: 10px;
-}
-
-.drop-zone-text {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--ink);
-  margin-bottom: 4px;
-}
-
-.drop-zone-hint {
-  font-size: 12px;
-  color: var(--ink3);
-}
-
-.preview-container {
-  display: none;
-  margin-top: 20px;
-  text-align: center;
-}
-
-.preview-image {
-  max-width: 220px;
-  max-height: 220px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  object-fit: cover;
-  box-shadow: var(--shadow-sm);
-}
-
-/* Prediction Output Bars */
-.prediction-results {
-  margin-top: 28px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  display: none;
-}
-
-.prediction-results.visible {
-  display: block;
-  animation: fadeUp 0.4s ease both;
-}
-
-.prediction-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.topk-item {
-  margin-bottom: 12px;
-}
-
-.topk-label-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  font-weight: 500;
-  margin-bottom: 5px;
-}
-
-.topk-bar-bg {
-  height: 8px;
-  background: var(--bg2);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.topk-bar-fill {
-  height: 100%;
-  background: var(--accent);
-  border-radius: 4px;
-  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* --- 15. Footer --- */
+/* --- 14. Footer --- */
 footer,
 .site-footer {
   border-top: 1px solid var(--border);
@@ -1227,7 +1079,7 @@ footer a:hover,
   color: var(--accent);
 }
 
-/* --- 16. Keyframe Animations --- */
+/* --- 15. Keyframe Animations --- */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -1240,7 +1092,7 @@ footer a:hover,
   }
 }
 
-/* --- 17. Responsive Breakpoints --- */
+/* --- 16. Responsive Breakpoints --- */
 @media (max-width: 800px) {
   .overview-grid {
     grid-template-columns: 1fr;
@@ -1264,8 +1116,7 @@ footer a:hover,
   .page-container,
   .hero,
   section,
-  .section,
-  .demo-shell {
+  .section {
     padding-left: 20px;
     padding-right: 20px;
   }
