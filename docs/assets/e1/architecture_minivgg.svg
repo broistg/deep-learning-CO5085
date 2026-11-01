@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 725 491" width="725" height="491" role="img" aria-labelledby="title desc">
+  <title id="title">Hình 3.2: Kiến trúc MiniVGG</title>
+  <desc id="desc">Ảnh 32 × 32 × 3 đi qua hai khối tích chập tạo 16 rồi 32 kênh, đặc trưng 8 × 8 × 32 được làm phẳng thành 2048 chiều và đưa vào lớp Linear tạo 10 logits. Mỗi ConvBlock gồm Conv 3 × 3, ReLU, BatchNorm, Conv 3 × 3, ReLU, BatchNorm và MaxPool 2 × 2.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 7 7" refX="6" refY="3.5" markerWidth="7" markerHeight="7" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0.5 0.5 6 3.5 0.5 6.5" fill="none" stroke="#1A1814" stroke-width="1"/>
+    </marker>
+  </defs>
+  <rect width="725" height="491" fill="#fff"/>
+  <g font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#1A1814">
+    <text x="40" y="281" text-anchor="middle" font-weight="700">Input Image</text>
+    <text x="40" y="297" text-anchor="middle">32 × 32 × 3</text>
+    <path d="M81 285 H149" fill="none" stroke="#1A1814" stroke-width="1" marker-end="url(#arrow)"/>
+
+    <rect x="150.5" y="264.5" width="174" height="41" fill="#FBE8DF" stroke="#C5440A"/>
+    <text x="237.5" y="282" text-anchor="middle" font-weight="700">2 × ConvBlocks</text>
+    <text x="237.5" y="298" text-anchor="middle">3 → 16 → 32 channels</text>
+    <path d="M325 285 H449" fill="none" stroke="#1A1814" stroke-width="1" marker-end="url(#arrow)"/>
+    <rect x="333" y="270" width="109" height="14" fill="#fff"/>
+    <text x="387.5" y="282" text-anchor="middle">8 × 8 × 32 → 2048</text>
+
+    <rect x="450.5" y="264.5" width="80" height="41" fill="#FBE8DF" stroke="#C5440A"/>
+    <text x="490.5" y="282" text-anchor="middle" font-weight="700">Linear</text>
+    <text x="490.5" y="298" text-anchor="middle">2048 → 10</text>
+
+    <text x="620" y="19" text-anchor="middle" font-weight="700">ConvBlock (detail)</text>
+    <rect x="560.5" y="30.5" width="120" height="460" fill="none" stroke="#1A1814" stroke-width="1" stroke-dasharray="7 7"/>
+
+    <rect x="580.5" y="60.5" width="80" height="40" fill="#FBE8DF" stroke="#C5440A"/>
+    <text x="620.5" y="78" text-anchor="middle" font-weight="700">Conv 3×3</text>
+    <text x="620.5" y="93" text-anchor="middle">s=1, p=1</text>
+    <path d="M620.5 101 V119" fill="none" stroke="#1A1814" stroke-width="1" marker-end="url(#arrow)"/>
+
+    <rect x="595.5" y="120.5" width="50" height="40" fill="#FFF3EC" stroke="#C77B55"/>
+    <text x="620.5" y="145" text-anchor="middle" font-weight="700">ReLU</text>
+    <path d="M620.5 161 V179" fill="none" stroke="#1A1814" stroke-width="1" marker-end="url(#arrow)"/>
+
+    <rect x="595.5" y="180.5" width="50" height="40" fill="#F4EFEA" stroke="#9A897D"/>
+    <text x="620.5" y="205" text-anchor="middle" font-weight="700">BN</text>
+    <path d="M620.5 221 V239" fill="none" stroke="#1A1814" stroke-width="1" marker-end="url(#arrow)"/>
+
+    <rect x="580.5" y="240.5" width="80" height="40" fill="#FBE8DF" stroke="#C5440A"/>
+    <text x="620.5" y="258" text-anchor="middle" font-weight="700">Conv 3×3</text>
+    <text x="620.5" y="273" text-anchor="middle">s=1, p=1</text>
+    <path d="M620.5 281 V299" fill="none" stroke="#1A1814" stroke-width="1" marker-end="url(#arrow)"/>
+
+    <rect x="595.5" y="300.5" width="50" height="40" fill="#FFF3EC" stroke="#C77B55"/>
+    <text x="620.5" y="325" text-anchor="middle" font-weight="700">ReLU</text>
+    <path d="M620.5 341 V359" fill="none" stroke="#1A1814" stroke-width="1" marker-end="url(#arrow)"/>
+
+    <rect x="595.5" y="360.5" width="50" height="40" fill="#F4EFEA" stroke="#9A897D"/>
+    <text x="620.5" y="385" text-anchor="middle" font-weight="700">BN</text>
+    <path d="M620.5 401 V419" fill="none" stroke="#1A1814" stroke-width="1" marker-end="url(#arrow)"/>
+
+    <rect x="575.5" y="420.5" width="90" height="40" fill="#F0EDE8" stroke="#A8A49F"/>
+    <text x="620.5" y="439" text-anchor="middle" font-weight="700">MaxPool 2×2</text>
+    <text x="620.5" y="454" text-anchor="middle">s=2</text>
+  </g>
+</svg>

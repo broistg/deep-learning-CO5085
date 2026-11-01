@@ -36,16 +36,16 @@ document.addEventListener('DOMContentLoaded', () => {
     image: [
       { value: 'vit-base', label: '[ViT-Base/16] · 85.8M (Vision Transformer - A1)' },
       { value: 'resnet50', label: '[ResNet-50] · 23.7M (CNN Backbone - A1)' },
-      { value: 'custom-cnn', label: '[Custom CNN] · 1.2M (E1 Baseline)' },
-      { value: 'mlp', label: '[MLP Classifier] · 0.2M (E1)' },
-      { value: 'softmax', label: '[Softmax Linear] · 7.8K (E1)' }
+      { value: 'custom-cnn', label: '[MiniVGG] · 37 338 tham số (E1)' },
+      { value: 'mlp', label: '[MLP] · 199 082 tham số (E1)' },
+      { value: 'softmax', label: '[Softmax] · 30 730 tham số (E1)' }
     ],
     sequence: [
       { value: 'lstm-row', label: '[Image-LSTM (Row Scan)] · 28 timesteps (E3)' },
       { value: 'gru-row', label: '[Image-GRU (Row Scan)] · 28 timesteps (E3)' },
       { value: 'lstm-patch', label: '[Image-LSTM (Patch Seq)] · 16 patches (E3)' },
       { value: 'gru-patch', label: '[Image-GRU (Patch Seq)] · 16 patches (E3)' },
-      { value: 'e1-baseline-cnn', label: '[E1 CNN Baseline] · Đối chứng không hồi quy' }
+      { value: 'e1-baseline-cnn', label: '[MiniVGG từ E1] · Đối chứng không hồi quy' }
     ],
     attention: [
       { value: 'scratch-msa-patch4', label: '[Scratch MSA (Patch 4×4)] · Tự viết từ đầu (E2)' },

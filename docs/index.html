@@ -102,28 +102,27 @@
     <div class="assignments">
 
       <!-- E1: Small Image Classification -->
-      <div class="assignment-card">
+      <div class="assignment-card e1-card">
         <div>
-          <div class="assignment-number">Exercise 01</div>
-          <div class="assignment-title">Small Image Classification (Softmax, MLP &amp; CNN)</div>
+          <div class="assignment-number">Bài tập E1</div>
+          <div class="assignment-title">Phân loại ảnh với Softmax, MLP và CNN</div>
           <div class="assignment-desc">
-            Phân loại trên tập dữ liệu ảnh kích thước nhỏ (MNIST / Fashion-MNIST / CIFAR-10) bằng Softmax Classifier,
-            Multi-Layer Perceptron (MLP) và Convolutional Neural Network (CNN). So sánh accuracy, model capacity, và
-            phân tích phân phối dự đoán lỗi (error analysis).
+            Thực nghiệm trên CIFAR-10 với ba kiến trúc và ba seed. So sánh độ chính xác kiểm thử, số tham số,
+            chi phí huấn luyện, quá trình hội tụ và lỗi phân loại; MiniVGG đạt 79,62 ± 0,26% trên tập kiểm thử.
           </div>
           <div class="assignment-links">
-            <a class="link-btn primary" href="exercises/e1.html">📄 Trang báo cáo</a>
-            <a class="link-btn primary" href="reports/exercises.pdf" target="_blank" rel="noopener noreferrer">📑 Báo
+            <a class="link-btn primary" href="exercises/e1.html"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 2h8l4 4v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M14 2v5h5M8 12h8M8 16h6"/></svg> Trang báo cáo</a>
+            <a class="link-btn primary" href="reports/exercises.pdf" target="_blank" rel="noopener noreferrer"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 2h8l4 4v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M14 2v5h5M8 12h8M8 16h6"/></svg> Báo
               cáo
               PDF</a>
             <a class="link-btn" href="https://github.com/broistg/deep-learning-CO5085/tree/main/E1" target="_blank"
               rel="noopener noreferrer">↗ Mã nguồn E1</a>
             <a class="link-btn"
               href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E1/notebooks/E1.ipynb"
-              target="_blank" rel="noopener noreferrer">📓 Mở bằng Colab</a>
+              target="_blank" rel="noopener noreferrer"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 3h14a2 2 0 0 1 2 2v16H6a2 2 0 0 1-2-2V3Z"/><path d="M4 17a2 2 0 0 1 2-2h14M8 7h8"/></svg> Mở bằng Colab</a>
           </div>
         </div>
-        <span class="assignment-badge badge-wip">In progress...</span>
+        <span class="assignment-badge badge-done">Đã hoàn thành</span>
       </div>
 
       <!-- E2: Multi-Head Self-Attention (MSA) -->
@@ -159,7 +158,7 @@
           <div class="assignment-title">LSTM / GRU trên chuỗi ảnh (Image as Sequence)</div>
           <div class="assignment-desc">
             Mô hình hóa hình ảnh dưới dạng dữ liệu chuỗi tuần tự bằng LSTM và GRU trên cùng tập ảnh nhỏ; so sánh trực
-            tiếp với baseline không hồi quy (MLP và CNN từ E1) về accuracy, số tham số và khả năng bắt phụ thuộc không
+            tiếp với baseline không hồi quy (MLP và MiniVGG từ E1) về accuracy, số tham số và khả năng bắt phụ thuộc không
             gian.
           </div>
           <div class="assignment-links">

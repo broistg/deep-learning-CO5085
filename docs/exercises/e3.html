@@ -221,17 +221,17 @@
               <td><strong>Baseline MLP (từ E1)</strong></td>
               <td>Vector phẳng (Flatten 1D)</td>
               <td>1 × (H·W·C)</td>
-              <td>[Từ E1]</td>
-              <td>[Từ E1]</td>
-              <td>[Từ E1]</td>
+              <td>199 082</td>
+              <td>51,17 ± 0,23</td>
+              <td>8,5</td>
             </tr>
             <tr>
-              <td><strong>Baseline CNN (từ E1)</strong></td>
+              <td><strong>Baseline MiniVGG (từ E1)</strong></td>
               <td>Không gian 2D nguyên bản</td>
               <td>H × W × C</td>
-              <td>[Từ E1]</td>
-              <td>[Từ E1]</td>
-              <td>[Từ E1]</td>
+              <td>37 338</td>
+              <td>79,62 ± 0,26</td>
+              <td>9,5</td>
             </tr>
             <tr>
               <td><strong>LSTM (Row-by-Row)</strong></td>
@@ -268,12 +268,14 @@
           </tbody>
         </table>
       </div>
+      <p>Hai dòng MLP và MiniVGG lấy từ Bảng 3.2 của báo cáo E1: độ chính xác kiểm thử tại epoch cuối là
+        trung bình ± độ lệch chuẩn mẫu trên ba seed; thời gian là trung bình của thời gian trung vị mỗi epoch.</p>
 
       <!-- Figure placeholder -->
       <figure class="report-figure">
         <img src="../assets/placeholder-figure.svg" alt="Convergence Curves Placeholder" loading="lazy">
         <figcaption>Hình 3.1: Đường cong huấn luyện loss-accuracy và so sánh khả năng bắt phụ thuộc theo thứ tự quét của
-          LSTM/GRU so với baseline CNN.</figcaption>
+          LSTM/GRU so với MiniVGG từ E1.</figcaption>
       </figure>
     </div>
 
