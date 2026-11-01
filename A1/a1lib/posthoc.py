@@ -88,7 +88,7 @@ def robustness(a):
            "levels": {k: v for k, v in LEVELS.items()}, "models": {rid: {} for rid in runs}}
     conds = [(None, 0)] + [(t, s) for t in TYPES for s in (1, 2, 3)]
     for ctype, sev in conds:
-        ds = CorruptedSet(root, entries, labels, ctype, sev)
+        ds = CorruptedSet(Path(root) / "images", entries, labels, ctype, sev)
         dl = torch.utils.data.DataLoader(ds, batch_size=128, num_workers=a.workers, pin_memory=device.type == "cuda")
         hit = {rid: 0 for rid in runs}
         for x, y in dl:
