@@ -433,6 +433,116 @@
    "trainable_pct": 100.0
   }
  },
+ "robustness": {
+  "m_resnet50_scratch_s0": {
+   "clean": 0.7477227722772277,
+   "keep_s3": {
+    "gaussian_noise": 12.182203389830507,
+    "gaussian_blur": 19.756355932203387,
+    "jpeg": 26.350635593220343,
+    "contrast": 49.60275423728814,
+    "occlusion": 70.78919491525424,
+    "patch_shuffle": 51.37711864406779
+   },
+   "mean_keep": 69.0722104519774
+  },
+  "m_resnet50_head_s0": {
+   "clean": 0.6899009900990098,
+   "keep_s3": {
+    "gaussian_noise": 46.81400688863376,
+    "gaussian_blur": 40.58553386911597,
+    "jpeg": 31.77382319173364,
+    "contrast": 96.64179104477613,
+    "occlusion": 83.52468427095293,
+    "patch_shuffle": 52.6406429391504
+   },
+   "mean_keep": 80.22069141472129
+  },
+  "m_resnet50_partial_s0": {
+   "clean": 0.8392079207920792,
+   "keep_s3": {
+    "gaussian_noise": 51.462954223690424,
+    "gaussian_blur": 45.96507786691836,
+    "jpeg": 33.41198678621992,
+    "contrast": 96.46059462010383,
+    "occlusion": 86.90420009438414,
+    "patch_shuffle": 52.38319962246343
+   },
+   "mean_keep": 81.83498505584396
+  },
+  "m_resnet50_full_s0": {
+   "clean": 0.8601980198019802,
+   "keep_s3": {
+    "gaussian_noise": 12.292817679558011,
+    "gaussian_blur": 39.73296500920811,
+    "jpeg": 26.381215469613263,
+    "contrast": 80.75506445672191,
+    "occlusion": 81.39963167587476,
+    "patch_shuffle": 64.31860036832413
+   },
+   "mean_keep": 76.59479230611828
+  },
+  "m_deit_s_scratch_s0": {
+   "clean": 0.3423762376237624,
+   "keep_s3": {
+    "gaussian_noise": 76.69172932330827,
+    "gaussian_blur": 46.558704453441294,
+    "jpeg": 47.94679005205321,
+    "contrast": 11.856564488143436,
+    "occlusion": 48.23597455176402,
+    "patch_shuffle": 62.00115673799884
+   },
+   "mean_keep": 75.14941199151724
+  },
+  "m_deit_s_head_s0": {
+   "clean": 0.7023762376237623,
+   "keep_s3": {
+    "gaussian_noise": 70.2565548350719,
+    "gaussian_blur": 49.05553989286721,
+    "jpeg": 37.834789963349316,
+    "contrast": 98.02650126867775,
+    "occlusion": 82.68959684240203,
+    "patch_shuffle": 50.77530307301946
+   },
+   "mean_keep": 82.5282711524606
+  },
+  "m_deit_s_partial_s0": {
+   "clean": 0.8833663366336634,
+   "keep_s3": {
+    "gaussian_noise": 84.82403048643802,
+    "gaussian_blur": 58.59672719121273,
+    "jpeg": 45.70724052902937,
+    "contrast": 98.69984308451019,
+    "occlusion": 89.39699618919525,
+    "patch_shuffle": 65.52342524097736
+   },
+   "mean_keep": 88.0644598869212
+  },
+  "m_deit_s_full_s0": {
+   "clean": 0.8732673267326733,
+   "keep_s3": {
+    "gaussian_noise": 63.85487528344672,
+    "gaussian_blur": 59.0702947845805,
+    "jpeg": 31.904761904761905,
+    "contrast": 82.31292517006803,
+    "occlusion": 87.1655328798186,
+    "patch_shuffle": 64.48979591836734
+   },
+   "mean_keep": 84.06147644242883
+  }
+ },
+ "toploss": {
+  "both_in_top": 74,
+  "both_predict_same_other_class": 47,
+  "train_acc": {
+   "ResNet-50": 0.8877227722772277,
+   "DeiT-S": 0.9128288543140028
+  }
+ },
+ "gradcam": {
+  "ResNet-50": 9,
+  "DeiT-S": 10
+ },
  "ablation": {
   "ResNet-50|scratch": {
    "0.1": 21.172277227722773,
@@ -601,144 +711,144 @@
   },
   "per_class_corr": 0.9529072379184105,
   "hardest": [
-   "class 093",
-   "class 077",
-   "class 056",
-   "class 000",
-   "class 037",
-   "class 039"
+   "steak",
+   "pork chop",
+   "huevos rancheros",
+   "apple pie",
+   "filet mignon",
+   "foie gras"
   ],
   "easiest": [
-   "class 033",
-   "class 045",
-   "class 070",
-   "class 063",
-   "class 088",
-   "class 086"
+   "edamame",
+   "frozen yogurt",
+   "pad thai",
+   "macarons",
+   "seaweed salad",
+   "sashimi"
   ],
   "pairs_cnn": [
    [
-    "class 037",
-    "class 093",
+    "filet mignon",
+    "steak",
     66
    ],
    [
-    "class 079",
-    "class 093",
+    "prime rib",
+    "steak",
     47
    ],
    [
-    "class 021",
-    "class 022",
+    "chocolate cake",
+    "chocolate mousse",
     47
    ],
    [
-    "class 004",
-    "class 099",
+    "beef tartare",
+    "tuna tartare",
     39
    ],
    [
-    "class 077",
-    "class 093",
+    "pork chop",
+    "steak",
     31
    ],
    [
-    "class 050",
-    "class 077",
+    "grilled salmon",
+    "pork chop",
     27
    ],
    [
-    "class 037",
-    "class 077",
+    "filet mignon",
+    "pork chop",
     25
    ],
    [
-    "class 022",
-    "class 098",
+    "chocolate mousse",
+    "tiramisu",
     22
    ]
   ],
   "pairs_vit": [
    [
-    "class 037",
-    "class 093",
+    "filet mignon",
+    "steak",
     76
    ],
    [
-    "class 021",
-    "class 022",
+    "chocolate cake",
+    "chocolate mousse",
     38
    ],
    [
-    "class 079",
-    "class 093",
+    "prime rib",
+    "steak",
     36
    ],
    [
-    "class 077",
-    "class 093",
+    "pork chop",
+    "steak",
     33
    ],
    [
-    "class 004",
-    "class 099",
+    "beef tartare",
+    "tuna tartare",
     32
    ],
    [
-    "class 000",
-    "class 008",
+    "apple pie",
+    "bread pudding",
     29
    ],
    [
-    "class 037",
-    "class 077",
+    "filet mignon",
+    "pork chop",
     25
    ],
    [
-    "class 050",
-    "class 077",
+    "grilled salmon",
+    "pork chop",
     22
    ]
   ],
   "pairs_shared": [
    [
-    "class 037",
-    "class 093",
+    "filet mignon",
+    "steak",
     66
    ],
    [
-    "class 079",
-    "class 093",
+    "prime rib",
+    "steak",
     47
    ],
    [
-    "class 021",
-    "class 022",
+    "chocolate cake",
+    "chocolate mousse",
     47
    ],
    [
-    "class 004",
-    "class 099",
+    "beef tartare",
+    "tuna tartare",
     39
    ],
    [
-    "class 077",
-    "class 093",
+    "pork chop",
+    "steak",
     31
    ],
    [
-    "class 050",
-    "class 077",
+    "grilled salmon",
+    "pork chop",
     27
    ],
    [
-    "class 037",
-    "class 077",
+    "filet mignon",
+    "pork chop",
     25
    ],
    [
-    "class 022",
-    "class 098",
+    "chocolate mousse",
+    "tiramisu",
     22
    ]
   ]
