@@ -72,7 +72,7 @@ class CorruptedSet(torch.utils.data.Dataset):
         arr = np.asarray(x).copy()
         if self.ctype:
             arr = corrupt(arr, self.ctype, self.sev, i)
-        return torch.from_numpy(arr).permute(2, 0, 1), self.labels[i]
+        return torch.from_numpy(np.array(arr)).permute(2, 0, 1), self.labels[i]
 
 
 @torch.inference_mode()
@@ -143,7 +143,7 @@ def gradcam(a):
             cam = GradCAM(model=model, target_layers=[model.blocks[-1].norm1], reshape_transform=vit_reshape)
         maps, preds = [], []
         for arr in imgs:
-            x = gpu_normalize(torch.from_numpy(arr).permute(2, 0, 1)[None], device)
+            x = gpu_normalize(torch.from_numpy(np.array(arr)).permute(2, 0, 1)[None], device)
             with torch.no_grad():
                 preds.append(int(model(x).argmax(1)))
             maps.append(cam(input_tensor=x, targets=None)[0])

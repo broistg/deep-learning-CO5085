@@ -1,0 +1,695 @@
+{
+ "n_train": 70700,
+ "models": {
+  "ResNet-50": {
+   "run": "m_resnet50_full_s0",
+   "train_acc": 0.8877227722772277,
+   "mean_loss": 0.6985351527600693,
+   "top": [
+    {
+     "entry": "steak/2440131",
+     "label": "steak",
+     "pred": "hot_dog",
+     "loss": 7.010198087882591
+    },
+    {
+     "entry": "takoyaki/2623785",
+     "label": "takoyaki",
+     "pred": "ramen",
+     "loss": 6.611393150544929
+    },
+    {
+     "entry": "beignets/706878",
+     "label": "beignets",
+     "pred": "filet_mignon",
+     "loss": 6.606683785314087
+    },
+    {
+     "entry": "samosa/3234108",
+     "label": "samosa",
+     "pred": "lasagna",
+     "loss": 6.50297092308387
+    },
+    {
+     "entry": "pizza/2785084",
+     "label": "pizza",
+     "pred": "french_fries",
+     "loss": 6.496008486183184
+    },
+    {
+     "entry": "french_toast/3303000",
+     "label": "french_toast",
+     "pred": "croque_madame",
+     "loss": 6.423944784008746
+    },
+    {
+     "entry": "chicken_wings/1528703",
+     "label": "chicken_wings",
+     "pred": "hot_dog",
+     "loss": 6.421995153483242
+    },
+    {
+     "entry": "chicken_quesadilla/349749",
+     "label": "chicken_quesadilla",
+     "pred": "huevos_rancheros",
+     "loss": 6.362876491851795
+    },
+    {
+     "entry": "oysters/1404187",
+     "label": "oysters",
+     "pred": "mussels",
+     "loss": 6.3257674291069605
+    },
+    {
+     "entry": "croque_madame/1039703",
+     "label": "croque_madame",
+     "pred": "omelette",
+     "loss": 6.310922776967146
+    },
+    {
+     "entry": "eggs_benedict/2276068",
+     "label": "eggs_benedict",
+     "pred": "huevos_rancheros",
+     "loss": 6.266135911325703
+    },
+    {
+     "entry": "samosa/3918822",
+     "label": "samosa",
+     "pred": "takoyaki",
+     "loss": 6.250037572553312
+    },
+    {
+     "entry": "clam_chowder/3918964",
+     "label": "clam_chowder",
+     "pred": "club_sandwich",
+     "loss": 6.24404334620407
+    },
+    {
+     "entry": "hummus/3089524",
+     "label": "hummus",
+     "pred": "beef_carpaccio",
+     "loss": 6.195553734992596
+    },
+    {
+     "entry": "sashimi/3702185",
+     "label": "sashimi",
+     "pred": "ceviche",
+     "loss": 6.185762283420434
+    },
+    {
+     "entry": "pancakes/1087958",
+     "label": "pancakes",
+     "pred": "beignets",
+     "loss": 6.166586536930704
+    },
+    {
+     "entry": "baby_back_ribs/704891",
+     "label": "baby_back_ribs",
+     "pred": "scallops",
+     "loss": 6.150189703880614
+    },
+    {
+     "entry": "tacos/394010",
+     "label": "tacos",
+     "pred": "sashimi",
+     "loss": 6.145210052934792
+    },
+    {
+     "entry": "paella/1769305",
+     "label": "paella",
+     "pred": "bruschetta",
+     "loss": 6.141862921375437
+    },
+    {
+     "entry": "french_onion_soup/2537920",
+     "label": "french_onion_soup",
+     "pred": "foie_gras",
+     "loss": 6.094528386410107
+    },
+    {
+     "entry": "garlic_bread/2650277",
+     "label": "garlic_bread",
+     "pred": "churros",
+     "loss": 6.07127554833895
+    },
+    {
+     "entry": "baby_back_ribs/1499720",
+     "label": "baby_back_ribs",
+     "pred": "cheese_plate",
+     "loss": 6.070821301603282
+    },
+    {
+     "entry": "sushi/1033302",
+     "label": "sushi",
+     "pred": "seaweed_salad",
+     "loss": 6.057818326571546
+    },
+    {
+     "entry": "gnocchi/200596",
+     "label": "gnocchi",
+     "pred": "breakfast_burrito",
+     "loss": 6.054100012480593
+    },
+    {
+     "entry": "pulled_pork_sandwich/894223",
+     "label": "pulled_pork_sandwich",
+     "pred": "foie_gras",
+     "loss": 6.049788780435984
+    },
+    {
+     "entry": "caesar_salad/295856",
+     "label": "caesar_salad",
+     "pred": "croque_madame",
+     "loss": 6.006841564999686
+    },
+    {
+     "entry": "bibimbap/3135804",
+     "label": "bibimbap",
+     "pred": "lobster_bisque",
+     "loss": 6.005359175884702
+    },
+    {
+     "entry": "chicken_curry/664427",
+     "label": "chicken_curry",
+     "pred": "risotto",
+     "loss": 5.998905404248272
+    },
+    {
+     "entry": "bibimbap/3356045",
+     "label": "bibimbap",
+     "pred": "gyoza",
+     "loss": 5.985041554837656
+    },
+    {
+     "entry": "gnocchi/476719",
+     "label": "gnocchi",
+     "pred": "macaroni_and_cheese",
+     "loss": 5.98022094624509
+    },
+    {
+     "entry": "peking_duck/288881",
+     "label": "peking_duck",
+     "pred": "gnocchi",
+     "loss": 5.97565764210983
+    },
+    {
+     "entry": "cannoli/2836182",
+     "label": "cannoli",
+     "pred": "tiramisu",
+     "loss": 5.9683426017984935
+    },
+    {
+     "entry": "steak/1147047",
+     "label": "steak",
+     "pred": "crab_cakes",
+     "loss": 5.963083627827288
+    },
+    {
+     "entry": "mussels/3689393",
+     "label": "mussels",
+     "pred": "chicken_curry",
+     "loss": 5.939658742619775
+    },
+    {
+     "entry": "mussels/3389988",
+     "label": "mussels",
+     "pred": "filet_mignon",
+     "loss": 5.939156412127786
+    },
+    {
+     "entry": "chicken_curry/3542597",
+     "label": "chicken_curry",
+     "pred": "baklava",
+     "loss": 5.930800420447453
+    },
+    {
+     "entry": "tacos/519704",
+     "label": "tacos",
+     "pred": "shrimp_and_grits",
+     "loss": 5.929822768751015
+    },
+    {
+     "entry": "cheesecake/2409232",
+     "label": "cheesecake",
+     "pred": "ice_cream",
+     "loss": 5.929588359056707
+    },
+    {
+     "entry": "onion_rings/550304",
+     "label": "onion_rings",
+     "pred": "fried_rice",
+     "loss": 5.929467146525326
+    },
+    {
+     "entry": "fish_and_chips/2463894",
+     "label": "fish_and_chips",
+     "pred": "filet_mignon",
+     "loss": 5.911133537831916
+    },
+    {
+     "entry": "omelette/1186923",
+     "label": "omelette",
+     "pred": "hamburger",
+     "loss": 5.901422598513896
+    },
+    {
+     "entry": "pizza/221048",
+     "label": "pizza",
+     "pred": "macaroni_and_cheese",
+     "loss": 5.8955620997535325
+    },
+    {
+     "entry": "oysters/2572367",
+     "label": "oysters",
+     "pred": "scallops",
+     "loss": 5.881579765188162
+    },
+    {
+     "entry": "gnocchi/1574186",
+     "label": "gnocchi",
+     "pred": "filet_mignon",
+     "loss": 5.8796908563711145
+    },
+    {
+     "entry": "falafel/731206",
+     "label": "falafel",
+     "pred": "tuna_tartare",
+     "loss": 5.877307652676937
+    },
+    {
+     "entry": "breakfast_burrito/2493874",
+     "label": "breakfast_burrito",
+     "pred": "fried_rice",
+     "loss": 5.865678648530482
+    },
+    {
+     "entry": "apple_pie/330431",
+     "label": "apple_pie",
+     "pred": "creme_brulee",
+     "loss": 5.860702604538389
+    },
+    {
+     "entry": "falafel/366728",
+     "label": "falafel",
+     "pred": "chicken_curry",
+     "loss": 5.846780111392052
+    },
+    {
+     "entry": "club_sandwich/1127619",
+     "label": "club_sandwich",
+     "pred": "guacamole",
+     "loss": 5.834508770579957
+    },
+    {
+     "entry": "pancakes/430115",
+     "label": "pancakes",
+     "pred": "chicken_quesadilla",
+     "loss": 5.825507104624726
+    }
+   ]
+  },
+  "DeiT-S": {
+   "run": "m_deit_s_full_s0",
+   "train_acc": 0.9128288543140028,
+   "mean_loss": 0.4679092585182482,
+   "top": [
+    {
+     "entry": "eggs_benedict/2276068",
+     "label": "eggs_benedict",
+     "pred": "huevos_rancheros",
+     "loss": 7.110961263854926
+    },
+    {
+     "entry": "escargots/990170",
+     "label": "escargots",
+     "pred": "creme_brulee",
+     "loss": 7.100266905661506
+    },
+    {
+     "entry": "omelette/1186923",
+     "label": "omelette",
+     "pred": "hamburger",
+     "loss": 7.049818114583205
+    },
+    {
+     "entry": "steak/2440131",
+     "label": "steak",
+     "pred": "hot_dog",
+     "loss": 7.026380152157246
+    },
+    {
+     "entry": "crab_cakes/889170",
+     "label": "crab_cakes",
+     "pred": "shrimp_and_grits",
+     "loss": 6.848709898696624
+    },
+    {
+     "entry": "sushi/1033302",
+     "label": "sushi",
+     "pred": "seaweed_salad",
+     "loss": 6.825111950853539
+    },
+    {
+     "entry": "hot_dog/493727",
+     "label": "hot_dog",
+     "pred": "scallops",
+     "loss": 6.807959580922522
+    },
+    {
+     "entry": "spaghetti_bolognese/3506379",
+     "label": "spaghetti_bolognese",
+     "pred": "spaghetti_carbonara",
+     "loss": 6.7732477287369655
+    },
+    {
+     "entry": "french_toast/3303000",
+     "label": "french_toast",
+     "pred": "croque_madame",
+     "loss": 6.76561181146424
+    },
+    {
+     "entry": "beet_salad/2873098",
+     "label": "beet_salad",
+     "pred": "poutine",
+     "loss": 6.6274872896513966
+    },
+    {
+     "entry": "cannoli/2231303",
+     "label": "cannoli",
+     "pred": "lasagna",
+     "loss": 6.6095626649005315
+    },
+    {
+     "entry": "lasagna/860471",
+     "label": "lasagna",
+     "pred": "gnocchi",
+     "loss": 6.605903023982852
+    },
+    {
+     "entry": "spaghetti_bolognese/3460217",
+     "label": "spaghetti_bolognese",
+     "pred": "spaghetti_carbonara",
+     "loss": 6.605871587968453
+    },
+    {
+     "entry": "pulled_pork_sandwich/894223",
+     "label": "pulled_pork_sandwich",
+     "pred": "pork_chop",
+     "loss": 6.604820440754078
+    },
+    {
+     "entry": "french_onion_soup/77527",
+     "label": "french_onion_soup",
+     "pred": "clam_chowder",
+     "loss": 6.579078715132173
+    },
+    {
+     "entry": "falafel/1306416",
+     "label": "falafel",
+     "pred": "cannoli",
+     "loss": 6.578367835155515
+    },
+    {
+     "entry": "tuna_tartare/3282685",
+     "label": "tuna_tartare",
+     "pred": "lobster_bisque",
+     "loss": 6.572414722197282
+    },
+    {
+     "entry": "tuna_tartare/2531864",
+     "label": "tuna_tartare",
+     "pred": "sashimi",
+     "loss": 6.55651750782104
+    },
+    {
+     "entry": "baby_back_ribs/1499720",
+     "label": "baby_back_ribs",
+     "pred": "nachos",
+     "loss": 6.532642837784368
+    },
+    {
+     "entry": "chicken_quesadilla/349749",
+     "label": "chicken_quesadilla",
+     "pred": "pork_chop",
+     "loss": 6.505989130391792
+    },
+    {
+     "entry": "beet_salad/1225910",
+     "label": "beet_salad",
+     "pred": "sashimi",
+     "loss": 6.429077035105921
+    },
+    {
+     "entry": "prime_rib/2853100",
+     "label": "prime_rib",
+     "pred": "filet_mignon",
+     "loss": 6.376802812023495
+    },
+    {
+     "entry": "oysters/907314",
+     "label": "oysters",
+     "pred": "french_toast",
+     "loss": 6.374682196553365
+    },
+    {
+     "entry": "gnocchi/200596",
+     "label": "gnocchi",
+     "pred": "falafel",
+     "loss": 6.371518717141682
+    },
+    {
+     "entry": "pho/1447717",
+     "label": "pho",
+     "pred": "pad_thai",
+     "loss": 6.35105361192106
+    },
+    {
+     "entry": "oysters/1404187",
+     "label": "oysters",
+     "pred": "mussels",
+     "loss": 6.349129366482413
+    },
+    {
+     "entry": "french_onion_soup/2467348",
+     "label": "french_onion_soup",
+     "pred": "scallops",
+     "loss": 6.347886681130881
+    },
+    {
+     "entry": "hot_and_sour_soup/1390816",
+     "label": "hot_and_sour_soup",
+     "pred": "lobster_bisque",
+     "loss": 6.347282994153309
+    },
+    {
+     "entry": "chicken_wings/297786",
+     "label": "chicken_wings",
+     "pred": "clam_chowder",
+     "loss": 6.346312287269841
+    },
+    {
+     "entry": "garlic_bread/395376",
+     "label": "garlic_bread",
+     "pred": "risotto",
+     "loss": 6.342510756605075
+    },
+    {
+     "entry": "cheese_plate/3775642",
+     "label": "cheese_plate",
+     "pred": "caprese_salad",
+     "loss": 6.3353046638996515
+    },
+    {
+     "entry": "croque_madame/1039703",
+     "label": "croque_madame",
+     "pred": "omelette",
+     "loss": 6.332766100016264
+    },
+    {
+     "entry": "chocolate_mousse/1667209",
+     "label": "chocolate_mousse",
+     "pred": "cup_cakes",
+     "loss": 6.3201711562270475
+    },
+    {
+     "entry": "strawberry_shortcake/2000152",
+     "label": "strawberry_shortcake",
+     "pred": "ice_cream",
+     "loss": 6.316063856539179
+    },
+    {
+     "entry": "fried_rice/596794",
+     "label": "fried_rice",
+     "pred": "pad_thai",
+     "loss": 6.296089686320959
+    },
+    {
+     "entry": "strawberry_shortcake/2498044",
+     "label": "strawberry_shortcake",
+     "pred": "ice_cream",
+     "loss": 6.29296497435635
+    },
+    {
+     "entry": "ceviche/2390451",
+     "label": "ceviche",
+     "pred": "tuna_tartare",
+     "loss": 6.286345843295028
+    },
+    {
+     "entry": "bibimbap/3135804",
+     "label": "bibimbap",
+     "pred": "chocolate_mousse",
+     "loss": 6.2402243662774275
+    },
+    {
+     "entry": "breakfast_burrito/3351842",
+     "label": "breakfast_burrito",
+     "pred": "croque_madame",
+     "loss": 6.234376782586867
+    },
+    {
+     "entry": "pho/175528",
+     "label": "pho",
+     "pred": "spring_rolls",
+     "loss": 6.228877372904118
+    },
+    {
+     "entry": "hamburger/1821268",
+     "label": "hamburger",
+     "pred": "pizza",
+     "loss": 6.223630674273378
+    },
+    {
+     "entry": "bibimbap/2514191",
+     "label": "bibimbap",
+     "pred": "tuna_tartare",
+     "loss": 6.220602080259055
+    },
+    {
+     "entry": "filet_mignon/695393",
+     "label": "filet_mignon",
+     "pred": "caesar_salad",
+     "loss": 6.220579627825417
+    },
+    {
+     "entry": "onion_rings/550304",
+     "label": "onion_rings",
+     "pred": "takoyaki",
+     "loss": 6.210107949364124
+    },
+    {
+     "entry": "mussels/3218790",
+     "label": "mussels",
+     "pred": "french_onion_soup",
+     "loss": 6.209910777782099
+    },
+    {
+     "entry": "strawberry_shortcake/1845065",
+     "label": "strawberry_shortcake",
+     "pred": "waffles",
+     "loss": 6.209219708318066
+    },
+    {
+     "entry": "french_fries/3484006",
+     "label": "french_fries",
+     "pred": "fish_and_chips",
+     "loss": 6.2072477906992285
+    },
+    {
+     "entry": "nachos/839211",
+     "label": "nachos",
+     "pred": "cheese_plate",
+     "loss": 6.199489700458489
+    },
+    {
+     "entry": "fried_rice/805320",
+     "label": "fried_rice",
+     "pred": "lasagna",
+     "loss": 6.196233233813981
+    },
+    {
+     "entry": "cheesecake/1932889",
+     "label": "cheesecake",
+     "pred": "tiramisu",
+     "loss": 6.195573580889004
+    }
+   ]
+  }
+ },
+ "both_in_top": 74,
+ "both_predict_same_other_class": 47,
+ "shown": [
+  {
+   "entry": "steak/2440131",
+   "label": "steak",
+   "pred_resnet": "hot_dog",
+   "pred_deit": "hot_dog"
+  },
+  {
+   "entry": "eggs_benedict/2276068",
+   "label": "eggs_benedict",
+   "pred_resnet": "huevos_rancheros",
+   "pred_deit": "huevos_rancheros"
+  },
+  {
+   "entry": "french_toast/3303000",
+   "label": "french_toast",
+   "pred_resnet": "croque_madame",
+   "pred_deit": "croque_madame"
+  },
+  {
+   "entry": "omelette/1186923",
+   "label": "omelette",
+   "pred_resnet": "hamburger",
+   "pred_deit": "hamburger"
+  },
+  {
+   "entry": "sushi/1033302",
+   "label": "sushi",
+   "pred_resnet": "seaweed_salad",
+   "pred_deit": "seaweed_salad"
+  },
+  {
+   "entry": "chicken_quesadilla/349749",
+   "label": "chicken_quesadilla",
+   "pred_resnet": "huevos_rancheros",
+   "pred_deit": "pork_chop"
+  },
+  {
+   "entry": "oysters/1404187",
+   "label": "oysters",
+   "pred_resnet": "mussels",
+   "pred_deit": "mussels"
+  },
+  {
+   "entry": "pulled_pork_sandwich/894223",
+   "label": "pulled_pork_sandwich",
+   "pred_resnet": "foie_gras",
+   "pred_deit": "pork_chop"
+  },
+  {
+   "entry": "croque_madame/1039703",
+   "label": "croque_madame",
+   "pred_resnet": "omelette",
+   "pred_deit": "omelette"
+  },
+  {
+   "entry": "baby_back_ribs/1499720",
+   "label": "baby_back_ribs",
+   "pred_resnet": "cheese_plate",
+   "pred_deit": "nachos"
+  },
+  {
+   "entry": "gnocchi/200596",
+   "label": "gnocchi",
+   "pred_resnet": "breakfast_burrito",
+   "pred_deit": "falafel"
+  },
+  {
+   "entry": "hot_dog/493727",
+   "label": "hot_dog",
+   "pred_resnet": "grilled_salmon",
+   "pred_deit": "scallops"
+  }
+ ]
+}

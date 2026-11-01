@@ -1,0 +1,94 @@
+{
+ "images": [
+  "apple_pie/1011328",
+  "breakfast_burrito/1000920",
+  "chicken_curry/101833",
+  "creme_brulee/1007951",
+  "falafel/102356",
+  "frozen_yogurt/1012504",
+  "hot_and_sour_soup/1000486",
+  "macarons/1005656",
+  "pancakes/1006982",
+  "ramen/1000325",
+  "spaghetti_bolognese/1027299",
+  "tuna_tartare/1008604"
+ ],
+ "classes": [
+  "apple_pie",
+  "breakfast_burrito",
+  "chicken_curry",
+  "creme_brulee",
+  "falafel",
+  "frozen_yogurt",
+  "hot_and_sour_soup",
+  "macarons",
+  "pancakes",
+  "ramen",
+  "spaghetti_bolognese",
+  "tuna_tartare"
+ ],
+ "models": {
+  "ResNet-50": {
+   "run": "m_resnet50_full_s0",
+   "pred": [
+    "apple_pie",
+    "breakfast_burrito",
+    "shrimp_and_grits",
+    "creme_brulee",
+    "crab_cakes",
+    "frozen_yogurt",
+    "hot_and_sour_soup",
+    "macarons",
+    "pancakes",
+    "ramen",
+    "spaghetti_bolognese",
+    "beet_salad"
+   ],
+   "correct": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    false
+   ]
+  },
+  "DeiT-S": {
+   "run": "m_deit_s_full_s0",
+   "pred": [
+    "samosa",
+    "breakfast_burrito",
+    "chicken_curry",
+    "creme_brulee",
+    "crab_cakes",
+    "frozen_yogurt",
+    "hot_and_sour_soup",
+    "macarons",
+    "pancakes",
+    "ramen",
+    "spaghetti_bolognese",
+    "tuna_tartare"
+   ],
+   "correct": [
+    false,
+    true,
+    true,
+    true,
+    false,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ]
+  }
+ }
+}

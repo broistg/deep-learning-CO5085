@@ -1,0 +1,18 @@
+{
+ "resnet50|scratch": 192.9,
+ "resnet50|head": 70.5,
+ "resnet50|partial": 86.4,
+ "resnet50|full": 195.0,
+ "deit_s|scratch": 191.0,
+ "deit_s|head": 58.3,
+ "deit_s|partial": 122.8,
+ "deit_s|full": 194.4,
+ "convnext_t|scratch": 294.5,
+ "convnext_t|head": 102.4,
+ "convnext_t|partial": 126.2,
+ "convnext_t|full": 302.6,
+ "swin_t|scratch": 395.3,
+ "swin_t|head": 152.6,
+ "swin_t|partial": 177.5,
+ "swin_t|full": 406.1
+}
