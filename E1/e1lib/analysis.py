@@ -152,19 +152,21 @@ def plot_loss_accuracy_curves(train_losses, train_accuracies,
         _show()
 
 
-def plot_confusion_matrix(y_true, y_pred, classes, normalize=False,
+def plot_confusion_matrix(y_true, y_pred, classes,
                           title="Confusion matrix", cmap="rocket", ax=None):
   cm = metrics.confusion_matrix(y_true, y_pred,
                                 labels=np.arange(len(classes)),
-                                normalize="true" if normalize else None)
+                                normalize="true")
   standalone = ax is None
   if standalone:
     fig, ax = plt.subplots(figsize=(10, 10))
   sns.heatmap(cm,
               annot=True,
-              fmt=".2f" if normalize else "d",
+              fmt=".2f",
               cmap=cmap,
               cbar=False,
+              vmin=0,
+              vmax=1,
               xticklabels=classes,
               yticklabels=classes,
               ax=ax)
@@ -456,7 +458,7 @@ def make_figures(results_dir=None, fig_dir=None, seed=0, suffix=""):
     plot_samples_per_class(train_ds, samples_per_class=10)
     for name, res in results.items():
         save(f"confusion_{name}")
-        plot_confusion_matrix(res["y_true"], res["y_pred"], CLASSES, normalize=False,
+        plot_confusion_matrix(res["y_true"], res["y_pred"], CLASSES,
                               title=f"Confusion Matrix - {name} (seed {seed})")
         save(f"errors_{name}")
         show_errors(test_ds, res["y_true"], res["y_pred"], res["y_prob"], CLASSES, n=8, num_cols=4,

@@ -51,7 +51,7 @@
         <tr><td>Tổng số ảnh</td><td>60 000</td></tr><tr><td>Ảnh huấn luyện gốc</td><td>50 000</td></tr><tr><td>Ảnh kiểm thử</td><td>10 000</td></tr><tr><td>Kích thước</td><td>32 × 32 pixel</td></tr><tr><td>Số kênh màu</td><td>3 (RGB)</td></tr><tr><td>Số lớp</td><td>10</td></tr>
       </tbody></table></div>
       <p class="table-caption">Bảng 2.1 · Thông tin tổng quan về CIFAR-10.</p>
-      <p>Mỗi lớp có 6 000 ảnh: 5 000 ảnh trong tập huấn luyện gốc và 1 000 ảnh trong tập kiểm thử. Quy mô dữ liệu phù hợp với phạm vi bài tập và vẫn đủ phức tạp để so sánh bộ phân loại Softmax, MLP và CNN.</p>
+      <p>Mỗi lớp có 6 000 ảnh: 5 000 ảnh trong tập huấn luyện gốc và 1 000 ảnh trong tập kiểm thử. Quy mô dữ liệu phù hợp với phạm vi bài tập và vẫn đủ phức tạp để so sánh các bộ phân loại.</p>
     </section>
 
     <section class="section" id="analysis">
@@ -59,12 +59,12 @@
       <p>Trước huấn luyện, nhóm khảo sát phân bố số mẫu theo lớp và quan sát ảnh đại diện. Cả 10 lớp trong tập huấn luyện gốc đều có 5 000 ảnh, nên không cần xử lý mất cân bằng lớp.</p>
       <figure class="report-figure dataset-figure"><a href="../assets/dataset/class-distribution.png" target="_blank" rel="noopener noreferrer" aria-label="Mở biểu đồ phân bố lớp kích thước đầy đủ"><img src="../assets/dataset/class-distribution.png" width="984" height="484" alt="Biểu đồ 10 cột bằng nhau, mỗi lớp CIFAR-10 có 5 000 ảnh huấn luyện gốc" loading="lazy"></a><figcaption>Hình 2.1 · Phân bố số lượng mẫu theo lớp trong tập huấn luyện CIFAR-10. Trích từ báo cáo.</figcaption></figure>
       <figure class="report-figure dataset-figure"><a href="../assets/dataset/samples.png" target="_blank" rel="noopener noreferrer" aria-label="Mở ảnh mẫu CIFAR-10 kích thước đầy đủ"><img src="../assets/dataset/samples.png" width="1984" height="2739" alt="Mười hàng ảnh mẫu CIFAR-10, mỗi hàng minh họa một lớp từ airplane đến truck" loading="lazy"></a><figcaption>Hình 2.2 · Một số ảnh mẫu thực tế thuộc mười lớp CIFAR-10. Trích từ báo cáo.</figcaption></figure>
-      <p>Dù độ phân giải thấp, ảnh có màu sắc, hình dạng và bối cảnh đa dạng. Một số cặp lớp như cat–dog và automobile–truck tương đối giống nhau về thị giác, làm bài toán phân loại khó hơn.</p>
+      <p>Dù độ phân giải thấp, ảnh có màu sắc, hình dạng và bối cảnh đa dạng. Một số cặp lớp như cat–dog và automobile–truck tương đối giống nhau về thị giác, làm tăng độ khó của bài toán phân loại.</p>
     </section>
 
     <section class="section" id="split">
       <div class="section-header"><span class="section-num">2.3</span><h2>Phân chia tập huấn luyện, kiểm định và kiểm thử</h2></div>
-      <p>Nhóm chia một lần 50 000 ảnh huấn luyện gốc theo kiểu phân tầng thành 45 000 ảnh huấn luyện và 5 000 ảnh kiểm định. Mỗi lớp đóng góp đúng 500 ảnh kiểm định. Chỉ số ảnh và mã băm SHA-256 được lưu trong <code>common/cifar10_split.json</code>. Các bài E1–E3 dùng cùng phép chia và ghi lại mã băm trong kết quả để kiểm tra khả năng tái lập.</p>
+      <p>Nhóm chia một lần 50 000 ảnh huấn luyện gốc theo kiểu phân tầng thành 45 000 ảnh huấn luyện và 5 000 ảnh kiểm định. Mỗi lớp đóng góp đúng 500 ảnh kiểm định. Phép chia dùng seed cố định 42; chỉ số ảnh và mã băm SHA-256 được lưu trong <code>common/cifar10_split.json</code>. Các bài E1–E3 dùng cùng phép chia và ghi lại mã băm trong kết quả để kiểm tra khả năng tái lập.</p>
       <p>Dữ liệu tải qua Hugging Face (<code>uoft-cs/cifar10</code>) chỉ được chấp nhận khi mã băm ảnh và nhãn trùng với bản TorchVision đã dùng để tạo phép chia. Do thứ tự ảnh của hai bản khác nhau, dữ liệu Hugging Face được sắp lại theo thứ tự TorchVision trước khi áp dụng chỉ số. Tập kiểm thử gốc gồm 10 000 ảnh được giữ nguyên, chỉ đánh giá sau khi huấn luyện; không dùng để chọn mô hình hay siêu tham số.</p>
       <div class="results-table-wrapper"><table class="results-table"><caption class="sr-only">Bảng 2.2: Phân chia dữ liệu</caption><thead><tr><th scope="col">Tập dữ liệu</th><th scope="col">Số mẫu</th><th scope="col">Mục đích</th></tr></thead><tbody>
         <tr><td>Huấn luyện</td><td>45 000</td><td>Huấn luyện mô hình</td></tr><tr><td>Kiểm định</td><td>5 000</td><td>Theo dõi quá trình huấn luyện</td></tr><tr><td>Kiểm thử</td><td>10 000</td><td>Đánh giá kết quả cuối cùng</td></tr>
