@@ -12,6 +12,9 @@ Code for assignment A1 (CO5085). Entry points (run from the repo root with `PYTH
 | `python -m a1lib.plan choose-lr` | pick LRs after the sweep |
 | `python -m a1lib.collect results` / `bundle` | copy results into the repo / build the Release files |
 | `python -m a1lib.train --config X.yaml --smoke [--fake]` | 2-epoch smoke test (`--fake` = synthetic data, no download) |
+| `python -m a1lib.cost_bench` | GPU-only training cost per architecture/mode and inference cost (one T4, one session) |
+| `python -m a1lib.posthoc robustness\|gradcam\|toploss` | GPU analyses on the released weights (notebook `kaggle_posthoc.ipynb`, about 1 h) |
+| `python -m a1lib.analyze` | tables, figures, calibration/ensemble/error analyses from the committed results |
 | `python -m unittest discover -s A1/tests` | torch-free unit tests |
 
 Team workflow: **TEAM_PROTOCOL.md**. Layout: `A1/a1lib/` (A1-only package), `common/` (reusable across assignments), `A1/configs/` (one YAML per run), `A1/results/` (result JSONs), `A1/notebooks/kaggle_worker.ipynb` (Kaggle).

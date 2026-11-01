@@ -42,6 +42,16 @@ def make_results(d, art):
                "timing": {"train_s_total": 100.0 * c["epochs"], "val_s_total": 10.0 * c["epochs"]}, "peak_mem_mb_max": 1234, "smoke": False}
         (d / f"{r.run_id}.json").write_text(json.dumps(res))
     (d / "lr_choice.json").write_text(json.dumps({"resnet50.a1_in1k|head": {"lr": 1e-3}}))
+    from a1lib.corruptions import TYPES
+    cores = [f"m_{a}_{m}_s0" for a in ("resnet50", "deit_s") for m in ("head", "partial", "full", "scratch")]
+    rob = {"subset": {"n": 5050}, "models": {rid: {"clean": 0.8, **{t: {"1": 0.7, "2": 0.6, "3": 0.5} for t in TYPES}} for rid in cores}}
+    (d / "posthoc_robustness.json").write_text(json.dumps(rob))
+    (d / "cost_infer.json").write_text(json.dumps({"env": {}, **{k: {"params_M": 23.7, "gmacs": 4.087, "ips_b128": 950.7, "lat1_median_ms": 7.21,
+                                                                    "lat1_p95_ms": 8.63, "mem_b1_mb": 170, "mem_b128_mb": 871}
+                                                                 for k in ("resnet50", "deit_s", "convnext_t", "swin_t")}}))
+    (d / "cost_gpu.json").write_text(json.dumps({"resnet50|head": 70.8, "deit_s|full": 197.3}))
+    (d / "posthoc_toploss.json").write_text(json.dumps({"both_in_top": 31, "both_predict_same_other_class": 12,
+                                                        "models": {"ResNet-50": {"train_acc": 0.99}, "DeiT-S": {"train_acc": 0.98}}}))
 
 
 class Analyze(unittest.TestCase):
@@ -98,6 +108,20 @@ class Analyze(unittest.TestCase):
         T = AN.fit_temperature(z, y)
         self.assertGreater(T, 1.5)
         self.assertLess(M.nll(z / T, y), M.nll(z, y))
+
+    def test_posthoc_tables(self):
+        for n in ("tab_robust", "tab_infercost"):
+            txt = (self.out / f"{n}.tex").read_text()
+            self.assertFalse(txt.strip().endswith("\\\\"), n)
+            self.assertTrue(all(l.rstrip().endswith("\\\\") for l in txt.strip().splitlines()[:-1]), n)
+        self.assertEqual((self.out / "tab_robust.tex").read_text().splitlines()[0].count("&"), 9)   # arch, mode, clean, 6 types, mean
+        self.assertEqual((self.out / "tab_infercost.tex").read_text().count("\n"), 4)
+        self.assertTrue((self.out / "figures" / "robustness.png").exists())
+        s = json.loads((self.out / "summary.json").read_text())
+        self.assertAlmostEqual(s["robustness"]["m_resnet50_full_s0"]["keep_s3"]["jpeg"], 62.5)
+        self.assertEqual(s["toploss"]["both_in_top"], 31)
+        row = [l for l in (self.out / "tab_traincost.tex").read_text().splitlines() if "ResNet-50 & Linear probing" in l][0]
+        self.assertIn("70{,}8", row)
 
     def test_ablation_has_all_points(self):
         s = json.loads((self.out / "summary.json").read_text())

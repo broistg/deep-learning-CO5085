@@ -58,9 +58,15 @@ def load_logits(art, rid, split):
 
 
 def class_names(explicit=None):
+    """Class names from split.json (verified against the team's split hash when found)."""
+    import hashlib
     for c in ([Path(explicit)] if explicit else []) + [A1 / "split.json", A1 / "data" / "split.json", A1 / "results" / "split.json"]:
         if c.exists():
+            h = hashlib.sha256(c.read_bytes()).hexdigest()[:16]
+            if h != "75ed81bfe380c089":
+                print(f"WARNING: {c} has sha256[:16] {h}, not the team's split 75ed81bfe380c089; class names may differ")
             return json.loads(c.read_text(encoding="utf8"))["classes"]
+    print("WARNING: no split.json found (commit it as A1/split.json); classes are printed as class_000 ...")
     return [f"class_{i:03d}" for i in range(N_CLASSES)]
 
 
@@ -225,6 +231,64 @@ def table_stretch(runs):
         rows.append(f"{arch(r)} & {MODE[c['mode']]} & {c['epochs']} & {num(100 * t['top1'])} & {num(100 * t['top5'])} & "
                     f"{num(100 * t['macro_f1'])} & {num(hours(r), 2)} \\\\")
     return tex_rows(rows)
+
+
+
+def table_infer(infer):
+    rows = []
+    for k, a in (("resnet50", "ResNet-50"), ("deit_s", "DeiT-S"), ("convnext_t", "ConvNeXt-T (mở rộng)"), ("swin_t", "Swin-T (mở rộng)")):
+        d = infer.get(k)
+        if not d:
+            continue
+        g = num(d["gmacs"], 3) if d.get("gmacs") else "--"
+        rows.append(f"{a} & {num(d['params_M'])} & {g} & {num(d['ips_b128'], 1)} & {num(d['lat1_median_ms'])} / {num(d['lat1_p95_ms'])} & "
+                    f"{thou(round(d['mem_b1_mb']))} / {thou(round(d['mem_b128_mb']))} \\\\")
+    return tex_rows(rows)
+
+
+def table_robust(rob, summ):
+    """Relative accuracy kept (accuracy under corruption / clean accuracy, %), strongest severity, plus the mean over all 18 conditions."""
+    models = rob["models"]
+    names = {"resnet50": "ResNet-50", "deit_s": "DeiT-S"}
+    rows, res = [], {}
+    from a1lib.corruptions import TYPES
+    for rid in sorted(models, key=lambda r: (r.split("_")[1] != "resnet50", ORDER_MODE.index(r.split("_")[-2]))):
+        m = models[rid]
+        clean = m["clean"]
+        keep = {t: [100 * m[t][s] / clean for s in ("1", "2", "3")] for t in TYPES if t in m}
+        allv = [v for vs in keep.values() for v in vs]
+        parts = rid.split("_")
+        arch_name = "ResNet-50" if parts[1] == "resnet50" else "DeiT-S"
+        res[rid] = {"clean": clean, "keep_s3": {t: v[2] for t, v in keep.items()}, "mean_keep": float(np.mean(allv))}
+        rows.append(f"{arch_name} & {MODE[parts[-2]]} & {num(100 * clean)} & " + " & ".join(num(keep[t][2], 1) for t in TYPES if t in keep) +
+                    f" & {num(np.mean(allv), 1)} \\\\")
+    summ["robustness"] = res
+    return tex_rows(rows)
+
+
+def fig_robust(rob, out):
+    from a1lib.corruptions import TYPES
+    titles = {"gaussian_noise": "nhiễu Gauss", "gaussian_blur": "làm mờ", "jpeg": "nén JPEG", "contrast": "giảm tương phản", "occlusion": "che khuất",
+              "patch_shuffle": "xáo trộn patch"}
+    fig, axs = plt.subplots(2, 3, figsize=(8.0, 4.8), sharey=True)
+    for ax, t in zip(axs.ravel(), TYPES):
+        for rid, m in rob["models"].items():
+            parts = rid.split("_")
+            if parts[-2] not in ("full", "scratch", "head"):
+                continue
+            a_ = "ResNet-50" if parts[1] == "resnet50" else "DeiT-S"
+            ax.plot([0, 1, 2, 3], [100 * m["clean"]] + [100 * m[t][s] for s in ("1", "2", "3")], marker="o", ms=3, lw=1.3, color=ARCH_COLOR[a_],
+                    ls={"full": "-", "head": ":", "scratch": "--"}[parts[-2]], label=f"{a_} {MODE[parts[-2]].lower()}" if t == TYPES[0] else None)
+        ax.set_title(titles[t], fontsize=9, color=INK)
+        ax.set_xticks([0, 1, 2, 3])
+        ax.set_xticklabels(["sạch", "1", "2", "3"])
+    axs[0, 0].set_ylabel("test top-1 (%)")
+    axs[1, 0].set_ylabel("test top-1 (%)")
+    fig.legend(*axs[0, 0].get_legend_handles_labels(), loc="lower center", ncol=3, frameon=False, fontsize=7)
+    fig.tight_layout(rect=(0, 0.07, 1, 1))
+    fig.savefig(out / "robustness.png")
+    fig.savefig(out / "robustness.pdf")
+    plt.close(fig)
 
 
 # ---------------------------------------------------------------------------------------------------------------- logits based
@@ -499,6 +563,18 @@ def main(argv=None):
     write_table(out, "tab_ablation.tex", body)
     write_table(out, "tab_lr.tex", table_lr(runs, choice))
     write_table(out, "tab_stretch.tex", table_stretch(runs))
+    infer_p, rob_p = res / "cost_infer.json", res / "posthoc_robustness.json"
+    if infer_p.exists():
+        write_table(out, "tab_infercost.tex", table_infer(json.loads(infer_p.read_text(encoding="utf8"))))
+    if rob_p.exists():
+        rob = json.loads(rob_p.read_text(encoding="utf8"))
+        write_table(out, "tab_robust.tex", table_robust(rob, summ))
+        fig_robust(rob, figdir)
+    for nm_, key in (("posthoc_toploss.json", "toploss"), ("posthoc_gradcam.json", "gradcam")):
+        if (res / nm_).exists():
+            d = json.loads((res / nm_).read_text(encoding="utf8"))
+            summ[key] = ({k: d[k] for k in ("both_in_top", "both_predict_same_other_class")} | {"train_acc": {m: v["train_acc"] for m, v in d["models"].items()}}
+                         if key == "toploss" else {m: sum(v["correct"]) for m, v in d["models"].items()})
     summ["ablation"] = {f"{a_}|{m}": {str(k): v for k, v in d.items()} for (a_, m), d in abl.items()}
     if g:
         fig_curves(g, figdir)

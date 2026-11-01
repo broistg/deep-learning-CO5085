@@ -77,9 +77,21 @@ def artifacts(bundle_dir, out_dir):
     print(f"{n_l} logits files -> .npz, {n_w} weight files unpacked into {out}")
 
 
+def fetch_weights(paths, runs, out_dir):
+    """Download model_final.pt of the given runs from the store into out_dir/<run_id>/ (for the post-hoc analyses on Kaggle)."""
+    out = Path(out_dir)
+    for rid in runs:
+        dst = out / rid / "model_final.pt"
+        if dst.exists():
+            print(f"{rid}: already there")
+            continue
+        paths.store.get(f"runs/{rid}/model_final.pt", dst)
+        print(f"{rid}: {dst.stat().st_size / 1e6:.0f} MB")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=["results", "bundle", "artifacts"])
+    ap.add_argument("cmd", choices=["results", "bundle", "artifacts", "fetch-core"])
     ap.add_argument("--bundle", default="release", help="artifacts: folder with a1_logits.zip / a1_weights.zip")
     ap.add_argument("--a1-dir", default="A1")
     ap.add_argument("--out", default=None)
@@ -87,6 +99,9 @@ def main():
     if a.cmd == "artifacts":
         return artifacts(a.bundle, a.out or str(Path(a.a1_dir) / "artifacts"))
     paths = Paths.from_env()
+    if a.cmd == "fetch-core":
+        core = [f"m_{x}_{m}_s0" for x in ("resnet50", "deit_s") for m in ("head", "partial", "full", "scratch")]
+        return fetch_weights(paths, core, a.out or str(Path(a.a1_dir) / "artifacts"))
     collect_results(paths, a.a1_dir) if a.cmd == "results" else bundle(paths, a.out or "release")
 
 
