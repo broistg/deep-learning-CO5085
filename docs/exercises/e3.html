@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Exercise 03: Sequence Models (LSTM / GRU) · CO5085</title>
+  <title>E3: Mô hình chuỗi ảnh với LSTM / GRU · CO5085</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,24 +24,25 @@
 
   <!-- Sticky Header -->
   <header>
-    <a class="logo" href="../index.html"><span>CO5085:</span> Deep Learning &amp; Its Applications in Computer
-      Vision</a>
-    <a class="back-btn" href="../index.html#exercises">← Về trang tổng quan</a>
+    <a class="logo" href="../index.html"><span>CO5085:</span> Học sâu và thị giác máy tính</a>
+    <a class="back-btn" href="../index.html#exercises"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#arrow-left"/></svg> Về trang tổng quan</a>
   </header>
 
-  <div class="page-container">
+  <main class="page-container report-page">
 
     <!-- Sub-navigation: Sibling exercises -->
-    <nav class="assignment-parts" aria-label="Exercise Navigation">
-      <span class="label">Exercises ·</span>
-      <a href="e1.html">E1: Small Image Classification</a>
-      <a href="e2.html">E2: Multi-Head Self-Attention</a>
-      <span class="current">E3: LSTM / GRU for Images</span>
+    <nav class="assignment-parts" aria-label="Điều hướng các phương pháp phân loại ảnh">
+      <span class="label">Phân loại ảnh ·</span>
+      <a href="../index.html">Trang chủ</a>
+      <a href="../dataset.html">Dữ liệu chung</a>
+      <a href="e1.html">E1 · Softmax / MLP / CNN</a>
+      <a href="e2.html">E2 · Self-Attention</a>
+      <span class="current" aria-current="page">E3 · LSTM / GRU</span>
     </nav>
 
     <!-- Page Hero Banner -->
-    <div class="page-tag">Exercise 03 · Technical Report</div>
-    <h1>Mô hình hóa ảnh như dữ liệu chuỗi<br><em>LSTM, GRU &amp; Baseline không hồi quy (MLP / CNN từ E1)</em></h1>
+    <div class="page-tag">Bài tập E3 · Kế hoạch thực nghiệm</div>
+    <h1>Mô hình hóa ảnh như dữ liệu chuỗi<br><em>LSTM, GRU và mô hình đối chứng E1</em></h1>
 
     <div class="page-meta">
       <div class="meta-item">
@@ -62,27 +63,28 @@
       </div>
       <div class="meta-item">
         <span class="meta-label">Trạng thái</span>
-        <span class="meta-value"><span class="badge badge-wip">In progress...</span></span>
+        <span class="meta-value"><span class="badge badge-wip">Đang thực hiện...</span></span>
       </div>
     </div>
 
     <!-- Quick Action Links -->
     <div class="quick-links">
       <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085/tree/main/E3" target="_blank"
-        rel="noopener noreferrer">↗ Mã nguồn E3</a>
-      <a class="link-btn primary" href="../reports/exercises.pdf" target="_blank" rel="noopener noreferrer">📄 Báo
+        rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#external"/></svg> Mã nguồn E3</a>
+      <a class="link-btn primary" href="../reports/exercises.pdf" target="_blank" rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#file"/></svg> Báo
         cáo
         PDF (E1-E3)</a>
-      <a class="link-btn pending" aria-disabled="true">📓 Notebook (sắp có)</a>
-      <a class="link-btn" href="../index.html#exercises">← Quay lại danh sách bài tập</a>
+      <span class="link-btn pending" aria-disabled="true"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#notebook"/></svg> Notebook (sắp có)</span>
+      <a class="link-btn" href="../index.html#exercises"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#arrow-left"/></svg> Quay lại danh sách bài tập</a>
+      <a class="link-btn" href="../dataset.html"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#chart"/></svg> Dataset dùng chung</a>
     </div>
 
-    <!-- Status Banner: Work In Progress -->
+    <nav class="report-toc" aria-label="Mục lục trong trang"><strong>Trong trang</strong><a href="#scope">Mục tiêu</a><a href="#architectures">Kiến trúc</a><a href="#results">Kế hoạch kết quả</a></nav>
+    <!-- Trạng thái thực nghiệm -->
     <div class="status-banner wip">
-      <div class="status-banner-icon">📌</div>
+      <div class="status-banner-icon"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#pin"/></svg></div>
       <div class="status-banner-content">
-        <h4>Báo cáo đang thực hiện (Work In Progress) · Hạn nộp: 09/11/2026 (W10) <span class="badge badge-wip">In
-            progress...</span></h4>
+        <h4>Báo cáo đang thực hiện · Hạn nộp: 09/11/2026 (W10) <span class="badge badge-wip">Đang thực hiện</span></h4>
         <p>
           Bài tập này áp dụng mô hình tuần hoàn (LSTM, GRU) trên <strong>cùng tập ảnh nhỏ đã chọn ở E1 và E2</strong>,
           biến đổi ảnh 2D thành chuỗi thời gian 1D và so sánh trực tiếp với baseline không hồi quy (MLP / CNN từ E1).
@@ -94,7 +96,7 @@
     <div class="section" id="scope">
       <div class="section-header">
         <span class="section-num">01</span>
-        <h2>Mục tiêu &amp; Biểu diễn ảnh thành chuỗi</h2>
+        <h2>Mục tiêu và biểu diễn ảnh thành chuỗi</h2>
       </div>
       <p>
         Mục tiêu của bài tập là mô hình hóa hình ảnh dưới dạng chuỗi dữ liệu tuần tự và phân loại bằng các mạng nơ-ron
@@ -118,25 +120,25 @@
 
       <div class="overview-grid">
         <div class="overview-card">
-          <div class="overview-icon">🔄</div>
+          <div class="overview-icon"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#refresh"/></svg></div>
           <div>
-            <div class="overview-title">Cơ chế Cổng (Gating)</div>
+            <div class="overview-title">Cơ chế cổng</div>
             <div class="overview-sub">LSTM (3 cổng: forget, input, output) và GRU (2 cổng: reset, update) kiểm
               soát dòng thông tin qua từng hàng/bước quét ảnh.</div>
           </div>
         </div>
         <div class="overview-card">
-          <div class="overview-icon">⚡</div>
+          <div class="overview-icon"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#bolt"/></svg></div>
           <div>
-            <div class="overview-title">LSTM vs. GRU</div>
+            <div class="overview-title">So sánh LSTM và GRU</div>
             <div class="overview-sub">Đối chiếu tốc độ thực thi, khả năng lưu giữ phụ thuộc không gian/thời gian
               và dung lượng tham số trên cùng cách biểu diễn.</div>
           </div>
         </div>
         <div class="overview-card">
-          <div class="overview-icon">📊</div>
+          <div class="overview-icon"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#chart"/></svg></div>
           <div>
-            <div class="overview-title">So sánh với Baseline E1</div>
+            <div class="overview-title">So sánh với mô hình E1</div>
             <div class="overview-sub">Đánh giá độ chính xác, số lượng tham số, và khả năng bắt phụ thuộc không
               gian giữa RNN và mô hình CNN/MLP không hồi quy.</div>
           </div>
@@ -148,39 +150,39 @@
     <div class="section" id="architectures">
       <div class="section-header">
         <span class="section-num">02</span>
-        <h2>Kiến trúc tuần hoàn &amp; Baseline không hồi quy</h2>
+        <h2>Kiến trúc tuần hoàn và mô hình đối chứng</h2>
       </div>
 
       <div class="models-grid">
         <div class="model-card">
-          <div class="model-family">Recurrent Network (PyTorch)</div>
-          <div class="model-name">Image LSTM Classifier</div>
+          <div class="model-family">Mạng hồi quy (PyTorch)</div>
+          <div class="model-name">Bộ phân loại ảnh LSTM</div>
           <div class="model-desc">
             Sử dụng <code>nn.LSTM</code> nhận chuỗi các vector hàng/patch của ảnh. Hidden state cuối cùng (hoặc pooling)
             đưa qua fully-connected classifier head để dự đoán nhãn.
           </div>
           <div class="model-meta">
-            <div><span class="meta-label">Cơ chế</span><span class="meta-val">Cell + Hidden State</span></div>
+            <div><span class="meta-label">Cơ chế</span><span class="meta-val">Trạng thái ô và trạng thái ẩn</span></div>
             <div><span class="meta-label">Dung lượng tham số</span><span class="meta-val">[Sẽ cập nhật]</span></div>
           </div>
         </div>
 
         <div class="model-card">
-          <div class="model-family">Recurrent Network (PyTorch)</div>
-          <div class="model-name">Image GRU Classifier</div>
+          <div class="model-family">Mạng hồi quy (PyTorch)</div>
+          <div class="model-name">Bộ phân loại ảnh GRU</div>
           <div class="model-desc">
             Sử dụng <code>nn.GRU</code> với cấu trúc gọn hơn (chỉ có reset và update gate), giúp giảm thời gian huấn
             luyện trên chuỗi bước quét ảnh mà vẫn giữ được ngữ cảnh dài.
           </div>
           <div class="model-meta">
-            <div><span class="meta-label">Cơ chế</span><span class="meta-val">2 Gated States</span></div>
+            <div><span class="meta-label">Cơ chế</span><span class="meta-val">Hai cơ chế cổng</span></div>
             <div><span class="meta-label">Dung lượng tham số</span><span class="meta-val">[Sẽ cập nhật]</span></div>
           </div>
         </div>
 
         <div class="model-card">
-          <div class="model-family">Non-recurrent Baseline (E1)</div>
-          <div class="model-name">CNN / MLP Baseline</div>
+          <div class="model-family">Mô hình đối chứng không hồi quy (E1)</div>
+          <div class="model-name">Mô hình đối chứng CNN / MLP</div>
           <div class="model-desc">
             Mô hình CNN hoặc MLP từ bài tập E1 (cùng tập dữ liệu và split), làm hệ quy chiếu đánh giá ưu/nhược điểm của
             cách tiếp cận tuần hoàn so với xử lý 2D song song.
@@ -197,7 +199,7 @@
     <div class="section" id="results">
       <div class="section-header">
         <span class="section-num">03</span>
-        <h2>Bảng kết quả thử nghiệm dự kiến</h2>
+        <h2>Kế hoạch đối chiếu kết quả</h2>
       </div>
       <p>
         Bảng theo dõi các chỉ số thực nghiệm đối chiếu giữa các mô hình tuần hoàn (LSTM, GRU) và baseline không hồi quy
@@ -205,15 +207,15 @@
       </p>
 
       <div class="results-table-wrapper">
-        <table class="results-table" aria-label="Upcoming Sequence Results Table">
+        <table class="results-table" aria-label="Kế hoạch so sánh kết quả chuỗi ảnh">
           <thead>
             <tr>
               <th>Mô hình</th>
               <th>Cách biểu diễn chuỗi ảnh</th>
               <th>Độ dài chuỗi (T) × Kích thước đặc trưng (D)</th>
               <th>Số tham số</th>
-              <th>Test Accuracy (%)</th>
-              <th>Thời gian chạy (Giây/Epoch)</th>
+              <th>Độ chính xác kiểm thử (%)</th>
+              <th>Thời gian chạy (giây/epoch)</th>
             </tr>
           </thead>
           <tbody>
@@ -234,7 +236,7 @@
               <td>9,5</td>
             </tr>
             <tr>
-              <td><strong>LSTM (Row-by-Row)</strong></td>
+              <td><strong>LSTM theo hàng</strong></td>
               <td>Mỗi hàng pixel là 1 bước thời gian</td>
               <td>H bước × (W·C)</td>
               <td>[Sẽ cập nhật]</td>
@@ -242,7 +244,7 @@
               <td>—</td>
             </tr>
             <tr>
-              <td><strong>GRU (Row-by-Row)</strong></td>
+              <td><strong>GRU theo hàng</strong></td>
               <td>Mỗi hàng pixel là 1 bước thời gian</td>
               <td>H bước × (W·C)</td>
               <td>[Sẽ cập nhật]</td>
@@ -250,7 +252,7 @@
               <td>—</td>
             </tr>
             <tr>
-              <td><strong>LSTM (Patch Sequence)</strong></td>
+              <td><strong>LSTM theo chuỗi patch</strong></td>
               <td>Dãy patch theo thứ tự hàng/cột</td>
               <td>N_patches × D_patch</td>
               <td>[Sẽ cập nhật]</td>
@@ -258,7 +260,7 @@
               <td>—</td>
             </tr>
             <tr>
-              <td><strong>GRU (Patch Sequence)</strong></td>
+              <td><strong>GRU theo chuỗi patch</strong></td>
               <td>Dãy patch theo thứ tự hàng/cột</td>
               <td>N_patches × D_patch</td>
               <td>[Sẽ cập nhật]</td>
@@ -270,23 +272,16 @@
       </div>
       <p>Hai dòng MLP và MiniVGG lấy từ Bảng 3.2 của báo cáo E1: độ chính xác kiểm thử tại epoch cuối là
         trung bình ± độ lệch chuẩn mẫu trên ba seed; thời gian là trung bình của thời gian trung vị mỗi epoch.</p>
-
-      <!-- Figure placeholder -->
-      <figure class="report-figure">
-        <img src="../assets/placeholder-figure.svg" alt="Convergence Curves Placeholder" loading="lazy">
-        <figcaption>Hình 3.1: Đường cong huấn luyện loss-accuracy và so sánh khả năng bắt phụ thuộc theo thứ tự quét của
-          LSTM/GRU so với MiniVGG từ E1.</figcaption>
-      </figure>
     </div>
 
-  </div>
+  </main>
 
   <!-- Footer -->
   <footer>
-    CO5085 · Exercise 03 Report · Nhóm DL4DL · HCMUT &nbsp;·&nbsp;
-    <a href="../index.html">Về trang chủ</a>
+    CO5085 · Báo cáo E3 · Nhóm DL4DL · HCMUT &nbsp;·&nbsp;
+    <a href="../index.html">Trang chủ</a> &nbsp;·&nbsp; <a href="../dataset.html">Dataset</a>
     &nbsp;·&nbsp;
-    <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+    <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">Kho GitHub</a>
   </footer>
 
 </body>

@@ -1,0 +1,4 @@
+# Giữ mã nguồn Live Demo trong repository nhưng không xuất bản trên GitHub Pages.
+exclude:
+  - demo.html
+  - js/demo.js

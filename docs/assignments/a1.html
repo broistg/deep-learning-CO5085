@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Assignment 01: CNN vs. Transformer on Large Dataset · CO5085</title>
+  <title>A1: So sánh CNN và Transformer trên tập ảnh lớn · CO5085</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,14 +32,14 @@
   <div class="page-container">
 
     <!-- Sub-navigation: Sibling assignments -->
-    <nav class="assignment-parts" aria-label="Assignment Navigation">
-      <span class="label">Assignments ·</span>
-      <span class="current">A1: CNN vs. Transformer</span>
-      <a href="a2.html">A2: CV Pipeline &amp; Paper Analysis</a>
+    <nav class="assignment-parts" aria-label="Điều hướng bài tập lớn">
+      <span class="label">Bài tập lớn ·</span>
+      <span class="current">A1: So sánh CNN và Transformer</span>
+      <a href="a2.html">A2: Computer Vision Pipeline & Paper Analysis</a>
     </nav>
 
     <!-- Page Hero Banner -->
-    <div class="page-tag">Assignment 01 · Technical Report</div>
+    <div class="page-tag">Bài tập lớn A1 · Báo cáo kỹ thuật</div>
     <h1>So sánh CNN &amp; Vision Transformer<br><em>trên tập dữ liệu ảnh quy mô lớn</em></h1>
 
     <div class="page-meta">
@@ -68,29 +68,29 @@
     <!-- Quick Action Links -->
     <div class="quick-links">
       <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085/tree/main/A1" target="_blank"
-        rel="noopener noreferrer">↗ Mã nguồn A1</a>
-      <a class="link-btn primary" href="../reports/assignment1.pdf" target="_blank" rel="noopener noreferrer">📄 Báo
+        rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#external"/></svg> Mã nguồn A1</a>
+      <a class="link-btn primary" href="../reports/assignment1.pdf" target="_blank" rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#file"/></svg> Báo
         cáo
         PDF A1</a>
-      <a class="link-btn primary" href="../demo.html">⚡ Live Demo</a>
-      <a class="link-btn primary" href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/A1/notebooks/A1.ipynb"
-        target="_blank" rel="noopener noreferrer">📓 Mở bằng Colab</a>
-      <a class="link-btn" href="#protocol">📋 Quy trình thực nghiệm</a>
-      <a class="link-btn" href="#training-plan">🧪 Kế hoạch huấn luyện</a>
-      <a class="link-btn" href="#benchmarks">📊 Bảng kết quả dự kiến</a>
-      <a class="link-btn" href="#discussion">💡 Thảo luận &amp; Phân tích</a>
-      <a class="link-btn" href="#reproducibility">♻️ Tái lập thí nghiệm</a>
-      <a class="link-btn" href="#references">📚 Tài liệu tham khảo</a>
+      <!-- Live Demo đang ẩn khỏi GitHub Pages. -->
+      <!-- <a class="link-btn primary" href="../demo.html"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#bolt"/></svg> Live Demo</a> -->
+      <a class="link-btn" href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/A1/notebooks/A1.ipynb" target="_blank" rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#notebook"/></svg> Mở notebook A1 bằng Colab</a>
+      <a class="link-btn" href="#protocol"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#clipboard"/></svg> Quy trình thực nghiệm</a>
+      <a class="link-btn" href="#training-plan"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#flask"/></svg> Kế hoạch huấn luyện</a>
+      <a class="link-btn" href="#benchmarks"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#chart"/></svg> Bảng kết quả dự kiến</a>
+      <a class="link-btn" href="#discussion"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#lightbulb"/></svg> Thảo luận &amp; Phân tích</a>
+      <a class="link-btn" href="#reproducibility"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#recycle"/></svg> Tái lập thí nghiệm</a>
+      <a class="link-btn" href="#references"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#library"/></svg> Tài liệu tham khảo</a>
     </div>
 
     <!-- Status Banner: Work In Progress -->
     <div class="status-banner wip">
-      <div class="status-banner-icon">📌</div>
+      <div class="status-banner-icon"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#pin"/></svg></div>
       <div class="status-banner-content">
-        <h4>Bài tập lớn A1 (Chiếm 30% coursework) <span class="badge badge-wip">Đang thực hiện</span></h4>
+        <h4>Bài tập lớn A1 (chiếm 30% điểm bài tập) <span class="badge badge-wip">Đang thực hiện</span></h4>
         <p>
           So sánh CNN và Vision Transformer trên tập dữ liệu ảnh lớn với các chế độ huấn luyện: From-scratch vs.
-          Pretrained, và 3 kiểu đóng băng (Freeze toàn bộ, Freeze một phần, Full fine-tuning).
+          Pretrained, và 3 kiểu đóng băng (Freeze toàn bộ, Freeze một phần, Tinh chỉnh toàn bộ).
         </p>
       </div>
     </div>
@@ -98,23 +98,23 @@
     <!-- SUB-TASK NAVIGATION -->
     <div class="overview-grid">
       <div class="overview-card">
-        <div class="overview-icon">📁</div>
+        <div class="overview-icon"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#folder"/></svg></div>
         <div>
-          <div class="overview-title">Mốc A1.1: Dataset &amp; Protocol</div>
+          <div class="overview-title">Mốc A1.1: Tập dữ liệu và quy trình</div>
           <div class="overview-sub"><strong>Hạn: 26/10/2026 (W8)</strong> · Khóa tập ảnh lớn, mô tả split/augmentation,
             liệt kê CNN/ViT sẽ dùng, kế hoạch pretrain &amp; freeze (chưa cần số liệu cuối).</div>
         </div>
       </div>
       <div class="overview-card">
-        <div class="overview-icon">⚙️</div>
+        <div class="overview-icon"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#settings"/></svg></div>
         <div>
-          <div class="overview-title">Mốc A1.2: So sánh cuối</div>
+          <div class="overview-title">Mốc A1.2: So sánh cuối cùng</div>
           <div class="overview-sub"><strong>Hạn: 09/11/2026 (W10)</strong> · Đủ thí nghiệm CNN vs Transformer,
             from-scratch vs pretrained, 3 chế độ freeze, bảng + biểu đồ, thảo luận, code tái lập được.</div>
         </div>
       </div>
       <div class="overview-card">
-        <div class="overview-icon">🌐</div>
+        <div class="overview-icon"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#globe"/></svg></div>
         <div>
           <div class="overview-title">Khung trang Web</div>
           <div class="overview-sub"><strong>Hạn: 19/10/2026 (W7)</strong> · Hoàn thiện khung landing page GitHub Pages
@@ -259,7 +259,7 @@
       </div>
 
       <figure class="report-figure">
-        <img src="../assets/placeholder-sample.svg" alt="Large Dataset Samples" loading="lazy">
+        <img src="../assets/placeholder-sample.svg" alt="Ảnh mẫu tập dữ liệu lớn (Large Dataset Samples)" loading="lazy">
         <figcaption>Hình 1.1: Mẫu ảnh từ tập dữ liệu lớn với các kỹ thuật tăng cường dữ liệu (Data Augmentation).
         </figcaption>
       </figure>
@@ -1149,7 +1149,7 @@
 
   <!-- Footer -->
   <footer>
-    CO5085 · Assignment 01 Report · Nhóm DL4DL · HCMUT &nbsp;·&nbsp;
+    CO5085 · Báo cáo A1 · Nhóm DL4DL · HCMUT &nbsp;·&nbsp;
     <a href="../index.html">Về trang chủ</a>
     &nbsp;·&nbsp;
     <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">GitHub Repo</a>

@@ -29,7 +29,8 @@
       <a href="#exercises">Exercises</a>
       <a href="#assignments">Assignments</a>
       <a href="#members">Team</a>
-      <a href="demo.html">Live Demo</a>
+      <!-- Live Demo đang ẩn khỏi GitHub Pages. -->
+      <!-- <a href="demo.html">Live Demo</a> -->
       <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
     </nav>
   </header>
@@ -39,7 +40,7 @@
     <div class="hero-tag">Học kỳ 1 (HK261) · Năm học 2026-2027</div>
     <h1>Học sâu &amp; Ứng dụng <br><em>trong Thị giác máy tính</em></h1>
     <p class="lead">
-      Cổng thông tin báo cáo kỹ thuật, kết quả thực nghiệm và demo mô hình cho môn học <strong>CO5085: Học sâu và ứng
+      Cổng thông tin báo cáo kỹ thuật, kết quả thực nghiệm và tài nguyên cho môn học <strong>CO5085: Học sâu và ứng
         dụng trong thị giác máy tính</strong>, Trường Đại học Bách Khoa, ĐHQG-HCM.
     </p>
 
@@ -98,14 +99,23 @@
 
   <!-- Exercises Section -->
   <section id="exercises">
-    <div class="section-label">Bài tập thực hành (Exercises)</div>
+    <div class="section-label">Phân loại ảnh · Các phương pháp</div>
     <div class="assignments">
+
+      <div class="assignment-card">
+        <div>
+          <div class="assignment-number">Tài nguyên dùng chung</div>
+          <div class="assignment-title">CIFAR-10 và thiết lập thực nghiệm</div>
+          <div class="assignment-desc">Phân bố lớp, ảnh mẫu, phép chia 45 000 / 5 000 / 10 000, chuẩn hóa RGB và các chỉ số đánh giá dùng cho E1–E3.</div>
+          <div class="assignment-links"><a class="link-btn primary" href="dataset.html">Trang Dataset</a><a class="link-btn" href="reports/exercises.pdf#page=11" target="_blank" rel="noopener noreferrer">Báo cáo PDF · Chương 2</a></div>
+        </div><span class="assignment-badge badge-done">Dùng chung</span>
+      </div>
 
       <!-- E1: Small Image Classification -->
       <div class="assignment-card e1-card">
         <div>
           <div class="assignment-number">Bài tập E1</div>
-          <div class="assignment-title">Phân loại ảnh với Softmax, MLP và CNN</div>
+          <div class="assignment-title">Softmax, MLP và CNN</div>
           <div class="assignment-desc">
             Thực nghiệm trên CIFAR-10 với ba kiến trúc và ba seed. So sánh độ chính xác kiểm thử, số tham số,
             chi phí huấn luyện, quá trình hội tụ và lỗi phân loại; MiniVGG đạt 79,62 ± 0,26% trên tập kiểm thử.
@@ -116,7 +126,7 @@
               cáo
               PDF</a>
             <a class="link-btn" href="https://github.com/broistg/deep-learning-CO5085/tree/main/E1" target="_blank"
-              rel="noopener noreferrer">↗ Mã nguồn E1</a>
+              rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#external"/></svg> Mã nguồn E1</a>
             <a class="link-btn"
               href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E1/notebooks/E1.ipynb"
               target="_blank" rel="noopener noreferrer"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 3h14a2 2 0 0 1 2 2v16H6a2 2 0 0 1-2-2V3Z"/><path d="M4 17a2 2 0 0 1 2-2h14M8 7h8"/></svg> Mở bằng Colab</a>
@@ -128,8 +138,8 @@
       <!-- E2: Multi-Head Self-Attention (MSA) -->
       <div class="assignment-card">
         <div>
-          <div class="assignment-number">Exercise 02</div>
-          <div class="assignment-title">Multi-Head Self-Attention (MSA) from Scratch</div>
+          <div class="assignment-number">Bài tập E2</div>
+          <div class="assignment-title">Multi-Head Self-Attention (MSA)</div>
           <div class="assignment-desc">
             Tự hiện thực lại Multi-Head Self-Attention (MSA) từ đầu bằng PyTorch và đối chứng với module
             <code>nn.MultiheadAttention</code>. Thử nghiệm các cơ chế tokenization
@@ -137,41 +147,41 @@
             ảnh nhỏ.
           </div>
           <div class="assignment-links">
-            <a class="link-btn primary" href="exercises/e2.html">📄 Trang báo cáo</a>
-            <a class="link-btn primary" href="reports/exercises.pdf" target="_blank" rel="noopener noreferrer">📑 Báo
+            <a class="link-btn primary" href="exercises/e2.html"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#file"/></svg> Trang báo cáo</a>
+            <a class="link-btn primary" href="reports/exercises.pdf" target="_blank" rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#file"/></svg> Báo
               cáo
               PDF</a>
             <a class="link-btn" href="https://github.com/broistg/deep-learning-CO5085/tree/main/E2" target="_blank"
-              rel="noopener noreferrer">↗ Mã nguồn E2</a>
+              rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#external"/></svg> Mã nguồn E2</a>
             <a class="link-btn"
               href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E2/notebooks/E2.ipynb"
-              target="_blank" rel="noopener noreferrer">📓 Mở bằng Colab</a>
+              target="_blank" rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#notebook"/></svg> Mở bằng Colab</a>
           </div>
         </div>
-        <span class="assignment-badge badge-done">Completed</span>
+        <span class="assignment-badge badge-done">Đã hoàn thành</span>
       </div>
 
       <!-- E3: Image as Sequence Models -->
       <div class="assignment-card">
         <div>
-          <div class="assignment-number">Exercise 03</div>
-          <div class="assignment-title">LSTM / GRU trên chuỗi ảnh (Image as Sequence)</div>
+          <div class="assignment-number">Bài tập E3</div>
+          <div class="assignment-title">LSTM và GRU trên chuỗi ảnh</div>
           <div class="assignment-desc">
             Mô hình hóa hình ảnh dưới dạng dữ liệu chuỗi tuần tự bằng LSTM và GRU trên cùng tập ảnh nhỏ; so sánh trực
             tiếp với baseline không hồi quy (MLP và MiniVGG từ E1) về accuracy, số tham số và khả năng bắt phụ thuộc không
             gian.
           </div>
           <div class="assignment-links">
-            <a class="link-btn primary" href="exercises/e3.html">📄 Trang báo cáo</a>
-            <a class="link-btn primary" href="reports/exercises.pdf" target="_blank" rel="noopener noreferrer">📑 Báo
+            <a class="link-btn primary" href="exercises/e3.html"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#file"/></svg> Trang báo cáo</a>
+            <a class="link-btn primary" href="reports/exercises.pdf" target="_blank" rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#file"/></svg> Báo
               cáo
               PDF</a>
             <a class="link-btn" href="https://github.com/broistg/deep-learning-CO5085/tree/main/E3" target="_blank"
-              rel="noopener noreferrer">↗ Mã nguồn E3</a>
-            <a class="link-btn pending" aria-disabled="true">📓 Notebook (sắp có)</a>
+              rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#external"/></svg> Mã nguồn E3</a>
+            <span class="link-btn pending" aria-disabled="true"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#notebook"/></svg> Notebook (sắp có)</span>
           </div>
         </div>
-        <span class="assignment-badge badge-wip">In progress...</span>
+        <span class="assignment-badge badge-wip">Đang thực hiện</span>
       </div>
 
     </div>
@@ -187,32 +197,31 @@
       <!-- A1: CNN vs. Transformer -->
       <div class="assignment-card">
         <div>
-          <div class="assignment-number">Assignment 01</div>
-          <div class="assignment-title">CNN vs. Transformer on Large Dataset</div>
+          <div class="assignment-number">Bài tập lớn A1</div>
+          <div class="assignment-title">So sánh CNN và Transformer trên tập ảnh lớn</div>
           <div class="assignment-desc">
             Nghiên cứu so sánh toàn diện giữa kiến trúc Convolutional Neural Network (CNN) và Vision Transformer (ViT)
             trên tập dữ liệu ảnh lớn. Đánh giá đa chiều dưới các chế độ huấn luyện: From-scratch vs Pretrained, cùng 3
             kỹ thuật đóng băng (Frozen backbone, Partial freeze, Full fine-tuning).
           </div>
           <div class="assignment-links">
-            <a class="link-btn primary" href="assignments/a1.html">📄 Trang báo cáo</a>
-            <a class="link-btn primary" href="reports/assignment1.pdf" target="_blank" rel="noopener noreferrer">📑
+            <a class="link-btn primary" href="assignments/a1.html"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#file"/></svg> Trang báo cáo</a>
+            <a class="link-btn primary" href="reports/assignment1.pdf" target="_blank" rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#file"/></svg>
               Báo
               cáo
               PDF</a>
             <a class="link-btn" href="https://github.com/broistg/deep-learning-CO5085/tree/main/A1" target="_blank"
-              rel="noopener noreferrer">↗ Mã nguồn A1</a>
-            <a class="link-btn primary" href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/A1/notebooks/A1.ipynb"
-              target="_blank" rel="noopener noreferrer">📓 Mở bằng Colab</a>
+              rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#external"/></svg> Mã nguồn A1</a>
+            <a class="link-btn" href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/A1/notebooks/A1.ipynb" target="_blank" rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#notebook"/></svg> Mở bằng Colab</a>
           </div>
         </div>
-        <span class="assignment-badge badge-wip">In progress...</span>
+        <span class="assignment-badge badge-wip">Đang thực hiện</span>
       </div>
 
       <!-- A2: Computer Vision Pipeline & Paper Analysis -->
       <div class="assignment-card">
         <div>
-          <div class="assignment-number">Assignment 02</div>
+          <div class="assignment-number">Bài tập lớn A2</div>
           <div class="assignment-title">Computer Vision Pipeline &amp; Paper Analysis</div>
           <div class="assignment-desc">
             Lựa chọn bài toán thị giác máy tính nâng cao (Object Detection, Semantic Segmentation, ...), xây dựng
@@ -220,17 +229,17 @@
             đối chiếu thực nghiệm.
           </div>
           <div class="assignment-links">
-            <a class="link-btn primary" href="assignments/a2.html">📄 Trang báo cáo</a>
-            <a class="link-btn primary" href="reports/assignment2.pdf" target="_blank" rel="noopener noreferrer">📑
+            <a class="link-btn primary" href="assignments/a2.html"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#file"/></svg> Trang báo cáo</a>
+            <a class="link-btn primary" href="reports/assignment2.pdf" target="_blank" rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#file"/></svg>
               Báo
               cáo
               PDF</a>
             <a class="link-btn" href="https://github.com/broistg/deep-learning-CO5085/tree/main/A2" target="_blank"
-              rel="noopener noreferrer">↗ Mã nguồn A2</a>
-            <a class="link-btn pending" aria-disabled="true">📓 Notebook (sắp có)</a>
+              rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#external"/></svg> Mã nguồn A2</a>
+            <span class="link-btn pending" aria-disabled="true"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#notebook"/></svg> Notebook (sắp có)</span>
           </div>
         </div>
-        <span class="assignment-badge badge-wip">In progress...</span>
+        <span class="assignment-badge badge-wip">Đang thực hiện</span>
       </div>
 
     </div>

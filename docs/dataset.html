@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tập dữ liệu và thiết lập thực nghiệm · CO5085</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <a class="logo" href="index.html"><span>CO5085:</span> Học sâu và ứng dụng trong thị giác máy tính</a>
+    <a class="back-btn" href="index.html"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#arrow-left"/></svg> Về trang chủ</a>
+  </header>
+  <main class="page-container report-page">
+    <nav class="assignment-parts" aria-label="Điều hướng các phương pháp phân loại ảnh">
+      <span class="label">Phân loại ảnh ·</span>
+      <a href="index.html">Trang chủ</a>
+      <span class="current" aria-current="page">Dữ liệu chung</span>
+      <a href="exercises/e1.html">E1 · Softmax / MLP / CNN</a>
+      <a href="exercises/e2.html">E2 · Self-Attention</a>
+      <a href="exercises/e3.html">E3 · LSTM / GRU</a>
+    </nav>
+    <div class="page-tag">Chương 2 của báo cáo · Dùng chung cho E1–E3</div>
+    <h1>Tập dữ liệu và<br><em>thiết lập thực nghiệm</em></h1>
+    <p class="lead">CIFAR-10, phép chia dữ liệu cố định, tiền xử lý và thước đo dùng chung để đối chiếu các bài tập trên cùng điều kiện.</p>
+    <div class="page-meta">
+      <div class="meta-item"><span class="meta-label">Tập dữ liệu</span><span class="meta-value">CIFAR-10 · 60 000 ảnh</span></div>
+      <div class="meta-item"><span class="meta-label">Kích thước ảnh</span><span class="meta-value">32 × 32 · RGB</span></div>
+      <div class="meta-item"><span class="meta-label">Số lớp</span><span class="meta-value">10 lớp cân bằng</span></div>
+      <div class="meta-item"><span class="meta-label">Phép chia</span><span class="meta-value">45 000 / 5 000 / 10 000</span></div>
+    </div>
+    <div class="quick-links">
+      <a class="link-btn primary" href="reports/exercises.pdf#page=11" target="_blank" rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#file"/></svg> Báo cáo PDF · Chương 2</a>
+      <a class="link-btn" href="https://github.com/broistg/deep-learning-CO5085/tree/main/common" target="_blank" rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#external"/></svg> Mã nguồn dữ liệu chung</a>
+      <a class="link-btn" href="#split">Phép chia dữ liệu</a>
+      <a class="link-btn" href="#metrics">Chỉ số đánh giá</a>
+    </div>
+    <nav class="report-toc" aria-label="Mục lục trang Dataset">
+      <strong>Trong trang</strong>
+      <a href="#introduction">2.1 Giới thiệu</a><a href="#analysis">2.2 Trực quan hóa</a><a href="#split">2.3 Phép chia</a><a href="#preprocessing">2.4 Tiền xử lý</a><a href="#workflow">2.5 Quy trình</a><a href="#metrics">2.6 Đánh giá</a>
+    </nav>
+
+    <section class="section" id="introduction">
+      <div class="section-header"><span class="section-num">2.1</span><h2>Giới thiệu tập dữ liệu</h2></div>
+      <p>CIFAR-10 là tập dữ liệu phân loại ảnh đa lớp gồm 60 000 ảnh màu RGB kích thước 32 × 32 pixel. Tập gốc có 50 000 ảnh huấn luyện và 10 000 ảnh kiểm thử. Mười lớp gồm airplane (máy bay), automobile (ô tô), bird (chim), cat (mèo), deer (hươu), dog (chó), frog (ếch), horse (ngựa), ship (tàu thủy) và truck (xe tải).</p>
+      <div class="results-table-wrapper"><table class="results-table"><caption class="sr-only">Bảng 2.1: Tổng quan CIFAR-10</caption><thead><tr><th scope="col">Thuộc tính</th><th scope="col">Giá trị</th></tr></thead><tbody>
+        <tr><td>Tổng số ảnh</td><td>60 000</td></tr><tr><td>Ảnh huấn luyện gốc</td><td>50 000</td></tr><tr><td>Ảnh kiểm thử</td><td>10 000</td></tr><tr><td>Kích thước</td><td>32 × 32 pixel</td></tr><tr><td>Số kênh màu</td><td>3 (RGB)</td></tr><tr><td>Số lớp</td><td>10</td></tr>
+      </tbody></table></div>
+      <p class="table-caption">Bảng 2.1 · Thông tin tổng quan về CIFAR-10.</p>
+      <p>Mỗi lớp có 6 000 ảnh: 5 000 ảnh trong tập huấn luyện gốc và 1 000 ảnh trong tập kiểm thử. Quy mô dữ liệu phù hợp với phạm vi bài tập và vẫn đủ phức tạp để so sánh bộ phân loại Softmax, MLP và CNN.</p>
+    </section>
+
+    <section class="section" id="analysis">
+      <div class="section-header"><span class="section-num">2.2</span><h2>Phân tích và trực quan hóa dữ liệu</h2></div>
+      <p>Trước huấn luyện, nhóm khảo sát phân bố số mẫu theo lớp và quan sát ảnh đại diện. Cả 10 lớp trong tập huấn luyện gốc đều có 5 000 ảnh, nên không cần xử lý mất cân bằng lớp.</p>
+      <figure class="report-figure dataset-figure"><a href="assets/dataset/class-distribution.png" target="_blank" rel="noopener noreferrer" aria-label="Mở biểu đồ phân bố lớp kích thước đầy đủ"><img src="assets/dataset/class-distribution.png" width="984" height="484" alt="Biểu đồ 10 cột bằng nhau, mỗi lớp CIFAR-10 có 5 000 ảnh huấn luyện gốc" loading="lazy"></a><figcaption>Hình 2.1 · Phân bố số lượng mẫu theo lớp trong tập huấn luyện CIFAR-10. Trích từ báo cáo.</figcaption></figure>
+      <figure class="report-figure dataset-figure"><a href="assets/dataset/samples.png" target="_blank" rel="noopener noreferrer" aria-label="Mở ảnh mẫu CIFAR-10 kích thước đầy đủ"><img src="assets/dataset/samples.png" width="1984" height="2739" alt="Mười hàng ảnh mẫu CIFAR-10, mỗi hàng minh họa một lớp từ airplane đến truck" loading="lazy"></a><figcaption>Hình 2.2 · Một số ảnh mẫu thực tế thuộc mười lớp CIFAR-10. Trích từ báo cáo.</figcaption></figure>
+      <p>Dù độ phân giải thấp, ảnh có màu sắc, hình dạng và bối cảnh đa dạng. Một số cặp lớp như cat–dog và automobile–truck tương đối giống nhau về thị giác, làm bài toán phân loại khó hơn.</p>
+    </section>
+
+    <section class="section" id="split">
+      <div class="section-header"><span class="section-num">2.3</span><h2>Phân chia tập huấn luyện, kiểm định và kiểm thử</h2></div>
+      <p>Nhóm chia một lần 50 000 ảnh huấn luyện gốc theo kiểu phân tầng thành 45 000 ảnh huấn luyện và 5 000 ảnh kiểm định. Mỗi lớp đóng góp đúng 500 ảnh kiểm định. Seed cố định là <strong>42</strong>; chỉ số ảnh và mã băm SHA-256 được lưu trong <code>common/cifar10_split.json</code>. Các bài E1–E3 dùng cùng phép chia và ghi lại mã băm trong kết quả để kiểm tra khả năng tái lập.</p>
+      <p>Dữ liệu tải qua Hugging Face (<code>uoft-cs/cifar10</code>) chỉ được chấp nhận khi mã băm ảnh và nhãn trùng với bản TorchVision đã dùng để tạo phép chia. Do thứ tự ảnh của hai bản khác nhau, dữ liệu Hugging Face được sắp lại theo thứ tự TorchVision trước khi áp dụng chỉ số. Tập kiểm thử gốc gồm 10 000 ảnh được giữ nguyên, chỉ đánh giá sau khi huấn luyện; không dùng để chọn mô hình hay siêu tham số.</p>
+      <div class="results-table-wrapper"><table class="results-table"><caption class="sr-only">Bảng 2.2: Phân chia dữ liệu</caption><thead><tr><th scope="col">Tập dữ liệu</th><th scope="col">Số mẫu</th><th scope="col">Mục đích</th></tr></thead><tbody>
+        <tr><td>Huấn luyện</td><td>45 000</td><td>Huấn luyện mô hình</td></tr><tr><td>Kiểm định</td><td>5 000</td><td>Theo dõi quá trình huấn luyện</td></tr><tr><td>Kiểm thử</td><td>10 000</td><td>Đánh giá kết quả cuối cùng</td></tr>
+      </tbody></table></div><p class="table-caption">Bảng 2.2 · Phân chia tập dữ liệu trong thực nghiệm.</p>
+    </section>
+
+    <section class="section" id="preprocessing">
+      <div class="section-header"><span class="section-num">2.4</span><h2>Tiền xử lý dữ liệu</h2></div>
+      <p>Ảnh được chuyển thành tensor PyTorch; giá trị pixel từ [0, 255] được đưa về [0, 1]. Trung bình và độ lệch chuẩn được tính riêng trên <strong>45 000 ảnh huấn luyện</strong> cho từng kênh màu, tránh rò rỉ thông tin từ tập kiểm định và kiểm thử.</p>
+      <div class="equation" role="math" aria-label="x phẩy chỉ số c bằng x chỉ số c trừ mu chỉ số c, chia sigma chỉ số c"><i>x</i>′<sub>c</sub> = (<i>x</i><sub>c</sub> − <i>μ</i><sub>c</sub>) / <i>σ</i><sub>c</sub><span class="equation-no">(2.1)</span></div>
+      <p>Với <i>c</i> ∈ {R, G, B}, <i>μ</i> ≈ (0,4918; 0,4825; 0,4468) và <i>σ</i> ≈ (0,2471; 0,2435; 0,2617). Cùng phép chuẩn hóa áp dụng cho cả ba tập.</p>
+      <p><strong>Tăng cường dữ liệu:</strong> chỉ trên tập huấn luyện, ảnh được cắt ngẫu nhiên 32 × 32 sau khi đệm 4 pixel và lật ngang với xác suất 0,5. Các phép biến đổi thực hiện sau chuẩn hóa. Ảnh kiểm định và kiểm thử không được tăng cường. Báo cáo mô tả cấu hình này là dùng chung cho E1–E3 và nêu thêm một lượt E1 không tăng cường để đối chiếu.</p>
+    </section>
+
+    <section class="section" id="workflow">
+      <div class="section-header"><span class="section-num">2.5</span><h2>Quy trình thực nghiệm chung</h2></div>
+      <ol class="report-list">
+        <li><strong>Dữ liệu:</strong> cùng phép chia 45 000 / 5 000 / 10 000 và thống kê chuẩn hóa nêu ở trên.</li>
+        <li><strong>Seed:</strong> mỗi cấu hình được lên kế hoạch huấn luyện với ba seed 0, 1, 2, điều khiển khởi tạo, thứ tự dữ liệu và tăng cường dữ liệu. Báo cáo kết quả bằng trung bình ± độ lệch chuẩn mẫu.</li>
+        <li><strong>Thời lượng:</strong> 30 epoch cho mỗi mô hình E1–E3 theo quy trình trong báo cáo.</li>
+        <li><strong>Kết quả chính:</strong> độ chính xác kiểm thử với trọng số ở epoch cuối; không chọn checkpoint hoặc siêu tham số theo tập kiểm thử. E1 còn ghi checkpoint có loss kiểm định thấp nhất để phân tích bổ sung.</li>
+        <li><strong>Tái lập:</strong> mỗi lần chạy lưu JSON gồm cấu hình, mã băm phép chia, lịch sử huấn luyện, kết quả cuối, thời gian và môi trường. Bảng và hình được sinh từ các tệp này; notebook Colab của từng bài có chế độ nạp kết quả đã lưu hoặc chạy lại.</li>
+      </ol>
+      <p>Siêu tham số riêng như bộ tối ưu, tốc độ học và kích thước batch được nêu trong từng chương. E3 hiện là trang kế hoạch, chưa công bố kết quả thực nghiệm.</p>
+    </section>
+
+    <section class="section" id="metrics">
+      <div class="section-header"><span class="section-num">2.6</span><h2>Các chỉ số đánh giá</h2></div>
+      <p>Bốn khía cạnh được dùng để so sánh mô hình: độ chính xác, năng lực và chi phí, độ ổn định giữa các seed, và đặc điểm lỗi phân loại.</p>
+      <h3 class="section-subhead" id="accuracy">2.6.1 · Độ chính xác</h3>
+      <div class="equation" role="math" aria-label="Accuracy bằng số mẫu được dự đoán đúng chia tổng số mẫu, nhân 100 phần trăm">Accuracy = (số mẫu dự đoán đúng / tổng số mẫu) × 100%<span class="equation-no">(2.2)</span></div>
+      <p>Phân bố lớp cân bằng giúp accuracy phù hợp để so sánh hiệu năng tổng thể. Chỉ số kiểm thử tính trên 10 000 ảnh; chỉ số kiểm định dùng để theo dõi.</p>
+      <h3 class="section-subhead" id="cost">2.6.2 · Năng lực và chi phí mô hình</h3>
+      <p>Năng lực được xem xét qua số tham số có thể huấn luyện <i>P</i> = Σ<sub>i=1</sub><sup>L</sup> |<i>θ</i><sub>i</sub>| và đặc điểm kiến trúc. Chi phí gồm thời gian huấn luyện trung vị mỗi epoch, bộ nhớ GPU đỉnh, thời gian suy luận và, ở E2, số phép nhân–cộng cho một ảnh. Các phép đo thời gian và bộ nhớ chỉ so sánh trực tiếp khi chạy trên cùng máy.</p>
+      <h3 class="section-subhead" id="stability">2.6.3 · Độ ổn định giữa các seed</h3>
+      <p>Ba seed cho mỗi cấu hình được tổng hợp bằng trung bình ± độ lệch chuẩn mẫu, với mẫu số <i>n</i> − 1. Khi <i>n</i> = 3, độ lệch chuẩn chỉ là ước lượng thô; chỉ nên diễn giải những chênh lệch lớn hơn rõ rệt so với mức biến thiên này.</p>
+      <h3 class="section-subhead" id="errors">2.6.4 · Phân tích lỗi</h3>
+      <p>Ma trận nhầm lẫn chuẩn hóa theo hàng cho thấy các cặp lớp thường bị nhầm. Một số ảnh dự đoán sai với độ tin cậy cao được hiển thị cùng nhãn thật và nhãn dự đoán để giải thích kiểu lỗi của từng mô hình.</p>
+    </section>
+  </main>
+  <footer>CO5085 · Tập dữ liệu dùng chung · Nhóm DL4DL · HCMUT &nbsp;·&nbsp; <a href="index.html">Trang chủ</a> &nbsp;·&nbsp; <a href="reports/exercises.pdf#page=11" target="_blank" rel="noopener noreferrer">Báo cáo PDF</a></footer>
+</body>
+</html>

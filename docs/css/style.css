@@ -347,6 +347,17 @@ nav.main-nav a.active {
   border-color: var(--accent2);
 }
 
+.link-btn.pending {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.link-btn.pending:hover {
+  background: var(--bg);
+  color: var(--ink2);
+  border-color: var(--border);
+}
+
 /* --- 6. Status Badges --- */
 .assignment-badge,
 .badge {
@@ -459,20 +470,6 @@ nav.main-nav a.active {
   color: var(--ink);
 }
 
-.progress-checklist li.done::before {
-  content: "✔";
-  color: #1E6B37;
-  font-weight: bold;
-}
-
-.progress-checklist li.wip::before {
-  content: "⏳";
-}
-
-.progress-checklist li.todo::before {
-  content: "⚪";
-  color: var(--ink3);
-}
 
 /* --- 7. Sections & Content Blocks --- */
 section,
@@ -884,19 +881,13 @@ h3.section-subhead {
   max-width: 100%;
 }
 
-/* E1: công thức, sơ đồ và hình phân tích lỗi */
-.e1-card .ui-icon {
-  width: 16px;
-  height: 16px;
-  flex: 0 0 auto;
-  vertical-align: middle;
-}
+/* Công thức dùng chung, sơ đồ và hình phân tích lỗi của E1 */
 
-.e1-report .equation-group {
+.report-page .equation-group {
   margin: 12px 0;
 }
 
-.e1-report .equation {
+.report-page .equation {
   position: relative;
   padding: 10px 64px 10px 16px;
   margin: 8px 0;
@@ -911,7 +902,7 @@ h3.section-subhead {
   white-space: nowrap;
 }
 
-.e1-report .equation-no {
+.report-page .equation-no {
   position: absolute;
   right: 14px;
   color: var(--ink3);
@@ -946,7 +937,7 @@ h3.section-subhead {
 }
 
 .e1-report .architecture-figure figcaption,
-.e1-report .table-caption {
+.report-page .table-caption {
   color: var(--ink3);
   font-size: 12px;
   line-height: 1.5;
@@ -955,11 +946,6 @@ h3.section-subhead {
 
 .e1-report .architecture-figure figcaption {
   margin-top: 12px;
-}
-
-.e1-report .table-caption {
-  margin-top: -16px;
-  margin-bottom: 22px;
 }
 
 .e1-report .e1-curves {
@@ -1052,7 +1038,7 @@ h3.section-subhead {
   text-underline-offset: 2px;
 }
 
-.e1-report .sr-only {
+.sr-only {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -1064,7 +1050,7 @@ h3.section-subhead {
   border: 0;
 }
 
-.e1-report .status-banner-icon .ui-icon {
+.status-banner-icon .ui-icon {
   width: 24px;
   height: 24px;
   vertical-align: middle;
@@ -1312,4 +1298,62 @@ footer a:hover,
   .e1-report .e1-error-grid .report-figure img {
     height: auto;
   }
+}
+
+/* Báo cáo E1–E3 và Dataset dùng chung nhịp dọc, mục lục, biểu thức và icon. */
+.ui-icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  vertical-align: middle;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.overview-icon .ui-icon, .status-banner-icon .ui-icon { width: 24px; height: 24px; }
+.progress-checklist .ui-icon { width: 15px; height: 15px; }
+.progress-checklist li.done .ui-icon { color: #1E6B37; }
+.progress-checklist li.todo .ui-icon { color: var(--ink3); }
+.progress-checklist li.wip .ui-icon { color: var(--status-wip-text); }
+.report-page .section { max-width: none; padding: 0; margin: 52px 0 0; scroll-margin-top: 90px; }
+.report-page .section:first-of-type { margin-top: 32px; }
+.report-page .section-header { align-items: baseline; }
+.report-page .section-num { min-width: 38px; white-space: nowrap; }
+.report-page .section p, .report-page .section li { overflow-wrap: anywhere; }
+.report-page .section ul, .report-list { margin: 12px 0 24px 22px; color: var(--ink2); }
+.report-page .section li { margin-bottom: 8px; }
+.report-page .table-caption { margin-top: -16px; margin-bottom: 22px; }
+.report-page .dataset-figure { max-width: 100%; }
+.report-toc { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; padding: 16px 18px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg2); margin: 0 0 32px; font-size: 12.5px; }
+.report-toc strong { color: var(--ink); margin-right: 4px; }
+.report-toc a { color: var(--ink2); }
+.report-toc a:hover, .report-toc a:focus-visible { color: var(--accent); text-decoration: underline; }
+.report-page .equation { max-width: 100%; overflow-x: auto; }
+.results-table { min-width: 540px; }
+.results-table-wrapper { -webkit-overflow-scrolling: touch; }
+.report-figure img { max-width: 100%; }
+nav.main-nav a[aria-current="page"] { color: var(--accent); font-weight: 700; }
+.home-header { height: auto; min-height: var(--header-height); flex-wrap: wrap; padding-top: 8px; padding-bottom: 8px; }
+.home-header .main-nav { gap: 8px 14px; flex-wrap: wrap; justify-content: flex-end; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (max-width: 1180px) {
+  header, .site-header { padding: 10px 24px; height: auto; min-height: var(--header-height); flex-wrap: wrap; gap: 8px 18px; }
+  nav.main-nav { gap: 12px; flex-wrap: wrap; }
+  .logo { font-size: 16px; }
+}
+@media (max-width: 640px) {
+  header, .site-header { padding: 10px 20px; }
+  nav.main-nav { display: flex; gap: 8px 14px; width: 100%; }
+  .home-header .main-nav { justify-content: flex-start; }
+  .page-container { padding-top: 32px; padding-bottom: 60px; }
+  .hero { padding-top: 50px; padding-bottom: 40px; }
+  .hero-meta, .page-meta { gap: 16px 24px; }
+  .report-page .section { margin-top: 42px; }
+  .report-page .section { scroll-margin-top: 170px; }
+  .report-page .section-header h2 { font-size: 21px; }
+  .report-page .equation { padding-right: 48px; font-size: 14px; }
+  .report-toc { align-items: flex-start; }
+  footer { padding: 24px 20px; }
 }

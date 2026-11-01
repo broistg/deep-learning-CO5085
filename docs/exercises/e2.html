@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Exercise 02: Multi-Head Self-Attention (MSA) · CO5085</title>
+  <title>E2: Multi-Head Self-Attention (MSA) · CO5085</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,21 +30,22 @@
   <header>
     <a class="logo" href="../index.html"><span>CO5085:</span> Deep Learning &amp; Its Applications in Computer
       Vision</a>
-    <a class="back-btn" href="../index.html#exercises">← Về trang tổng quan</a>
+    <a class="back-btn" href="../index.html#exercises"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#arrow-left"/></svg> Về trang tổng quan</a>
   </header>
 
-  <div class="page-container">
+  <main class="page-container report-page">
 
     <!-- Sub-navigation: Sibling exercises -->
     <nav class="assignment-parts" aria-label="Exercise Navigation">
       <span class="label">Exercises ·</span>
-      <a href="e1.html">E1: Small Image Classification</a>
-      <span class="current">E2: Multi-Head Self-Attention</span>
-      <a href="e3.html">E3: LSTM / GRU for Images</a>
+      <a href="../dataset.html">Dữ liệu chung</a>
+      <a href="e1.html">E1 · Softmax / MLP / CNN</a>
+      <span class="current" aria-current="page">E2 · Self-Attention</span>
+      <a href="e3.html">E3 · LSTM / GRU</a>
     </nav>
 
     <!-- Page Hero Banner -->
-    <div class="page-tag">Exercise 02 · Technical Report</div>
+    <div class="page-tag">Bài tập E2 · Chương 4 của báo cáo</div>
     <h1>Multi-Head Self-Attention (MSA)<br><em>Hiện thực từ đầu &amp; Cơ chế Tokenization</em></h1>
 
     <div class="page-meta">
@@ -68,29 +69,28 @@
         <span class="meta-label">Giảng viên hướng dẫn</span>
         <span class="meta-value">TS. Lê Thành Sách và TS. Nguyễn Quốc Minh</span>
       </div>
-      <!-- <div class="meta-item">
-        <span class="meta-label">Trạng thái</span>
-        <span class="meta-value"><span class="badge badge-done">Đã có kết quả</span></span>
-      </div> -->
+      <div class="meta-item"><span class="meta-label">Trạng thái</span><span class="meta-value"><span class="badge badge-done">Đã hoàn thành</span></span></div>
     </div>
 
     <!-- Quick Action Links -->
     <div class="quick-links">
       <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085/tree/main/E2" target="_blank"
-        rel="noopener noreferrer">↗ Mã nguồn E2</a>
-      <a class="link-btn primary" href="../reports/exercises.pdf" target="_blank" rel="noopener noreferrer">📄 Báo
+        rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#external"/></svg> Mã nguồn E2</a>
+      <a class="link-btn primary" href="../reports/exercises.pdf#page=27" target="_blank" rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#file"/></svg> Báo
         cáo PDF (E1-E3)</a>
       <a class="link-btn"
         href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E2/notebooks/E2.ipynb"
-        target="_blank" rel="noopener noreferrer">📓 Mở bằng Colab</a>
-      <a href="#tokenization" class="link-btn">🧩 Các phương pháp Tokenization</a>
-      <a href="#results" class="link-btn">📊 Kết quả</a>
-      <a href="#reproduce" class="link-btn">🔁 Tái lập</a>
+        target="_blank" rel="noopener noreferrer"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#notebook"/></svg> Mở bằng Colab</a>
+      <a href="#tokenization" class="link-btn"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#puzzle"/></svg> Các phương pháp Tokenization</a>
+      <a href="#results" class="link-btn"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#chart"/></svg> Kết quả</a>
+      <a href="#reproduce" class="link-btn"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#refresh"/></svg> Tái lập</a>
+      <a class="link-btn" href="../dataset.html"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#chart"/></svg> Dataset dùng chung</a>
     </div>
 
-    <!-- Status Banner -->
+    <nav class="report-toc" aria-label="Mục lục trong trang"><strong>Trong trang</strong><a href="#formulation">4.1 Công thức toán học &amp; Cấu trúc Self-Attention</a><a href="#tokenization">4.2 Các cơ chế Tokenization</a><a href="#setup">4.3 Thiết lập</a><a href="#results">4.4 Kết quả</a><a href="#visualizations"> 4.5 Trực quan hóa</a><a href="#reproduce">A Tái lập và khai báo sử dụng AI</a></nav>
+    <!-- Trạng thái thực nghiệm -->
     <div class="status-banner">
-      <div class="status-banner-icon">✅</div>
+      <div class="status-banner-icon"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#check"/></svg></div>
       <div class="status-banner-content">
         <h4>Đã hoàn tất thực nghiệm · Hạn nộp: 02/11/2026 (W9)</h4>
         <p>
@@ -106,8 +106,8 @@
     <!-- SECTION 01: MATHEMATICAL FORMULATION -->
     <div class="section" id="formulation">
       <div class="section-header">
-        <span class="section-num">01</span>
-        <h2>Công thức toán học &amp; Cấu trúc Self-Attention</h2>
+        <span class="section-num">4.1</span>
+        <h2>Công thức toán học &amp; cấu trúc Self-Attention</h2>
       </div>
       <p>
         Cơ chế Self-Attention cho phép các vector đặc trưng trong chuỗi tự tương tác và tính trọng số quan hệ theo
@@ -115,8 +115,7 @@
         <strong>Value ($V$)</strong>.
       </p>
 
-      <div
-        style="background: var(--bg2); border-left: 3px solid var(--accent); padding: 16px 20px; border-radius: 4px; font-family: monospace; font-size: 14px; margin: 16px 0 24px;">
+      <div class="equation" role="math">
         Attention(Q, K, V) = softmax( (Q · K^T) / sqrt(d_h) ) · V<br><br>
         MultiHead(X) = Concat(head_1, ..., head_h) · W^O<br>
         với head_i = Attention(X · W_i^Q, X · W_i^K, X · W_i^V), d_h = D / h
@@ -124,7 +123,7 @@
 
       <div class="overview-grid">
         <div class="overview-card">
-          <div class="overview-icon">📐</div>
+          <div class="overview-icon"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#ruler"/></svg></div>
           <div>
             <div class="overview-title">Hệ số tỉ lệ $1/\sqrt{d_h}$</div>
             <div class="overview-sub">Giữ phương sai của tích vô hướng ổn định theo $d_h$, tránh softmax bão hòa và
@@ -132,7 +131,7 @@
           </div>
         </div>
         <div class="overview-card">
-          <div class="overview-icon">🔀</div>
+          <div class="overview-icon"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#workflow"/></svg></div>
           <div>
             <div class="overview-title">Multi-Head Projection</div>
             <div class="overview-sub">Mỗi head dùng một phép chiếu riêng, cho phép quan sát các quan hệ khác nhau giữa
@@ -140,7 +139,7 @@
           </div>
         </div>
         <div class="overview-card">
-          <div class="overview-icon">⚡</div>
+          <div class="overview-icon"><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#bolt"/></svg></div>
           <div>
             <div class="overview-title">Độ phức tạp $O(N^2 D + N D^2)$</div>
             <div class="overview-sub">Bộ nhớ ma trận chú ý tăng theo $N^2$; số token $N$ là đại lượng quyết định chi
@@ -149,7 +148,7 @@
         </div>
       </div>
 
-      <h3 style="margin-top: 28px;">Hai bản hiện thực, cùng khởi tạo</h3>
+      <h3 class="section-subhead">Hai bản hiện thực, cùng khởi tạo</h3>
       <p>
         <code>MSAScratch</code> chỉ dùng <code>Linear</code>, <code>einsum</code>, <code>softmax</code> và
         <code>reshape</code>; <code>MSATorch</code> bọc <code>nn.MultiheadAttention</code>. Cả hai nhận đúng cùng bộ
@@ -164,7 +163,7 @@
     <!-- SECTION 02: TOKENIZATION MECHANISMS -->
     <div class="section" id="tokenization">
       <div class="section-header">
-        <span class="section-num">02</span>
+        <span class="section-num">4.2</span>
         <h2>Các cơ chế Tokenization từ ảnh 2D</h2>
       </div>
       <p>
@@ -225,11 +224,11 @@
     <!-- SECTION 03: SETUP -->
     <div class="section" id="setup">
       <div class="section-header">
-        <span class="section-num">03</span>
+        <span class="section-num">4.3</span>
         <h2>Cấu hình thực nghiệm</h2>
       </div>
       <div class="results-table-wrapper">
-        <table class="results-table" aria-label="Experiment configuration">
+        <table class="results-table" aria-label="Cấu hình thực nghiệm E2">
           <thead>
             <tr>
               <th>Thành phần</th>
@@ -270,8 +269,8 @@
     <!-- SECTION 04: EXPERIMENTAL RESULTS -->
     <div class="section" id="results">
       <div class="section-header">
-        <span class="section-num">04</span>
-        <h2>Kết quả thực nghiệm &amp; Bảng so sánh</h2>
+        <span class="section-num">4.4</span>
+        <h2>Kết quả thực nghiệm &amp; bảng so sánh</h2>
       </div>
 
       <h3>4.1. Đối chiếu: MSA tự viết vs. MSA PyTorch (cùng cơ chế Tokenize)</h3>
@@ -286,13 +285,13 @@
       </p>
 
       <div class="results-table-wrapper">
-        <table class="results-table" aria-label="MSA Implementation Comparison Table">
+        <table class="results-table" aria-label="So sánh hai bản hiện thực MSA">
           <thead>
             <tr>
               <th>Cơ chế Tokenize</th>
               <th>Số tham số</th>
-              <th>Test acc. – tự viết (%)</th>
-              <th>Test acc. – PyTorch (%)</th>
+              <th>Độ chính xác kiểm thử – tự viết (%)</th>
+              <th>Độ chính xác kiểm thử – PyTorch (%)</th>
               <th>Δ</th>
               <th>Giây/epoch – tự viết</th>
               <th>Giây/epoch – PyTorch</th>
@@ -354,7 +353,7 @@
       </ul>
 
       <div class="results-table-wrapper">
-        <table class="results-table" aria-label="Tokenization Experiment Results">
+        <table class="results-table" aria-label="Kết quả thực nghiệm theo cơ chế tokenization">
           <thead>
             <tr>
               <th>Cơ chế Tokenization</th>
@@ -462,7 +461,7 @@
     <!-- SECTION 05: ATTENTION MAPS -->
     <div class="section" id="visualizations">
       <div class="section-header">
-        <span class="section-num">05</span>
+        <span class="section-num">4.4.4</span>
         <h2>Trực quan hóa bản đồ chú ý (Attention Maps)</h2>
       </div>
       <p>
@@ -504,8 +503,8 @@
     <!-- SECTION 06: REPRODUCE -->
     <div class="section" id="reproduce">
       <div class="section-header">
-        <span class="section-num">06</span>
-        <h2>Tái lập &amp; khai báo sử dụng AI</h2>
+        <span class="section-num">A</span>
+        <h2>Tái lập và khai báo sử dụng AI</h2>
       </div>
       <p>
         Mã nguồn, cấu hình, seed và tệp kết quả JSON nằm trong thư mục <code>E2/</code>. Kiểm thử:
@@ -535,12 +534,12 @@
       </p>
     </div>
 
-  </div>
+  </main>
 
   <!-- Footer -->
   <footer>
-    CO5085 · Exercise 02 Report · Nhóm DL4DL · HCMUT &nbsp;·&nbsp;
-    <a href="../index.html">Về trang chủ</a>
+    CO5085 · Báo cáo E2 · Nhóm DL4DL · HCMUT &nbsp;·&nbsp;
+    <a href="../index.html">Trang chủ</a> &nbsp;·&nbsp; <a href="../dataset.html">Dataset</a>
     &nbsp;·&nbsp;
     <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
   </footer>
