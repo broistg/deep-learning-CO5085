@@ -932,6 +932,42 @@
    "needs_lr": true
   },
   {
+   "run_id": "dg_m_deit_s_partial_lr1e-3",
+   "stage": 6,
+   "kind": "diag",
+   "owner": "dat",
+   "est_hours": 0.647,
+   "config": "configs/dg_m_deit_s_partial_lr1e-3.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "dg_m_resnet50_full_lr3e-3",
+   "stage": 6,
+   "kind": "diag",
+   "owner": "ly",
+   "est_hours": 0.71,
+   "config": "configs/dg_m_resnet50_full_lr3e-3.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "dg_m_resnet50_head_lr3e-2",
+   "stage": 6,
+   "kind": "diag",
+   "owner": "ly",
+   "est_hours": 0.594,
+   "config": "configs/dg_m_resnet50_head_lr3e-2.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "dg_m_resnet50_partial_lr3e-3",
+   "stage": 6,
+   "kind": "diag",
+   "owner": "ly",
+   "est_hours": 0.597,
+   "config": "configs/dg_m_resnet50_partial_lr3e-3.yaml",
+   "needs_lr": false
+  },
+  {
    "run_id": "dg_resnet50_full_nomix",
    "stage": 6,
    "kind": "diag",

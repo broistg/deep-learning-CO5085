@@ -163,8 +163,7 @@ class FollowUpTables(unittest.TestCase):
         from a1lib.corruptions import TYPES
         def m(c):
             return {"clean": 0.8, **{t: {"1": 0.7, "2": 0.6, "3": c} for t in TYPES}}
-        r0 = {"models": {"m_resnet50_full_s0": m(0.4)}}
-        r1 = {"models": {"m_resnet50_full_s1": m(0.5), "m_resnet50_full_s2": m(0.6)}}
-        out = AN.table_robust_seeds(r0, r1)
+        one = {"models": {"m_resnet50_full_s0": m(0.4), "m_resnet50_full_s1": m(0.5), "m_resnet50_full_s2": m(0.6)}}
+        out = AN.table_robust_seeds(one)
         self.assertIn("ResNet-50 & Full fine-tuning & 3", out)
         self.assertIn("pm", out)

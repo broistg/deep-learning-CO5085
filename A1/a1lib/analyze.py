@@ -294,17 +294,17 @@ def table_diag(runs):
         for r in mine:
             rid = r["run_id"]
             if rid.startswith("dg_m_"):
-                lab = f"{MODE[r['config']['mode']]}, LR {_lr_tex(float(r['config']['lr_peak']))} (độ nhạy)"
+                lab = f"{MODE[r['config']['mode']]}, LR {_lr_tex(float(r['config']['lr_peak']))} (độ nhạy, seed {r['config']['seed']})"
             else:
                 lab = DIAG_LABEL.get(rid.rsplit("_", 1)[-1], rid)
             rows.append(line(lab, r))
     return tex_rows(rows)
 
 
-def table_robust_seeds(rob0, rob_extra):
+def table_robust_seeds(rob0, rob_extra=None):
     """Mean +- std over seeds of the share of clean accuracy kept at severity 3 (the seed-0 file and the file with seeds 1 and 2)."""
     from a1lib.corruptions import TYPES
-    models = {**rob0["models"], **rob_extra["models"]}
+    models = {**rob0["models"], **(rob_extra or {"models": {}})["models"]}
     by = {}
     for rid, m in models.items():
         parts = rid.split("_")
@@ -668,11 +668,11 @@ def main(argv=None):
     if any(r["config"]["kind"] in ("diag", "diag_sweep") for r in runs.values()):
         write_table(out, "tab_diag_lr.tex", table_diag_lr(runs, choice))
         write_table(out, "tab_diag.tex", table_diag(runs))
-    if rob_p.exists() and (res / "posthoc_robustness_seeds.json").exists():
-        write_table(out, "tab_robust_seeds.tex", table_robust_seeds(json.loads(rob_p.read_text(encoding="utf8")),
-                                                                    json.loads((res / "posthoc_robustness_seeds.json").read_text(encoding="utf8"))))
     if rob_p.exists():
-        rob = json.loads(rob_p.read_text(encoding="utf8"))
+        rob_all = json.loads(rob_p.read_text(encoding="utf8"))
+        if any(not k.endswith("_s0") for k in rob_all["models"]):          # the file holds seeds 1 and 2 as well
+            write_table(out, "tab_robust_seeds.tex", table_robust_seeds(rob_all))
+        rob = {**rob_all, "models": {k: v for k, v in rob_all["models"].items() if k.endswith("_s0")}}   # main table and figure: seed 0 only
         write_table(out, "tab_robust.tex", table_robust(rob, summ))
         fig_robust(rob, figdir)
     for nm_, key in (("posthoc_toploss.json", "toploss"), ("posthoc_gradcam.json", "gradcam")):

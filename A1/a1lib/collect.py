@@ -94,6 +94,7 @@ def main():
     ap.add_argument("cmd", choices=["results", "bundle", "artifacts", "fetch-core"])
     ap.add_argument("--bundle", default="release", help="artifacts: folder with a1_logits.zip / a1_weights.zip")
     ap.add_argument("--a1-dir", default="A1")
+    ap.add_argument("--with-seeds", action="store_true", help="fetch-core: also the weights of seeds 1 and 2 of the 6 pretrained configs")
     ap.add_argument("--runs", default="", help="fetch-core: comma list of run ids instead of the 8 core seed-0 runs")
     ap.add_argument("--out", default=None)
     a = ap.parse_args()
@@ -102,7 +103,8 @@ def main():
     paths = Paths.from_env()
     if a.cmd == "fetch-core":
         core = [f"m_{x}_{m}_s0" for x in ("resnet50", "deit_s") for m in ("head", "partial", "full", "scratch")]
-        return fetch_weights(paths, [r for r in a.runs.split(",") if r] or core, a.out or str(Path(a.a1_dir) / "artifacts"))
+        seeds = [f"m_{x}_{m}_s{k}" for x in ("resnet50", "deit_s") for m in ("head", "partial", "full") for k in (1, 2)] if a.with_seeds else []
+        return fetch_weights(paths, [r for r in a.runs.split(",") if r] or core + seeds, a.out or str(Path(a.a1_dir) / "artifacts"))
     collect_results(paths, a.a1_dir) if a.cmd == "results" else bundle(paths, a.out or "release")
 
 

@@ -1,6 +1,7 @@
 """Post-hoc analyses that need the trained weights and a GPU (Kaggle/Colab, about 1 h in total). No training.
 
-    python -m a1lib.posthoc robustness --runs m_resnet50_full_s1,... --tag seeds   # other runs (e.g. seeds 1 and 2) -> posthoc_robustness_seeds.json
+    python -m a1lib.posthoc robustness --with-seeds   # the 8 core models + seeds 1 and 2 of the 6 pretrained configs (20 models, one file)
+    python -m a1lib.posthoc robustness --runs a,b --tag x   # any other runs -> posthoc_robustness_x.json (never overwrites the main file)
     python -m a1lib.posthoc robustness   # 8 core models x 6 corruptions x 3 severities on a fixed 50-images-per-class test subset
     python -m a1lib.posthoc gradcam      # Grad-CAM of ResNet-50 and DeiT-S (full fine-tuning) on 12 images chosen by a fixed rule
     python -m a1lib.posthoc toploss      # training images with the highest loss under the fine-tuned models (label-noise check)
@@ -27,6 +28,7 @@ from a1lib.train import make_loader, predict
 
 A1 = Path(__file__).resolve().parents[1]
 CORE = [f"m_{a}_{m}_s0" for a in ("resnet50", "deit_s") for m in ("head", "partial", "full", "scratch")]
+SEED_RUNS = [f"m_{x}_{m}_s{k}" for x in ("resnet50", "deit_s") for m in ("head", "partial", "full") for k in (1, 2)]   # follow-up: seeds 1 and 2
 CAM_RUNS = {"ResNet-50": "m_resnet50_full_s0", "DeiT-S": "m_deit_s_full_s0"}
 CAM_CLASSES = list(range(0, N_CLASSES, 9))[:12]          # rule: every 9th class (0, 9, ..., 99), the first test image of each
 TOPLOSS_RUNS = CAM_RUNS
@@ -82,7 +84,7 @@ def robustness(a):
     cidx = {c: i for i, c in enumerate(split["classes"])}
     entries = subset_per_class(split["test"], SUBSET_FRACTION)
     labels = [cidx[e.split("/")[0]] for e in entries]
-    runs = a.runs.split(",") if a.runs else CORE
+    runs = a.runs.split(",") if a.runs else (CORE + SEED_RUNS if a.with_seeds else CORE)
     models = {rid: load_model(rid, a.results, a.artifacts, device) for rid in runs}
     log(f"{len(entries)} test images ({len(entries) // N_CLASSES} per class), {len(models)} models, {len(TYPES)} corruptions x 3 severities")
     out = {"subset": {"n": len(entries), "per_class": len(entries) // N_CLASSES, "rule": "subset_per_class(test, 0.2, seed 42)"},
@@ -228,6 +230,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("cmd", choices=["robustness", "gradcam", "toploss", "all"])
     ap.add_argument("--runs", default="", help="robustness: comma list (default: the 8 core runs)")
+    ap.add_argument("--with-seeds", action="store_true", help="robustness: also the 12 pretrained runs of seeds 1 and 2 (one file, 20 models)")
     ap.add_argument("--tag", default="seeds", help="robustness with --runs: output is posthoc_robustness_<tag>.json")
     ap.add_argument("--results", default=str(A1 / "results"))
     ap.add_argument("--artifacts", default=str(A1 / "artifacts"))

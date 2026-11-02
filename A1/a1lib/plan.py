@@ -105,7 +105,7 @@ def diag_sweep_run(model, mode, lr):
                 notes=f"follow-up LR sweep point for mode '{mode}' (3 epochs, 20% of train, seed 0, val only)")
 
 
-def diag_run(run_id, model, mode, notes, lr="auto", llrd=1.0, mixup_prob=None, label_smoothing=None):
+def diag_run(run_id, model, mode, notes, lr="auto", llrd=1.0, mixup_prob=None, label_smoothing=None, seed=0):
     import dataclasses
     from a1lib.config import default_augmentation
     aug = default_augmentation()
@@ -113,7 +113,7 @@ def diag_run(run_id, model, mode, notes, lr="auto", llrd=1.0, mixup_prob=None, l
         aug["mixup"]["prob"] = mixup_prob
     if label_smoothing is not None:
         aug["mixup"]["label_smoothing"] = label_smoothing
-    return dataclasses.replace(_cfg(run_id, model, mode, PRETRAINED_EPOCHS, "diag", 0, 1.0, lr, notes), augmentation=aug, llrd=llrd)
+    return dataclasses.replace(_cfg(run_id, model, mode, PRETRAINED_EPOCHS, "diag", seed, 1.0, lr, notes), augmentation=aug, llrd=llrd)
 
 
 def build_diag_runs():
@@ -233,6 +233,7 @@ def main():
     ad.add_argument("--model", required=True, choices=sorted(SHORT.values()))
     ad.add_argument("--mode", required=True, choices=["head", "partial", "full"])
     ad.add_argument("--lr", required=True, type=float)
+    ad.add_argument("--seed", type=int, default=0, help="default 0; seeds 1 and 2 only for a sensitivity run that is cited as a headline comparison")
     e = sub.add_parser("extend")
     _paths_args(e)
     e.add_argument("--model", required=True)
@@ -289,7 +290,8 @@ def main():
               f"commit configs/ and plan.json, then both members `git pull`")
     elif a.cmd == "add-diag":
         full = {v: k for k, v in SHORT.items()}[a.model]
-        r = diag_run(f"dg_m_{a.model}_{a.mode}_lr{lr_tag(a.lr)}", full, a.mode, f"follow-up: sensitivity run at lr {a.lr:g} (seed 0)", lr=a.lr)
+        r = diag_run(f"dg_m_{a.model}_{a.mode}_lr{lr_tag(a.lr)}" + (f"_s{a.seed}" if a.seed else ""), full, a.mode,
+                     f"follow-up: sensitivity run at lr {a.lr:g} (seed {a.seed})", lr=a.lr, seed=a.seed)
         new = _append_to_plan(plan, [r], a1)
         write_json(plan_path, plan)
         print(f"added {r.run_id}" if new else f"{r.run_id} already exists")
