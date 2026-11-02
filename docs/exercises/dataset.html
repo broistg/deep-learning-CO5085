@@ -75,7 +75,7 @@
       <p>Ảnh được chuyển thành tensor PyTorch; giá trị pixel từ [0, 255] được đưa về [0, 1]. Trung bình và độ lệch chuẩn được tính riêng trên <strong>45 000 ảnh huấn luyện</strong> cho từng kênh màu, tránh rò rỉ thông tin từ tập kiểm định và kiểm thử.</p>
       <div class="equation" role="math" aria-label="x phẩy chỉ số c bằng x chỉ số c trừ mu chỉ số c, chia sigma chỉ số c"><i>x</i>′<sub>c</sub> = (<i>x</i><sub>c</sub> − <i>μ</i><sub>c</sub>) / <i>σ</i><sub>c</sub><span class="equation-no">(2.1)</span></div>
       <p>Với <i>c</i> ∈ {R, G, B}, <i>μ</i> ≈ (0,4918; 0,4825; 0,4468) và <i>σ</i> ≈ (0,2471; 0,2435; 0,2617). Cùng phép chuẩn hóa áp dụng cho cả ba tập.</p>
-      <p><strong>Tăng cường dữ liệu:</strong> chỉ trên tập huấn luyện, ảnh được cắt ngẫu nhiên 32 × 32 sau khi đệm 4 pixel và lật ngang với xác suất 0,5. Các phép biến đổi thực hiện sau chuẩn hóa. Ảnh kiểm định và kiểm thử không được tăng cường. Báo cáo mô tả cấu hình này là dùng chung cho E1–E3 và nêu thêm một lượt E1 không tăng cường để đối chiếu.</p>
+      <p><strong>Tăng cường dữ liệu:</strong> chỉ trên tập huấn luyện, ảnh được cắt ngẫu nhiên 32 × 32 sau khi đệm 4 pixel và lật ngang với xác suất 0,5. Các phép biến đổi thực hiện sau chuẩn hóa. Ảnh kiểm định và kiểm thử không được tăng cường. Báo cáo mô tả cấu hình này là dùng chung cho E1–E3.</p>
     </section>
 
     <section class="section" id="workflow">
