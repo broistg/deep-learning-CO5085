@@ -39,5 +39,8 @@ release_assets/
 .DS_Store
 Thumbs.db
 
+# Secrets
+.env
+
 # Others
 *.tex
