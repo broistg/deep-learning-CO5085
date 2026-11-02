@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>E1: Phân loại ảnh với Softmax, MLP và CNN · CO5085</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet">
   <link rel="icon" type="image/png" href="../assets/favicon.png">
   <link rel="stylesheet" href="../css/style.css?v=20261101-css-icons">
 </head>
+
 <body>
   <header>
     <a class="logo" href="../index.html"><span>CO5085:</span> Deep Learning &amp; Its Applications in Computer
       Vision</a>
-    <a class="back-btn" href="../index.html#exercises"><span class="ui-icon icon-arrow-left" aria-hidden="true"></span> Về trang tổng quan</a>
+    <a class="back-btn" href="../index.html#exercises"><span class="ui-icon icon-arrow-left" aria-hidden="true"></span>
+      Về trang tổng quan</a>
   </header>
   <main class="page-container report-page e1-report">
     <nav class="assignment-parts" aria-label="Điều hướng bài tập E">
@@ -29,164 +34,375 @@
     <div class="page-meta">
       <div class="meta-item"><span class="meta-label">Môn học</span><span class="meta-value">CO5085</span></div>
       <div class="meta-item"><span class="meta-label">Nhóm</span><span class="meta-value">DL4DL</span></div>
-      <div class="meta-item"><span class="meta-label">Tập dữ liệu</span><span class="meta-value">CIFAR-10 · 32 × 32 × 3</span></div>
-      <div class="meta-item"><span class="meta-label">Thành viên phụ trách</span><span class="meta-value">Nguyễn Lê Thảo Ly</span></div>
-      <div class="meta-item"><span class="meta-label">Giảng viên hướng dẫn</span><span class="meta-value">TS. Lê Thành Sách và TS. Nguyễn Quốc Minh</span></div>
-      <div class="meta-item"><span class="meta-label">Trạng thái</span><span class="meta-value"><span class="badge badge-done">Đã hoàn thành</span></span></div>
+      <div class="meta-item"><span class="meta-label">Tập dữ liệu</span><span class="meta-value">CIFAR-10 · 32 × 32 ×
+          3</span></div>
+      <div class="meta-item"><span class="meta-label">Thành viên phụ trách</span><span class="meta-value">Nguyễn Lê Thảo
+          Ly</span></div>
+      <div class="meta-item"><span class="meta-label">Giảng viên hướng dẫn</span><span class="meta-value">TS. Lê Thành
+          Sách và TS. Nguyễn Quốc Minh</span></div>
+      <div class="meta-item"><span class="meta-label">Trạng thái</span><span class="meta-value"><span
+            class="badge badge-done">Đã hoàn thành</span></span></div>
     </div>
     <div class="quick-links">
-      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085/tree/main/E1" target="_blank" rel="noopener noreferrer"><span class="ui-icon icon-external" aria-hidden="true"></span> Mã nguồn E1</a>
-      <a class="link-btn primary" href="../reports/exercises.pdf#page=17" target="_blank" rel="noopener noreferrer"><span class="ui-icon icon-file" aria-hidden="true"></span> Báo cáo PDF · Chương 3</a>
-      <a class="link-btn" href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E1/notebooks/E1.ipynb" target="_blank" rel="noopener noreferrer"><span class="ui-icon icon-notebook" aria-hidden="true"></span> Mở bằng Colab</a>
-      <a href="#results" class="link-btn"><span class="ui-icon icon-chart" aria-hidden="true"></span> Kết quả thực nghiệm</a>
-      <a class="link-btn" href="#reproduce"><span class="ui-icon icon-refresh" aria-hidden="true"></span> Tái lập và khai báo AI</a>
-      <a class="link-btn" href="dataset.html"><span class="ui-icon icon-chart" aria-hidden="true"></span> Dataset E1–E3</a>
+      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085/tree/main/E1" target="_blank"
+        rel="noopener noreferrer"><span class="ui-icon icon-external" aria-hidden="true"></span> Mã nguồn E1</a>
+      <a class="link-btn primary" href="../reports/exercises.pdf#page=17" target="_blank"
+        rel="noopener noreferrer"><span class="ui-icon icon-file" aria-hidden="true"></span> Báo cáo PDF · Chương 3</a>
+      <a class="link-btn"
+        href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E1/notebooks/E1.ipynb"
+        target="_blank" rel="noopener noreferrer"><span class="ui-icon icon-notebook" aria-hidden="true"></span> Mở bằng
+        Colab</a>
+      <a href="#results" class="link-btn"><span class="ui-icon icon-chart" aria-hidden="true"></span> Kết quả thực
+        nghiệm</a>
+      <a class="link-btn" href="#reproduce"><span class="ui-icon icon-refresh" aria-hidden="true"></span> Tái lập và
+        khai báo AI</a>
+      <a class="link-btn" href="dataset.html"><span class="ui-icon icon-chart" aria-hidden="true"></span> Dataset
+        E1–E3</a>
     </div>
-    <nav class="report-toc" aria-label="Mục lục trong trang"><strong>Trong trang</strong><a href="#architectures">3.1 Kiến trúc</a><a href="#training">3.2 Huấn luyện</a><a href="#results">3.3 Kết quả</a><a href="#discussion">3.4 Thảo luận</a><a href="#reproduce">A Tái lập và khai báo sử dụng AI</a></nav>
+    <nav class="report-toc" aria-label="Mục lục trong trang"><strong>Trong trang</strong><a href="#architectures">3.1
+        Kiến trúc</a><a href="#training">3.2 Huấn luyện</a><a href="#results">3.3 Kết quả</a><a href="#discussion">3.4
+        Thảo luận</a><a href="#reproduce">A Tái lập và khai báo sử dụng AI</a></nav>
     <div class="status-banner">
       <div class="status-banner-icon"><span class="ui-icon icon-check" aria-hidden="true"></span></div>
-      <div class="status-banner-content"><h4>Đã hoàn tất thực nghiệm</h4>
-        <p>Ba kiến trúc được huấn luyện độc lập với ba seed (0, 1, 2) theo cùng quy trình trên CIFAR-10. Kết quả chính là độ chính xác kiểm thử tại epoch cuối; các phân tích lỗi minh họa seed 0.</p>
+      <div class="status-banner-content">
+        <h4>Đã hoàn tất thực nghiệm</h4>
+        <p>Ba kiến trúc được huấn luyện độc lập với ba seed (0, 1, 2) theo cùng quy trình trên CIFAR-10. Kết quả chính
+          là độ chính xác kiểm thử tại epoch cuối; các phân tích lỗi minh họa seed 0.</p>
       </div>
     </div>
 
     <section class="section" id="architectures">
-      <div class="section-header"><span class="section-num">3.1</span><h2>Kiến trúc các mô hình</h2></div>
-      <p>E1 so sánh bộ phân loại tuyến tính Softmax, mạng truyền thẳng MLP và mạng tích chập MiniVGG trên cùng ảnh CIFAR-10. Ba kiến trúc khác nhau về khả năng biểu diễn phi tuyến và khai thác cấu trúc không gian.</p>
+      <div class="section-header"><span class="section-num">3.1</span>
+        <h2>Kiến trúc các mô hình</h2>
+      </div>
+      <p>E1 so sánh bộ phân loại tuyến tính Softmax, mạng truyền thẳng MLP và mạng tích chập MiniVGG trên cùng ảnh
+        CIFAR-10. Ba kiến trúc khác nhau về khả năng biểu diễn phi tuyến và khai thác cấu trúc không gian.</p>
       <div class="models-grid">
         <article class="model-card">
-          <div class="model-family">3.1.1 · Mô hình cơ sở</div><h3 class="model-name">Softmax classifier</h3>
-          <p class="model-desc">Ảnh 32 × 32 × 3 được làm phẳng thành vector 3072 chiều và ánh xạ trực tiếp sang 10 logits. Không có lớp ẩn hay phép biến đổi phi tuyến, nên mô hình chỉ tạo ranh giới quyết định tuyến tính trong không gian pixel.</p>
+          <div class="model-family">3.1.1 · Mô hình cơ sở</div>
+          <h3 class="model-name">Softmax classifier</h3>
+          <p class="model-desc">Ảnh 32 × 32 × 3 được làm phẳng thành vector 3072 chiều và ánh xạ trực tiếp sang 10
+            logits. Không có lớp ẩn hay phép biến đổi phi tuyến, nên mô hình chỉ tạo ranh giới quyết định tuyến tính
+            trong không gian pixel.</p>
           <div class="equation"><i>z</i> = <i>W</i><i>x</i> + <i>b</i><span class="equation-no">(3.1)</span></div>
-          <p class="model-desc"><i>x</i> ∈ ℝ<sup>3072</sup>, <i>W</i> ∈ ℝ<sup>10×3072</sup>, <i>b</i> ∈ ℝ<sup>10</sup>.</p>
-          <div class="model-meta"><div><span class="meta-label">Tham số huấn luyện</span><span class="meta-val">30 730</span></div><div><span class="meta-label">Biểu diễn</span><span class="meta-val">Ảnh làm phẳng, tuyến tính</span></div></div>
+          <p class="model-desc"><i>x</i> ∈ ℝ<sup>3072</sup>, <i>W</i> ∈ ℝ<sup>10×3072</sup>, <i>b</i> ∈ ℝ<sup>10</sup>.
+          </p>
+          <div class="model-meta">
+            <div><span class="meta-label">Tham số huấn luyện</span><span class="meta-val">30 730</span></div>
+            <div><span class="meta-label">Biểu diễn</span><span class="meta-val">Ảnh làm phẳng, tuyến tính</span></div>
+          </div>
         </article>
         <article class="model-card">
-          <div class="model-family">3.1.2 · Mạng truyền thẳng</div><h3 class="model-name">Multi-Layer Perceptron (MLP)</h3>
-          <p class="model-desc">MLP vẫn dùng vector ảnh 3072 chiều nhưng bổ sung hai lớp ẩn ReLU, với số chiều lần lượt là 64 và 32. Các phép biến đổi phi tuyến giúp học quan hệ giữa đặc trưng đầu vào, song không mã hóa trực tiếp tính cục bộ của ảnh.</p>
+          <div class="model-family">3.1.2 · Mạng truyền thẳng</div>
+          <h3 class="model-name">Multi-Layer Perceptron (MLP)</h3>
+          <p class="model-desc">MLP vẫn dùng vector ảnh 3072 chiều nhưng bổ sung hai lớp ẩn ReLU, với số chiều lần lượt
+            là 64 và 32. Các phép biến đổi phi tuyến giúp học quan hệ giữa đặc trưng đầu vào, song không mã hóa trực
+            tiếp tính cục bộ của ảnh.</p>
           <div class="equation">3072 → 64 → 32 → 10<span class="equation-no">(3.2)</span></div>
           <div class="equation-group">
-            <div class="equation"><i>h</i><sub>1</sub> = ReLU(<i>W</i><sub>1</sub><i>x</i> + <i>b</i><sub>1</sub>)<span class="equation-no">(3.3)</span></div>
-            <div class="equation"><i>h</i><sub>2</sub> = ReLU(<i>W</i><sub>2</sub><i>h</i><sub>1</sub> + <i>b</i><sub>2</sub>)<span class="equation-no">(3.4)</span></div>
-            <div class="equation"><i>z</i> = <i>W</i><sub>3</sub><i>h</i><sub>2</sub> + <i>b</i><sub>3</sub><span class="equation-no">(3.5)</span></div>
+            <div class="equation"><i>h</i><sub>1</sub> = ReLU(<i>W</i><sub>1</sub><i>x</i> + <i>b</i><sub>1</sub>)<span
+                class="equation-no">(3.3)</span></div>
+            <div class="equation"><i>h</i><sub>2</sub> = ReLU(<i>W</i><sub>2</sub><i>h</i><sub>1</sub> +
+              <i>b</i><sub>2</sub>)<span class="equation-no">(3.4)</span></div>
+            <div class="equation"><i>z</i> = <i>W</i><sub>3</sub><i>h</i><sub>2</sub> + <i>b</i><sub>3</sub><span
+                class="equation-no">(3.5)</span></div>
           </div>
           <figure class="architecture-figure">
             <div class="architecture-scroll">
-              <a href="../assets/e1/architecture_mlp.svg" target="_blank" rel="noopener noreferrer" aria-label="Mở sơ đồ kiến trúc MLP kích thước đầy đủ">
-                <img src="../assets/e1/architecture_mlp.svg" alt="Ảnh 32 × 32 × 3 → Flatten 3072 → hai lớp ẩn FC và ReLU 64, 32 → Linear 10 logits" width="522" height="62" loading="lazy">
+              <a href="../assets/e1/architecture_mlp.svg" target="_blank" rel="noopener noreferrer"
+                aria-label="Mở sơ đồ kiến trúc MLP kích thước đầy đủ">
+                <img src="../assets/e1/architecture_mlp.svg"
+                  alt="Ảnh 32 × 32 × 3 → Flatten 3072 → hai lớp ẩn FC và ReLU 64, 32 → Linear 10 logits" width="522"
+                  height="62" loading="lazy">
               </a>
             </div>
             <figcaption>Hình 3.1 · Kiến trúc MLP với hai lớp ẩn tuyến tính kèm ReLU.</figcaption>
           </figure>
-          <div class="model-meta"><div><span class="meta-label">Tham số huấn luyện</span><span class="meta-val">199 082</span></div><div><span class="meta-label">Biểu diễn</span><span class="meta-val">Ảnh làm phẳng, phi tuyến</span></div></div>
+          <div class="model-meta">
+            <div><span class="meta-label">Tham số huấn luyện</span><span class="meta-val">199 082</span></div>
+            <div><span class="meta-label">Biểu diễn</span><span class="meta-val">Ảnh làm phẳng, phi tuyến</span></div>
+          </div>
         </article>
         <article class="model-card">
-          <div class="model-family">3.1.3 · Mạng tích chập</div><h3 class="model-name">MiniVGG (CNN)</h3>
-          <p class="model-desc">Mô hình tham khảo MiniVGGNet của Rosebrock, giảm số kênh xuống 16 và 32. Mỗi khối có hai tích chập 3 × 3 (stride 1, padding 1), mỗi phép theo sau bởi ReLU và Batch Normalization, rồi Max Pooling 2 × 2 (stride 2). Sau khối thứ hai, đặc trưng được làm phẳng và đưa trực tiếp qua lớp tuyến tính.</p>
+          <div class="model-family">3.1.3 · Mạng tích chập</div>
+          <h3 class="model-name">MiniVGG (CNN)</h3>
+          <p class="model-desc">Mô hình tham khảo MiniVGGNet của Rosebrock, giảm số kênh xuống 16 và 32. Mỗi khối có hai
+            tích chập 3 × 3 (stride 1, padding 1), mỗi phép theo sau bởi ReLU và Batch Normalization, rồi Max Pooling 2
+            × 2 (stride 2). Sau khối thứ hai, đặc trưng được làm phẳng và đưa trực tiếp qua lớp tuyến tính.</p>
           <div class="equation">32 × 32 × 3 → 16 × 16 × 16 → 8 × 8 × 32<span class="equation-no">(3.6)</span></div>
-          <div class="equation"><i>z</i> = Linear(Flatten(<i>F</i>)), &nbsp; <i>F</i> ∈ ℝ<sup>8×8×32</sup><span class="equation-no">(3.7)</span></div>
+          <div class="equation"><i>z</i> = Linear(Flatten(<i>F</i>)), &nbsp; <i>F</i> ∈ ℝ<sup>8×8×32</sup><span
+              class="equation-no">(3.7)</span></div>
           <figure class="architecture-figure">
             <div class="architecture-scroll">
-              <a href="../assets/e1/architecture_minivgg.svg" target="_blank" rel="noopener noreferrer" aria-label="Mở sơ đồ kiến trúc MiniVGG kích thước đầy đủ">
-                <img src="../assets/e1/architecture_minivgg.svg" alt="Ảnh 32 × 32 × 3 → hai ConvBlock tạo 16 rồi 32 kênh → Flatten 2048 → Linear 10; chi tiết mỗi khối gồm hai Conv 3 × 3, ReLU, BN và MaxPool 2 × 2" width="725" height="491" loading="lazy">
+              <a href="../assets/e1/architecture_minivgg.svg" target="_blank" rel="noopener noreferrer"
+                aria-label="Mở sơ đồ kiến trúc MiniVGG kích thước đầy đủ">
+                <img src="../assets/e1/architecture_minivgg.svg"
+                  alt="Ảnh 32 × 32 × 3 → hai ConvBlock tạo 16 rồi 32 kênh → Flatten 2048 → Linear 10; chi tiết mỗi khối gồm hai Conv 3 × 3, ReLU, BN và MaxPool 2 × 2"
+                  width="725" height="491" loading="lazy">
               </a>
             </div>
             <figcaption>Hình 3.2 · Sơ đồ tổng thể MiniVGG và cấu trúc dùng chung của hai khối tích chập.</figcaption>
           </figure>
-          <p class="model-desc">Bộ lọc cục bộ và chia sẻ trọng số giúp khai thác quan hệ không gian mà không cần kết nối đầy đủ mọi pixel như MLP.</p>
-          <div class="model-meta"><div><span class="meta-label">Tham số huấn luyện</span><span class="meta-val">37 338</span></div><div><span class="meta-label">Biểu diễn</span><span class="meta-val">Đặc trưng không gian cục bộ</span></div></div>
+          <p class="model-desc">Bộ lọc cục bộ và chia sẻ trọng số giúp khai thác quan hệ không gian mà không cần kết nối
+            đầy đủ mọi pixel như MLP.</p>
+          <div class="model-meta">
+            <div><span class="meta-label">Tham số huấn luyện</span><span class="meta-val">37 338</span></div>
+            <div><span class="meta-label">Biểu diễn</span><span class="meta-val">Đặc trưng không gian cục bộ</span>
+            </div>
+          </div>
         </article>
       </div>
     </section>
 
     <section class="section" id="training">
-      <div class="section-header"><span class="section-num">3.2</span><h2>Huấn luyện và đánh giá</h2></div>
+      <div class="section-header"><span class="section-num">3.2</span>
+        <h2>Huấn luyện và đánh giá</h2>
+      </div>
       <h3 class="section-subhead">Quy trình huấn luyện</h3>
-      <p>Ba mô hình dùng cùng phép chia dữ liệu, chuẩn hóa và tăng cường dữ liệu của báo cáo: 45 000 ảnh huấn luyện, 5 000 ảnh kiểm định và 10 000 ảnh kiểm thử. Thống kê chuẩn hóa được tính trên tập huấn luyện; random crop với đệm 4 pixel và lật ngang chỉ áp dụng trong huấn luyện. Các siêu tham số được giữ cố định để khảo sát ảnh hưởng của kiến trúc.</p>
-      <div class="results-table-wrapper"><table class="results-table"><caption class="sr-only">Bảng 3.1: Cấu hình huấn luyện E1</caption><thead><tr><th scope="col">Thành phần</th><th scope="col">Thiết lập</th></tr></thead><tbody>
-        <tr><td>Kiến trúc</td><td>Softmax, MLP, MiniVGG</td></tr>
-        <tr><td>Tối ưu</td><td>Adam, learning rate 10<sup>−3</sup></td></tr>
-        <tr><td>Lịch learning rate</td><td>Cố định</td></tr>
-        <tr><td>Hàm mất mát</td><td>Cross-entropy</td></tr>
-        <tr><td>Huấn luyện</td><td>30 epoch, batch size 64</td></tr>
-        <tr><td>Tăng cường dữ liệu</td><td>Random crop (đệm 4) và lật ngang, chỉ trên tập huấn luyện</td></tr>
-        <tr><td>Seed</td><td>0, 1, 2 (khởi tạo, thứ tự dữ liệu và tăng cường dữ liệu)</td></tr>
-      </tbody></table></div>
+      <p>Ba mô hình dùng cùng phép chia dữ liệu, chuẩn hóa và tăng cường dữ liệu của báo cáo: 45 000 ảnh huấn luyện, 5
+        000 ảnh kiểm định và 10 000 ảnh kiểm thử. Thống kê chuẩn hóa được tính trên tập huấn luyện; random crop với đệm
+        4 pixel và lật ngang chỉ áp dụng trong huấn luyện. Các siêu tham số được giữ cố định để khảo sát ảnh hưởng của
+        kiến trúc.</p>
+      <div class="results-table-wrapper">
+        <table class="results-table">
+          <caption class="sr-only">Bảng 3.1: Cấu hình huấn luyện E1</caption>
+          <thead>
+            <tr>
+              <th scope="col">Thành phần</th>
+              <th scope="col">Thiết lập</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Kiến trúc</td>
+              <td>Softmax, MLP, MiniVGG</td>
+            </tr>
+            <tr>
+              <td>Tối ưu</td>
+              <td>Adam, learning rate 10<sup>−3</sup></td>
+            </tr>
+            <tr>
+              <td>Lịch learning rate</td>
+              <td>Cố định</td>
+            </tr>
+            <tr>
+              <td>Hàm mất mát</td>
+              <td>Cross-entropy</td>
+            </tr>
+            <tr>
+              <td>Huấn luyện</td>
+              <td>30 epoch, batch size 64</td>
+            </tr>
+            <tr>
+              <td>Tăng cường dữ liệu</td>
+              <td>Random crop (đệm 4) và lật ngang, chỉ trên tập huấn luyện</td>
+            </tr>
+            <tr>
+              <td>Seed</td>
+              <td>0, 1, 2 (khởi tạo, thứ tự dữ liệu và tăng cường dữ liệu)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <p class="table-caption">Bảng 3.1 · Cấu hình huấn luyện của E1.</p>
       <h3 class="section-subhead">Các thí nghiệm và tiêu chí đánh giá</h3>
-      <p>Tổng cộng có 9 lần huấn luyện độc lập: 3 kiến trúc × 3 seed. Chỉ số chính là accuracy trên 10 000 ảnh kiểm thử chính thức với trọng số ở epoch cuối, báo cáo bằng trung bình ± độ lệch chuẩn mẫu của ba seed.</p>
-      <p>Báo cáo còn so sánh số tham số huấn luyện được, thời gian huấn luyện trung vị mỗi epoch, bộ nhớ GPU đỉnh, thời gian suy luận mỗi ảnh, đường cong loss và accuracy. Phân tích lỗi dựa trên ma trận nhầm lẫn và ảnh sai có độ tin cậy cao.</p>
+      <p>Tổng cộng có 9 lần huấn luyện độc lập: 3 kiến trúc × 3 seed. Chỉ số chính là accuracy trên 10 000 ảnh kiểm thử
+        chính thức với trọng số ở epoch cuối, báo cáo bằng trung bình ± độ lệch chuẩn mẫu của ba seed.</p>
+      <p>Báo cáo còn so sánh số tham số huấn luyện được, thời gian huấn luyện trung vị mỗi epoch, bộ nhớ GPU đỉnh, thời
+        gian suy luận mỗi ảnh, đường cong loss và accuracy. Phân tích lỗi dựa trên ma trận nhầm lẫn và ảnh sai có độ tin
+        cậy cao.</p>
       <h3 class="section-subhead">Môi trường thực nghiệm</h3>
-      <p>GPU NVIDIA GeForce RTX 3050 Laptop 6 GB; Python 3.12.15; PyTorch 2.14.1 (CUDA 12.6). Thời gian và bộ nhớ chỉ có giá trị so sánh tương đối giữa các mô hình trong môi trường này.</p>
+      <p>GPU NVIDIA GeForce RTX 3050 Laptop 6 GB; Python 3.12.15; PyTorch 2.14.1 (CUDA 12.6). Thời gian và bộ nhớ chỉ có
+        giá trị so sánh tương đối giữa các mô hình trong môi trường này.</p>
     </section>
 
     <section class="section" id="results">
-      <div class="section-header"><span class="section-num">3.3</span><h2>Kết quả thực nghiệm</h2></div>
-      <p>Trừ khi ghi chú khác, kết quả kiểm thử dùng trọng số epoch cuối và được trình bày dưới dạng trung bình ± độ lệch chuẩn mẫu trên ba seed (0, 1, 2). Tệp từng lần chạy nằm trong <code>E1/results</code>; bảng tổng hợp được sinh bằng <code>python -m e1lib.summary</code>.</p>
+      <div class="section-header"><span class="section-num">3.3</span>
+        <h2>Kết quả thực nghiệm</h2>
+      </div>
+      <p>Trừ khi ghi chú khác, kết quả kiểm thử dùng trọng số epoch cuối và được trình bày dưới dạng trung bình ± độ
+        lệch chuẩn mẫu trên ba seed (0, 1, 2). Tệp từng lần chạy nằm trong <code>E1/results</code>; bảng tổng hợp được
+        sinh bằng <code>python -m e1lib.summary</code>.</p>
       <h3 class="section-subhead">So sánh độ chính xác và quy mô mô hình</h3>
-      <div class="results-table-wrapper"><table class="results-table"><caption class="sr-only">Bảng 3.2: Độ chính xác, tham số và chi phí huấn luyện E1</caption><thead><tr><th scope="col">Mô hình</th><th scope="col">Tham số</th><th scope="col">Độ chính xác kiểm thử (%)</th><th scope="col">s/epoch</th><th scope="col">GPU (MB)</th></tr></thead><tbody>
-        <tr><td><strong>Softmax</strong></td><td>30 730</td><td>32,61 ± 0,98</td><td>7,4</td><td>17,7</td></tr>
-        <tr><td><strong>MLP</strong></td><td>199 082</td><td>51,17 ± 0,23</td><td>8,5</td><td>21,6</td></tr>
-        <tr><td><strong>MiniVGG</strong></td><td>37 338</td><td>79,62 ± 0,26</td><td>9,5</td><td>49,0</td></tr>
-      </tbody></table></div>
-      <p class="table-caption">Bảng 3.2 · Thời gian là trung bình qua các seed của thời gian trung vị mỗi epoch; GPU là bộ nhớ đỉnh được ghi nhận.</p>
-      <p>MLP cao hơn Softmax 18,57 điểm phần trăm. MiniVGG cao hơn MLP 28,45 điểm phần trăm dù chỉ có khoảng 18,8% số tham số của MLP. MiniVGG cũng có thời gian mỗi epoch và bộ nhớ GPU đỉnh lớn nhất vì các phép tích chập xử lý nhiều bản đồ đặc trưng.</p>
+      <div class="results-table-wrapper">
+        <table class="results-table">
+          <caption class="sr-only">Bảng 3.2: Độ chính xác, tham số và chi phí huấn luyện E1</caption>
+          <thead>
+            <tr>
+              <th scope="col">Mô hình</th>
+              <th scope="col">Tham số</th>
+              <th scope="col">Độ chính xác kiểm thử (%)</th>
+              <th scope="col">s/epoch</th>
+              <th scope="col">GPU (MB)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Softmax</strong></td>
+              <td>30 730</td>
+              <td>32,61 ± 0,98</td>
+              <td>7,4</td>
+              <td>17,7</td>
+            </tr>
+            <tr>
+              <td><strong>MLP</strong></td>
+              <td>199 082</td>
+              <td>51,17 ± 0,23</td>
+              <td>8,5</td>
+              <td>21,6</td>
+            </tr>
+            <tr>
+              <td><strong>MiniVGG</strong></td>
+              <td>37 338</td>
+              <td>79,62 ± 0,26</td>
+              <td>9,5</td>
+              <td>49,0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-caption">Bảng 3.2 · Thời gian là trung bình qua các seed của thời gian trung vị mỗi epoch; GPU là
+        bộ nhớ đỉnh được ghi nhận.</p>
+      <p>MLP cao hơn Softmax 18,57 điểm phần trăm. MiniVGG cao hơn MLP 28,45 điểm phần trăm dù chỉ có khoảng 18,8% số
+        tham số của MLP. MiniVGG cũng có thời gian mỗi epoch và bộ nhớ GPU đỉnh lớn nhất vì các phép tích chập xử lý
+        nhiều bản đồ đặc trưng.</p>
       <h3 class="section-subhead">Quá trình hội tụ</h3>
-      <figure class="report-figure e1-curves"><a href="../assets/e1/curves.png" target="_blank" rel="noopener noreferrer" aria-label="Mở hình kích thước đầy đủ"><img src="../assets/e1/curves.png" alt="Sáu biểu đồ loss và accuracy huấn luyện, kiểm định của Softmax, MLP và MiniVGG qua 30 epoch; đường trung bình và vùng độ lệch chuẩn mẫu trên ba seed" loading="lazy" width="2021" height="2023"></a><figcaption>Hình 3.3 · Loss (trái) và accuracy (phải) qua 30 epoch. Đường là trung bình trên ba seed; vùng tô là ± độ lệch chuẩn mẫu. Chỉ số huấn luyện dùng ảnh được tăng cường ngẫu nhiên, chỉ số kiểm định dùng ảnh gốc.</figcaption></figure>
-      <p>Softmax chững lại sớm: training loss quanh 2,09 và validation accuracy dao động 29–35%. MLP giảm training loss từ 1,83 xuống 1,42; validation accuracy tăng từ 39,96% lên 50,11%, với tốc độ cải thiện chậm dần. MiniVGG giảm training loss từ 1,44 xuống 0,61 và nâng validation accuracy từ 62,47% lên 80,79%; đường cong tiếp tục cải thiện ở cuối 30 epoch và biến thiên giữa các seed tương đối nhỏ.</p>
+      <figure class="report-figure e1-curves"><a href="../assets/e1/curves.png" target="_blank"
+          rel="noopener noreferrer" aria-label="Mở hình kích thước đầy đủ"><img src="../assets/e1/curves.png"
+            alt="Sáu biểu đồ loss và accuracy huấn luyện, kiểm định của Softmax, MLP và MiniVGG qua 30 epoch; đường trung bình và vùng độ lệch chuẩn mẫu trên ba seed"
+            loading="lazy" width="2021" height="2023"></a>
+        <figcaption>Hình 3.3 · Loss (trái) và accuracy (phải) qua 30 epoch. Đường là trung bình trên ba seed; vùng tô là
+          ± độ lệch chuẩn mẫu. Chỉ số huấn luyện dùng ảnh được tăng cường ngẫu nhiên, chỉ số kiểm định dùng ảnh gốc.
+        </figcaption>
+      </figure>
+      <p>Softmax chững lại sớm: training loss quanh 2,09 và validation accuracy dao động 29–35%. MLP giảm training loss
+        từ 1,83 xuống 1,42; validation accuracy tăng từ 39,96% lên 50,11%, với tốc độ cải thiện chậm dần. MiniVGG giảm
+        training loss từ 1,44 xuống 0,61 và nâng validation accuracy từ 62,47% lên 80,79%; đường cong tiếp tục cải thiện
+        ở cuối 30 epoch và biến thiên giữa các seed tương đối nhỏ.</p>
       <h3 class="section-subhead" id="errors">Phân tích lỗi phân loại</h3>
-      <p>Các ma trận nhầm lẫn và ảnh dự đoán sai có độ tin cậy cao lấy từ tập kiểm thử CIFAR-10 của seed 0. Mỗi lớp có 1 000 ảnh kiểm thử. Ma trận được chuẩn hóa theo hàng để đọc tỷ lệ nhận diện từng lớp.</p>
+      <p>Các ma trận nhầm lẫn và ảnh dự đoán sai có độ tin cậy cao lấy từ tập kiểm thử CIFAR-10 của seed 0. Mỗi lớp có 1
+        000 ảnh kiểm thử. Ma trận được chuẩn hóa theo hàng để đọc tỷ lệ nhận diện từng lớp.</p>
       <article class="error-analysis">
         <h4>Softmax <span>· seed 0 · độ chính xác kiểm thử 31,68%</span></h4>
-        <div class="figure-grid e1-error-grid"><figure class="report-figure"><a href="../assets/e1/confusion_SoftmaxClassifier.png" target="_blank" rel="noopener noreferrer" aria-label="Mở hình kích thước đầy đủ"><img src="../assets/e1/confusion_SoftmaxClassifier.png" alt="Ma trận nhầm lẫn của Softmax trên CIFAR-10, seed 0" loading="lazy" width="1978" height="1974"></a><figcaption>Hình 3.4a · Ma trận nhầm lẫn.</figcaption></figure><figure class="report-figure"><a href="../assets/e1/errors_SoftmaxClassifier.png" target="_blank" rel="noopener noreferrer" aria-label="Mở hình kích thước đầy đủ"><img src="../assets/e1/errors_SoftmaxClassifier.png" alt="Các ảnh Softmax dự đoán sai với độ tin cậy cao, seed 0" loading="lazy" width="1701" height="885"></a><figcaption>Hình 3.4b · Các ảnh dự đoán sai.</figcaption></figure></div>
-        <p>Nhận diện tốt nhất: airplane 54,6%, truck 45,7%, ship 36,0%; thấp nhất: deer 17,2%, cat 20,4%, bird 23,6%. Nhầm lẫn nổi bật: ship→airplane 364 ảnh, deer→bird 280 ảnh, cat→dog 234 ảnh và automobile→truck 220 ảnh. Một số ảnh deer hoặc dog bị nhận thành ship với xác suất khoảng 0,99, cho thấy hạn chế của ranh giới tuyến tính khi mô tả hình dạng và không gian.</p>
+        <div class="figure-grid e1-error-grid">
+          <figure class="report-figure"><a href="../assets/e1/confusion_SoftmaxClassifier.png" target="_blank"
+              rel="noopener noreferrer" aria-label="Mở hình kích thước đầy đủ"><img
+                src="../assets/e1/confusion_SoftmaxClassifier.png"
+                alt="Ma trận nhầm lẫn của Softmax trên CIFAR-10, seed 0" loading="lazy" width="1978" height="1974"></a>
+            <figcaption>Hình 3.4a · Ma trận nhầm lẫn.</figcaption>
+          </figure>
+          <figure class="report-figure"><a href="../assets/e1/errors_SoftmaxClassifier.png" target="_blank"
+              rel="noopener noreferrer" aria-label="Mở hình kích thước đầy đủ"><img
+                src="../assets/e1/errors_SoftmaxClassifier.png"
+                alt="Các ảnh Softmax dự đoán sai với độ tin cậy cao, seed 0" loading="lazy" width="1701"
+                height="885"></a>
+            <figcaption>Hình 3.4b · Các ảnh dự đoán sai.</figcaption>
+          </figure>
+        </div>
+        <p>Nhận diện tốt nhất: airplane 54,6%, truck 45,7%, ship 36,0%; thấp nhất: deer 17,2%, cat 20,4%, bird 23,6%.
+          Nhầm lẫn nổi bật: ship→airplane 364 ảnh, deer→bird 280 ảnh, cat→dog 234 ảnh và automobile→truck 220 ảnh. Một
+          số ảnh deer hoặc dog bị nhận thành ship với xác suất khoảng 0,99, cho thấy hạn chế của ranh giới tuyến tính
+          khi mô tả hình dạng và không gian.</p>
       </article>
       <article class="error-analysis">
         <h4>MLP <span>· seed 0 · độ chính xác kiểm thử 51,38%</span></h4>
-        <div class="figure-grid e1-error-grid"><figure class="report-figure"><a href="../assets/e1/confusion_MLP.png" target="_blank" rel="noopener noreferrer" aria-label="Mở hình kích thước đầy đủ"><img src="../assets/e1/confusion_MLP.png" alt="Ma trận nhầm lẫn của MLP trên CIFAR-10, seed 0" loading="lazy" width="1978" height="1974"></a><figcaption>Hình 3.5a · Ma trận nhầm lẫn.</figcaption></figure><figure class="report-figure"><a href="../assets/e1/errors_MLP.png" target="_blank" rel="noopener noreferrer" aria-label="Mở hình kích thước đầy đủ"><img src="../assets/e1/errors_MLP.png" alt="Các ảnh MLP dự đoán sai với độ tin cậy cao, seed 0" loading="lazy" width="1701" height="885"></a><figcaption>Hình 3.5b · Các ảnh dự đoán sai.</figcaption></figure></div>
-        <p>Nhận diện tốt nhất: ship 72,5%, frog 65,3%, horse 58,5%; thấp nhất: dog 33,7%, deer 37,6%, cat 40,2%. Nhầm lẫn: cat→dog 140 và dog→cat 283 ảnh; automobile→truck 198 và truck→automobile 139 ảnh; airplane→ship 173 ảnh; deer→bird 168 ảnh. Error grid có bird→frog, automobile→ship và horse→airplane với xác suất khoảng 0,99. MLP cải thiện nhờ phi tuyến nhưng vẫn khó phân biệt lớp có đặc điểm hình ảnh gần nhau.</p>
+        <div class="figure-grid e1-error-grid">
+          <figure class="report-figure"><a href="../assets/e1/confusion_MLP.png" target="_blank"
+              rel="noopener noreferrer" aria-label="Mở hình kích thước đầy đủ"><img src="../assets/e1/confusion_MLP.png"
+                alt="Ma trận nhầm lẫn của MLP trên CIFAR-10, seed 0" loading="lazy" width="1978" height="1974"></a>
+            <figcaption>Hình 3.5a · Ma trận nhầm lẫn.</figcaption>
+          </figure>
+          <figure class="report-figure"><a href="../assets/e1/errors_MLP.png" target="_blank" rel="noopener noreferrer"
+              aria-label="Mở hình kích thước đầy đủ"><img src="../assets/e1/errors_MLP.png"
+                alt="Các ảnh MLP dự đoán sai với độ tin cậy cao, seed 0" loading="lazy" width="1701" height="885"></a>
+            <figcaption>Hình 3.5b · Các ảnh dự đoán sai.</figcaption>
+          </figure>
+        </div>
+        <p>Nhận diện tốt nhất: ship 72,5%, frog 65,3%, horse 58,5%; thấp nhất: dog 33,7%, deer 37,6%, cat 40,2%. Nhầm
+          lẫn: cat→dog 140 và dog→cat 283 ảnh; automobile→truck 198 và truck→automobile 139 ảnh; airplane→ship 173 ảnh;
+          deer→bird 168 ảnh. Error grid có bird→frog, automobile→ship và horse→airplane với xác suất khoảng 0,99. MLP
+          cải thiện nhờ phi tuyến nhưng vẫn khó phân biệt lớp có đặc điểm hình ảnh gần nhau.</p>
       </article>
       <article class="error-analysis">
         <h4>MiniVGG <span>· seed 0 · độ chính xác kiểm thử 79,52%</span></h4>
-        <div class="figure-grid e1-error-grid"><figure class="report-figure"><a href="../assets/e1/confusion_MiniVGG.png" target="_blank" rel="noopener noreferrer" aria-label="Mở hình kích thước đầy đủ"><img src="../assets/e1/confusion_MiniVGG.png" alt="Ma trận nhầm lẫn của MiniVGG trên CIFAR-10, seed 0" loading="lazy" width="1978" height="1974"></a><figcaption>Hình 3.6a · Ma trận nhầm lẫn.</figcaption></figure><figure class="report-figure"><a href="../assets/e1/errors_MiniVGG.png" target="_blank" rel="noopener noreferrer" aria-label="Mở hình kích thước đầy đủ"><img src="../assets/e1/errors_MiniVGG.png" alt="Các ảnh MiniVGG dự đoán sai với độ tin cậy cao, seed 0" loading="lazy" width="1702" height="885"></a><figcaption>Hình 3.6b · Các ảnh dự đoán sai.</figcaption></figure></div>
-        <p>Nhận diện tốt nhất: ship 91,4%, automobile 89,1%, truck 86,8%, frog 86,0%; thấp nhất: cat 61,7%, bird 70,2%, dog 74,4%. Nhầm lẫn: cat→dog 157 và dog→cat 122 ảnh; bird↔deer 64 ảnh mỗi chiều; airplane→ship 81 ảnh; automobile→truck 55 ảnh. Error grid có automobile↔truck và cat hoặc bird→frog với xác suất hiển thị gần 1,00. Mô hình giảm nhiều lỗi nhưng vẫn gặp khó ở các lớp động vật tương đồng.</p>
+        <div class="figure-grid e1-error-grid">
+          <figure class="report-figure"><a href="../assets/e1/confusion_MiniVGG.png" target="_blank"
+              rel="noopener noreferrer" aria-label="Mở hình kích thước đầy đủ"><img
+                src="../assets/e1/confusion_MiniVGG.png" alt="Ma trận nhầm lẫn của MiniVGG trên CIFAR-10, seed 0"
+                loading="lazy" width="1978" height="1974"></a>
+            <figcaption>Hình 3.6a · Ma trận nhầm lẫn.</figcaption>
+          </figure>
+          <figure class="report-figure"><a href="../assets/e1/errors_MiniVGG.png" target="_blank"
+              rel="noopener noreferrer" aria-label="Mở hình kích thước đầy đủ"><img
+                src="../assets/e1/errors_MiniVGG.png" alt="Các ảnh MiniVGG dự đoán sai với độ tin cậy cao, seed 0"
+                loading="lazy" width="1702" height="885"></a>
+            <figcaption>Hình 3.6b · Các ảnh dự đoán sai.</figcaption>
+          </figure>
+        </div>
+        <p>Nhận diện tốt nhất: ship 91,4%, automobile 89,1%, truck 86,8%, frog 86,0%; thấp nhất: cat 61,7%, bird 70,2%,
+          dog 74,4%. Nhầm lẫn: cat→dog 157 và dog→cat 122 ảnh; bird↔deer 64 ảnh mỗi chiều; airplane→ship 81 ảnh;
+          automobile→truck 55 ảnh. Error grid có automobile↔truck và cat hoặc bird→frog với xác suất hiển thị gần 1,00.
+          Mô hình giảm nhiều lỗi nhưng vẫn gặp khó ở các lớp động vật tương đồng.</p>
       </article>
     </section>
 
     <section class="section" id="discussion">
-      <div class="section-header"><span class="section-num">3.4</span><h2>Nhận xét và thảo luận</h2></div>
+      <div class="section-header"><span class="section-num">3.4</span>
+        <h2>Nhận xét và thảo luận</h2>
+      </div>
       <h3 class="section-subhead">Kiến trúc, hội tụ và độ tin cậy</h3>
-      <p>MiniVGG đạt độ chính xác cao nhất dù chỉ dùng khoảng 18,8% số tham số của MLP: khả năng học đặc trưng cục bộ và chia sẻ trọng số quan trọng hơn việc chỉ tăng số tham số của mạng truyền thẳng. Softmax chững lại sớm; MLP và MiniVGG tiếp tục cải thiện. Những cặp có đặc trưng thị giác gần nhau, đặc biệt cat và dog, vẫn dễ bị nhầm. Cả ba mô hình đều có dự đoán sai với độ tin cậy cao, nên accuracy tổng thể chưa phản ánh đủ hành vi phân loại và mức đáng tin của xác suất dự đoán.</p>
+      <p>MiniVGG đạt độ chính xác cao nhất dù chỉ dùng khoảng 18,8% số tham số của MLP: khả năng học đặc trưng cục bộ và
+        chia sẻ trọng số quan trọng hơn việc chỉ tăng số tham số của mạng truyền thẳng. Softmax chững lại sớm; MLP và
+        MiniVGG tiếp tục cải thiện. Những cặp có đặc trưng thị giác gần nhau, đặc biệt cat và dog, vẫn dễ bị nhầm. Cả ba
+        mô hình đều có dự đoán sai với độ tin cậy cao, nên accuracy tổng thể chưa phản ánh đủ hành vi phân loại và mức
+        đáng tin của xác suất dự đoán.</p>
       <h3 class="section-subhead">Đánh đổi tài nguyên</h3>
-      <p>MiniVGG ít tham số hơn MLP nhưng dùng nhiều thời gian huấn luyện và bộ nhớ GPU hơn vì phải xử lý các bản đồ đặc trưng không gian qua nhiều lớp. Lựa chọn kiến trúc cần xét đồng thời độ chính xác, thời gian và phần cứng.</p>
+      <p>MiniVGG ít tham số hơn MLP nhưng dùng nhiều thời gian huấn luyện và bộ nhớ GPU hơn vì phải xử lý các bản đồ đặc
+        trưng không gian qua nhiều lớp. Lựa chọn kiến trúc cần xét đồng thời độ chính xác, thời gian và phần cứng.</p>
       <h3 class="section-subhead">Hạn chế thực nghiệm</h3>
       <ul class="e1-limitations">
         <li>Chỉ có ba seed, nên ước lượng độ ổn định còn hạn chế.</li>
         <li>Cùng cấu hình huấn luyện cho cả ba kiến trúc; chưa tối ưu siêu tham số riêng.</li>
         <li>Chỉ khảo sát CIFAR-10 trong 30 epoch, chưa đánh giá trên dữ liệu hoặc điều kiện huấn luyện khác.</li>
         <li>Thời gian và bộ nhớ đo trên một GPU, chưa phản ánh hiệu năng trên phần cứng khác.</li>
-        <li>Ma trận nhầm lẫn và error grid chỉ minh họa seed 0; các ảnh lỗi được chọn không đại diện cho toàn bộ phân bố lỗi.</li>
+        <li>Ma trận nhầm lẫn và error grid chỉ minh họa seed 0; các ảnh lỗi được chọn không đại diện cho toàn bộ phân bố
+          lỗi.</li>
         <li>Chưa có ablation study riêng cho tăng cường dữ liệu, Batch Normalization và pooling.</li>
       </ul>
     </section>
 
     <section class="section" id="reproduce">
-      <div class="section-header"><span class="section-num">A</span><h2>Tái lập và khai báo sử dụng AI</h2></div>
-      <p>Nội dung này tóm tắt Phụ lục A.1 và A.3 của <a href="../reports/exercises.pdf#page=41" target="_blank" rel="noopener noreferrer">báo cáo PDF</a>.</p>
+      <div class="section-header"><span class="section-num">A</span>
+        <h2>Tái lập và khai báo sử dụng AI</h2>
+      </div>
+      <p>Nội dung này tóm tắt Phụ lục A.1 và A.3 của <a href="../reports/exercises.pdf#page=41" target="_blank"
+          rel="noopener noreferrer">báo cáo PDF</a>.</p>
       <h3 class="section-subhead">Tái lập kết quả E1</h3>
-      <p><a href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E1/notebooks/E1.ipynb" target="_blank" rel="noopener noreferrer">Notebook E1 trên Google Colab</a> sử dụng các module trong <code>E1/e1lib</code> và quy trình dữ liệu dùng chung trong <code>common</code>. Biến <code>MODE</code> có hai chế độ:</p>
+      <p><a href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E1/notebooks/E1.ipynb"
+          target="_blank" rel="noopener noreferrer">Notebook E1 trên Google Colab</a> sử dụng các module trong
+        <code>E1/e1lib</code> và quy trình dữ liệu dùng chung trong <code>common</code>. Biến <code>MODE</code> có hai
+        chế độ:</p>
       <ul class="e1-repro-list">
-        <li><code>load</code>: nạp kết quả JSON và tệp dự đoán đã lưu, tổng hợp thống kê, sinh lại bảng và hình mà không huấn luyện lại.</li>
-        <li><code>rerun</code>: huấn luyện lại Softmax, MLP và MiniVGG với các seed 0, 1, 2; lưu kết quả riêng để đối chiếu với kết quả đã công bố.</li>
+        <li><code>load</code>: nạp kết quả JSON và tệp dự đoán đã lưu, tổng hợp thống kê, sinh lại bảng và hình mà không
+          huấn luyện lại.</li>
+        <li><code>rerun</code>: huấn luyện lại Softmax, MLP và MiniVGG với các seed 0, 1, 2; lưu kết quả riêng để đối
+          chiếu với kết quả đã công bố.</li>
       </ul>
       <p>Để chạy bằng dòng lệnh, thực hiện từ thư mục gốc của repository sau khi cấu hình môi trường Python phù hợp:</p>
       <pre class="e1-commands"><code>python -m unittest discover -s E1/tests -v
 python -m e1lib.run --all
 python -m e1lib.summary
 python -m e1lib.analysis --seed 0</code></pre>
-      <p>Có thể bỏ qua bước huấn luyện nếu các kết quả đã lưu còn hợp lệ. Các tệp trong <code>E1/results</code> chứa cấu hình, lịch sử huấn luyện và chỉ số đánh giá; tệp dự đoán dùng để dựng ma trận nhầm lẫn và ảnh lỗi. Trọng số và logit kiểm thử được công bố trong GitHub Release <code>weights-v1</code>, với mã băm SHA-256 trong <code>common/release_manifest.json</code>. Xem thêm <a href="https://github.com/broistg/deep-learning-CO5085/blob/main/E1/README.md" target="_blank" rel="noopener noreferrer">hướng dẫn E1</a> để cấu hình đường dẫn import và môi trường.</p>
+      <p>Có thể bỏ qua bước huấn luyện nếu các kết quả đã lưu còn hợp lệ. Các tệp trong <code>E1/results</code> chứa cấu
+        hình, lịch sử huấn luyện và chỉ số đánh giá; tệp dự đoán dùng để dựng ma trận nhầm lẫn và ảnh lỗi. Trọng số và
+        logit kiểm thử được công bố trong GitHub Release <code>weights-v1</code>, với mã băm SHA-256 trong
+        <code>common/release_manifest.json</code>. Xem thêm <a
+          href="https://github.com/broistg/deep-learning-CO5085/blob/main/E1/README.md" target="_blank"
+          rel="noopener noreferrer">hướng dẫn E1</a> để cấu hình đường dẫn import và môi trường.</p>
       <h3 class="section-subhead">Khai báo sử dụng công cụ AI</h3>
-      <p>Nhóm lên ý tưởng và tự viết bản gốc của mã. ChatGPT và Claude hỗ trợ cải thiện, rà soát mã, xây dựng bộ kiểm thử và bản nháp báo cáo. Nhóm tự chạy toàn bộ thực nghiệm, đối chiếu số liệu trong báo cáo với tệp kết quả gốc và chịu trách nhiệm về nội dung cuối cùng.</p>
+      <p>Nhóm lên ý tưởng và tự viết bản gốc của mã. ChatGPT và Claude hỗ trợ cải thiện, rà soát mã, xây dựng bộ kiểm
+        thử và bản nháp báo cáo. Nhóm tự chạy toàn bộ thực nghiệm, đối chiếu số liệu trong báo cáo với tệp kết quả gốc
+        và chịu trách nhiệm về nội dung cuối cùng.</p>
     </section>
   </main>
   <footer>
@@ -196,4 +412,5 @@ python -m e1lib.analysis --seed 0</code></pre>
     <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
   </footer>
 </body>
+
 </html>

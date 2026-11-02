@@ -34,24 +34,33 @@ def _names(split):
 
 
 def cmd_counts(a):
+    """Images per class in each set. Food-101 is perfectly balanced, so one bar per set (not one line per class) says everything:
+    the bar height is the (identical) count of every class; the label gives the total."""
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     sp = _split(a.split)
     classes = sorted({e.split("/")[0] for e in sp["train"]})
     out = {"n_classes": len(classes), "sets": {}}
-    fig, ax = plt.subplots(figsize=(7.5, 2.6))
+    names = {"train": "Huấn luyện", "val": "Validation", "test": "Kiểm thử"}
+    mins, maxs, totals = [], [], []
     for name in ("train", "val", "test"):
         cnt = {c: 0 for c in classes}
         for e in sp[name]:
             cnt[e.split("/")[0]] += 1
         v = np.array([cnt[c] for c in classes])
         out["sets"][name] = {"total": int(v.sum()), "min": int(v.min()), "max": int(v.max()), "balanced": bool(v.min() == v.max())}
-        ax.plot(range(len(classes)), v, label=f"{name} ({int(v.sum()):,})".replace(",", " "), lw=2)
-    disjoint = len(set(sp["train"]) | set(sp["val"]) | set(sp["test"])) == len(sp["train"]) + len(sp["val"]) + len(sp["test"])
-    out["disjoint"] = disjoint
-    ax.set_yscale("log"), ax.set_xlabel("chỉ số lớp"), ax.set_ylabel("số ảnh / lớp"), ax.legend(frameon=False, ncol=3)
-    ax.set_ylim(30, 400)
+        mins.append(int(v.min())), maxs.append(int(v.max())), totals.append(int(v.sum()))
+    out["disjoint"] = len(set(sp["train"]) | set(sp["val"]) | set(sp["test"])) == len(sp["train"]) + len(sp["val"]) + len(sp["test"])
+    fig, ax = plt.subplots(figsize=(5.6, 2.8))
+    xs = np.arange(3)
+    ax.bar(xs, maxs, width=0.55, color=["#2a78d6", "#1baf7a", "#eb6834"])
+    ax.vlines(xs, mins, maxs, color="#0b0b0b", lw=1.5)                 # min..max over the classes (zero length when balanced)
+    for x, mx, tot in zip(xs, maxs, totals):
+        ax.text(x, mx + 12, f"{mx} / lớp\n{tot:,} ảnh".replace(",", " "), ha="center", va="bottom", fontsize=8)
+    ax.set_xticks(xs, [names[k] for k in ("train", "val", "test")])
+    ax.set_ylabel("số ảnh mỗi lớp"), ax.set_ylim(0, 900)
+    ax.set_title(f"{len(classes)} lớp, mọi lớp có cùng số ảnh trong từng tập", fontsize=9)
     fig.tight_layout()
     fd = Path(a.figures)
     fd.mkdir(parents=True, exist_ok=True)

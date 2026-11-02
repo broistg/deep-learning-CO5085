@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="../css/style.css?v=20261101-css-icons">
 
   <!-- Math: inline $...$ and display $$...$$ -->
-  <script>window.MathJax = { tex: { inlineMath: [['$', '$']] } };</script>
+  <script>window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };</script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js"></script>
 </head>
 
@@ -30,7 +30,8 @@
   <header>
     <a class="logo" href="../index.html"><span>CO5085:</span> Deep Learning &amp; Its Applications in Computer
       Vision</a>
-    <a class="back-btn" href="../index.html#exercises"><span class="ui-icon icon-arrow-left" aria-hidden="true"></span> Về trang tổng quan</a>
+    <a class="back-btn" href="../index.html#exercises"><span class="ui-icon icon-arrow-left" aria-hidden="true"></span>
+      Về trang tổng quan</a>
   </header>
 
   <main class="page-container report-page">
@@ -69,24 +70,35 @@
         <span class="meta-label">Giảng viên hướng dẫn</span>
         <span class="meta-value">TS. Lê Thành Sách và TS. Nguyễn Quốc Minh</span>
       </div>
-      <div class="meta-item"><span class="meta-label">Trạng thái</span><span class="meta-value"><span class="badge badge-done">Đã hoàn thành</span></span></div>
+      <div class="meta-item"><span class="meta-label">Trạng thái</span><span class="meta-value"><span
+            class="badge badge-done">Đã hoàn thành</span></span></div>
     </div>
 
     <!-- Quick Action Links -->
     <div class="quick-links">
       <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085/tree/main/E2" target="_blank"
         rel="noopener noreferrer"><span class="ui-icon icon-external" aria-hidden="true"></span> Mã nguồn E2</a>
-      <a class="link-btn primary" href="../reports/exercises.pdf#page=27" target="_blank" rel="noopener noreferrer"><span class="ui-icon icon-file" aria-hidden="true"></span> Báo cáo PDF · Chương 4</a>
+      <a class="link-btn primary" href="../reports/exercises.pdf#page=27" target="_blank"
+        rel="noopener noreferrer"><span class="ui-icon icon-file" aria-hidden="true"></span> Báo cáo PDF · Chương 4</a>
       <a class="link-btn"
         href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E2/notebooks/E2.ipynb"
-        target="_blank" rel="noopener noreferrer"><span class="ui-icon icon-notebook" aria-hidden="true"></span> Mở bằng Colab</a>
-      <a href="#tokenization" class="link-btn"><span class="ui-icon icon-puzzle" aria-hidden="true"></span> Các phương pháp Tokenization</a>
-      <a href="#results" class="link-btn"><span class="ui-icon icon-chart" aria-hidden="true"></span> Kết quả thực nghiệm</a>
-      <a href="#reproduce" class="link-btn"><span class="ui-icon icon-refresh" aria-hidden="true"></span> Tái lập và khai báo AI</a>
-      <a class="link-btn" href="dataset.html"><span class="ui-icon icon-chart" aria-hidden="true"></span> Dataset E1–E3</a>
+        target="_blank" rel="noopener noreferrer"><span class="ui-icon icon-notebook" aria-hidden="true"></span> Mở bằng
+        Colab</a>
+      <a href="#tokenization" class="link-btn"><span class="ui-icon icon-puzzle" aria-hidden="true"></span> Các phương
+        pháp Tokenization</a>
+      <a href="#results" class="link-btn"><span class="ui-icon icon-chart" aria-hidden="true"></span> Kết quả thực
+        nghiệm</a>
+      <a href="#reproduce" class="link-btn"><span class="ui-icon icon-refresh" aria-hidden="true"></span> Tái lập và
+        khai báo AI</a>
+      <a class="link-btn" href="dataset.html"><span class="ui-icon icon-chart" aria-hidden="true"></span> Dataset
+        E1–E3</a>
     </div>
 
-    <nav class="report-toc" aria-label="Mục lục trong trang"><strong>Trong trang</strong><a href="#formulation">4.1 Công thức toán học &amp; Cấu trúc Self-Attention</a><a href="#tokenization">4.2 Các cơ chế Tokenization</a><a href="#setup">4.3 Thiết lập</a><a href="#results">4.4 Kết quả</a><a href="#visualizations"> 4.5 Trực quan hóa</a><a href="#reproduce">A Tái lập và khai báo sử dụng AI</a></nav>
+    <nav class="report-toc" aria-label="Mục lục trong trang"><strong>Trong trang</strong><a href="#formulation">4.1 Công
+        thức toán học &amp; Cấu trúc Self-Attention</a><a href="#tokenization">4.2 Các cơ chế Tokenization</a><a
+        href="#setup">4.3 Thiết lập</a><a href="#results">4.4 Kết quả</a><a href="#visualizations"> 4.4.4 Trực quan
+        hóa</a><a href="#discussion">4.5 Nhận xét và thảo luận</a><a href="#reproduce">A Tái lập và khai báo sử dụng
+        AI</a></nav>
     <!-- Trạng thái thực nghiệm -->
     <div class="status-banner">
       <div class="status-banner-icon"><span class="ui-icon icon-check" aria-hidden="true"></span></div>
@@ -115,9 +127,9 @@
       </p>
 
       <div class="equation" role="math">
-        Attention(Q, K, V) = softmax( (Q · K^T) / sqrt(d_h) ) · V<br><br>
-        MultiHead(X) = Concat(head_1, ..., head_h) · W^O<br>
-        với head_i = Attention(X · W_i^Q, X · W_i^K, X · W_i^V), d_h = D / h
+        $$\mathrm{Attention}(Q,K,V)=\mathrm{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d_h}}\right)V$$
+        $$\mathrm{MultiHead}(X)=\mathrm{Concat}(\mathrm{head}_1,\dots,\mathrm{head}_h)\,W^{O}$$
+        $$\text{với }\ \mathrm{head}_i=\mathrm{Attention}(XW_i^{Q},\,XW_i^{K},\,XW_i^{V}),\qquad d_h=D/h$$
       </div>
 
       <div class="overview-grid">
@@ -157,6 +169,13 @@
         Khi không cần ma trận chú ý, PyTorch có thể dùng nhân tính toán gộp (fused), nên so sánh thời gian chỉ phản ánh
         cách hiện thực.
       </p>
+      <figure class="report-figure">
+        <img src="../assets/e2/architecture.svg"
+          alt="Sơ đồ mô hình: ảnh, tokenizer, thêm CLS và positional embedding, 4 khối LN-MSA-LN-MLP, LN và Linear 10 lớp"
+          loading="lazy">
+        <figcaption>Hình 4.1: Sơ đồ mô hình phân loại ảnh dùng MSA. Chỉ khối MSA (tô xanh) được hiện thực hai cách; các
+          phần còn lại giống hệt nhau.</figcaption>
+      </figure>
     </div>
 
     <!-- SECTION 02: TOKENIZATION MECHANISMS -->
@@ -272,7 +291,7 @@
         <h2>Kết quả thực nghiệm &amp; bảng so sánh</h2>
       </div>
 
-      <h3>4.1. Đối chiếu: MSA tự viết vs. MSA PyTorch (cùng cơ chế Tokenize)</h3>
+      <h3>4.4.1 Đối chiếu: MSA tự viết vs. MSA PyTorch (cùng cơ chế Tokenize)</h3>
       <p>
         Hai bản MSA bắt đầu từ cùng trọng số, cùng thứ tự dữ liệu theo seed. Δ là hiệu trung bình theo cặp seed
         (tự viết − PyTorch), tính bằng điểm phần trăm.
@@ -280,7 +299,7 @@
       <p>
         Chênh lệch trung bình chỉ từ −0,18 đến +0,05 điểm, nhỏ hơn nhiều so với độ lệch chuẩn giữa các seed và không
         có dấu nhất quán (theo từng seed, lớn nhất là 0,68 điểm); hai bản về cơ bản tương đương. Bản PyTorch nhanh
-        hơn khoảng 4 % (Patch 4×4, CNN-stem) đến 17–18 % (Patch 8×8, Row) mỗi epoch nhờ nhân tính toán gộp.
+        hơn khoảng 4 % (Patch 4×4, CNN-stem) đến 16–17 % (Patch 8×8, Row) mỗi epoch nhờ nhân tính toán gộp.
       </p>
 
       <div class="results-table-wrapper">
@@ -337,7 +356,14 @@
         </table>
       </div>
 
-      <h3 style="margin-top: 28px;">4.2. So sánh các cơ chế Tokenization khác nhau</h3>
+      <figure class="report-figure">
+        <img src="../assets/e2/curves_impl.png" alt="Validation accuracy of the two MSA implementations" loading="lazy">
+        <figcaption>Hình 4.2: Độ chính xác validation của MSA tự viết (nét liền) và PyTorch (nét đứt), trung bình ba
+          seed; hai
+          đường gần như chồng khít.</figcaption>
+      </figure>
+
+      <h3 style="margin-top: 28px;">4.4.2 So sánh các cơ chế Tokenization khác nhau</h3>
       <p>
         MSA tự viết, 3 seed. $N{+}1$ gồm token <code>[CLS]</code>; thời gian là trung vị giây/epoch (huấn luyện, không
         gồm validation); bộ nhớ là đỉnh GPU khi huấn luyện. Chi phí lý thuyết (triệu MACs/ảnh): Patch 4×4 55,8 ·
@@ -413,17 +439,11 @@
       <!-- Training curve figure -->
       <figure class="report-figure">
         <img src="../assets/e2/curves_tokenizers.png" alt="Learning curves of the four tokenizers" loading="lazy">
-        <figcaption>Hình 4.1: Loss huấn luyện và độ chính xác validation theo epoch của bốn tokenizer (trung bình ± std,
-          3 seed). </figcaption>
+        <figcaption>Hình 4.3: Loss huấn luyện và độ chính xác validation theo epoch của bốn tokenizer (trung bình ± std,
+          3 seed).</figcaption>
       </figure>
 
-      <figure class="report-figure">
-        <img src="../assets/e2/curves_impl.png" alt="Validation accuracy of the two MSA implementations" loading="lazy">
-        <figcaption>Hình 4.2: Độ chính xác validation của MSA tự viết (nét liền) và PyTorch (nét đứt); hai đường gần
-          như chồng khít.</figcaption>
-      </figure>
-
-      <h3 style="margin-top: 28px;">4.3. Vai trò của positional embedding</h3>
+      <h3 style="margin-top: 28px;">4.4.3 Vai trò của positional embedding</h3>
       <div class="results-table-wrapper">
         <table class="results-table" aria-label="Positional embedding ablation">
           <thead>
@@ -472,19 +492,19 @@
 
       <figure class="report-figure">
         <img src="../assets/e2/attention_maps.png" alt="Attention rollout heatmaps" loading="lazy">
-        <figcaption>Hình 5.1: Bản đồ chú ý của <code>[CLS]</code> cho 4 ảnh test (máy bay, mèo, ngựa, tàu).
+        <figcaption>Hình 4.4: Bản đồ chú ý của <code>[CLS]</code> cho 4 ảnh test (máy bay, mèo, ngựa, tàu).
           Mô hình tự viết, seed 0.
         </figcaption>
       </figure>
 
       <figure class="report-figure">
         <img src="../assets/e2/confusion.png" alt="Confusion matrix" loading="lazy">
-        <figcaption>Hình 5.2: Ma trận nhầm lẫn của tokenizer tốt nhất (CNN-stem, seed 0).</figcaption>
+        <figcaption>Hình 4.5: Ma trận nhầm lẫn của tokenizer tốt nhất (CNN-stem, seed 0).</figcaption>
       </figure>
 
       <figure class="report-figure">
         <img src="../assets/e2/errors.png" alt="Most confident errors" loading="lazy">
-        <figcaption>Hình 5.3: Các ảnh bị dự đoán sai với độ tin cậy cao nhất.</figcaption>
+        <figcaption>Hình 4.6: Các ảnh bị dự đoán sai với độ tin cậy cao nhất.</figcaption>
       </figure>
 
       <p>
@@ -496,6 +516,43 @@
         <strong>Nhận xét:</strong> rollout của Patch 4×4 và CNN-stem tập trung khá rõ vào vật thể (thân ngựa, tàu, máy
         bay), còn chú ý ở khối cuối thường dồn vào vài điểm cục bộ và đôi khi rơi vào nền. Với Row, bản đồ là các dải
         ngang vì mỗi token là cả một hàng. Chỉ trên bốn ảnh và một seed, nên chỉ mang tính minh họa.
+      </p>
+    </div>
+
+    <!-- SECTION 05b: DISCUSSION -->
+    <div class="section" id="discussion">
+      <div class="section-header">
+        <span class="section-num">4.5</span>
+        <h2>Nhận xét và thảo luận</h2>
+      </div>
+      <p>
+        <strong>Hiện thực MSA.</strong> Bản tự viết (chỉ <code>Linear</code>, <code>einsum</code>,
+        <code>softmax</code>) cho kết quả tương đương <code>nn.MultiheadAttention</code>: kiểm thử đơn vị xác nhận đầu
+        ra, ma trận chú ý và gradient trùng nhau, và sau 30 epoch chênh lệch độ chính xác nằm trong nhiễu giữa các
+        seed. Lợi ích của bản PyTorch chỉ là tốc độ và bộ nhớ (nhanh hơn 4–17 % mỗi epoch trong thiết lập này).
+      </p>
+      <p>
+        <strong>Tokenization quan trọng hơn kích thước attention.</strong> Với cùng encoder gần 0,8–0,9 triệu tham số,
+        thay cách tạo token làm độ chính xác thay đổi từ 67 % đến 83 %. CNN-stem vượt xa các tokenizer tuyến tính; điều
+        này phù hợp với quan sát chung rằng ViT cần nhiều dữ liệu hoặc tiền huấn luyện để vượt CNN. Tuy nhiên thí
+        nghiệm không tách riêng nguyên nhân: CNN-stem khác patch embedding ở ba lớp tích chập, BatchNorm và khoảng
+        10 % tham số nhiều hơn, nên tính cục bộ chỉ là một giải thích gợi ý, chưa được kiểm chứng. Giữa các tokenizer
+        thuần attention, token nhỏ hơn (Patch 4×4) tốt hơn token lớn (8×8) nhưng chi phí tăng nhanh theo $N^2$; không
+        có tokenizer nào vừa rẻ vừa chính xác nhất. Tokenizer theo hàng cho kết quả tốt đáng ngạc nhiên dù bỏ hầu hết
+        cấu trúc 2D, nhưng vẫn kém Patch 4×4.
+      </p>
+      <p>
+        <strong>Thông tin vị trí là cần thiết.</strong> Bỏ positional embedding làm giảm khoảng 7 điểm ở cả hai
+        tokenizer được thử, cho thấy thứ tự token mang thông tin không thể thay thế bằng nội dung token.
+      </p>
+      <p>
+        <strong>Hạn chế.</strong> (i) Chỉ 3 seed, nên các chênh lệch dưới khoảng 1 điểm (ví dụ Hàng so với Patch 8×8)
+        chưa đủ chắc chắn. (ii) Siêu tham số được giữ cố định cho mọi tokenizer, không tinh chỉnh riêng. (iii) Mô hình
+        nhỏ và chỉ 30 epoch; CNN-stem có độ chính xác huấn luyện cao hơn hẳn và có thể còn cải thiện, trong khi các mô
+        hình khác còn hội tụ chưa hoàn toàn. (iv) Thời gian và bộ nhớ chỉ đo trên một GPU xách tay, một lần chạy mỗi
+        cấu hình. (v) CNN-stem có nhiều tham số hơn khoảng 10 % (không cân bằng hoàn toàn số tham số). (vi) Bản đồ
+        chú ý chỉ minh họa trên bốn ảnh và một seed. (vii) Các biến thể token trong đề (patch chồng lấn, token theo
+        kênh, từng pixel) chưa được thử.
       </p>
     </div>
 
@@ -514,6 +571,13 @@
         lại. Chi tiết trong <code>E2/README.md</code>.
       </p>
       <p>
+        <strong>Khai báo sử dụng công cụ AI.</strong> Nhóm lên ý tưởng và tự viết bản gốc của mã. Công cụ AI (ChatGPT /
+        Claude) hỗ trợ cải thiện và rà soát mã, xây dựng bộ kiểm thử và bản nháp báo cáo. Nhóm đã tự chạy toàn bộ thực
+        nghiệm, kiểm tra các số liệu đưa vào báo cáo với tệp kết quả gốc, và chịu trách nhiệm về toàn bộ nội dung
+        (xem Phụ lục A.3 của <a href="../reports/exercises.pdf#page=42" target="_blank" rel="noopener noreferrer">báo
+          cáo PDF</a>).
+      </p>
+      <p>
         <strong>Notebook tái lập:</strong>
         <a href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E2/notebooks/E2.ipynb"
           target="_blank" rel="noopener noreferrer">E2/notebooks/E2.ipynb</a>
@@ -525,11 +589,6 @@
         được tải qua thư viện <code>datasets</code> (Hugging Face) và chỉ được chấp nhận khi mã băm của dữ liệu trùng
         với
         bản TorchVision dùng cho phép chia cố định.
-      </p>
-      <p>
-        Nhóm lên ý tưởng và tự viết bản gốc của mã. Công cụ AI (ChatGPT / Claude) hỗ trợ cải thiện và rà soát mã, xây
-        dựng bộ kiểm thử và bản nháp báo cáo. Nhóm đã đọc, kiểm tra, hoàn thiện báo cáo và chịu trách nhiệm về toàn bộ
-        nội dung.
       </p>
     </div>
 
