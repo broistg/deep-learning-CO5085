@@ -1,0 +1,41 @@
+{
+ "segformer_b0|scratch": {
+  "lr": 0.0006,
+  "val_top1": 0.017449948892053747,
+  "val_nll": -0.38750947016805165,
+  "grid": [
+   0.0002,
+   0.0006,
+   0.0018
+  ],
+  "at_edge": false,
+  "extend_to": null,
+  "extended": false
+ },
+ "deeplabv3p_mnv2|pretrained": {
+  "lr": 0.01,
+  "val_top1": 0.07702794007605734,
+  "val_nll": -0.6349520610938922,
+  "grid": [
+   0.005,
+   0.01,
+   0.02
+  ],
+  "at_edge": false,
+  "extend_to": null,
+  "extended": false
+ },
+ "deeplabv3p_mnv2|scratch": {
+  "lr": 0.03,
+  "val_top1": 0.03411905434175345,
+  "val_nll": -0.4982308757063564,
+  "grid": [
+   0.01,
+   0.03,
+   0.1
+  ],
+  "at_edge": false,
+  "extend_to": null,
+  "extended": false
+ }
+}

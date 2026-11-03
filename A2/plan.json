@@ -91,6 +91,15 @@
    "needs_lr": false
   },
   {
+   "run_id": "a2_sw_sf_pretrained_lr3.6e-4",
+   "stage": 0,
+   "kind": "sweep",
+   "owner": "dat",
+   "est_hours": 0.198,
+   "config": "configs/a2_sw_sf_pretrained_lr3.6e-4.yaml",
+   "needs_lr": false
+  },
+  {
    "run_id": "a2_sw_sf_pretrained_lr3e-5",
    "stage": 0,
    "kind": "sweep",
