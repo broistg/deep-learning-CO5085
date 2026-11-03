@@ -14,11 +14,15 @@ import signal
 import threading
 import time
 import traceback
+import warnings
 from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
 import torch
+
+# harmless: the dataset returns read-only numpy arrays that the collate function copies into tensors
+warnings.filterwarnings("ignore", message="The given NumPy array is not writable")
 import torch.nn.functional as F
 
 from common.ckpt import atomic_save, build_state, find_checkpoint, make_scaler, restore_state
