@@ -23,6 +23,8 @@ import torch
 
 # harmless: the dataset returns read-only numpy arrays that the collate function copies into tensors
 warnings.filterwarnings("ignore", message="The given NumPy array is not writable")
+# harmless with fp16 GradScaler: the first optimizer step(s) are skipped on overflow, the scheduler still advances
+warnings.filterwarnings("ignore", message="Detected call of `lr_scheduler.step\\(\\)` before `optimizer.step\\(\\)`")
 import torch.nn.functional as F
 
 from common.ckpt import atomic_save, build_state, find_checkpoint, make_scaler, restore_state

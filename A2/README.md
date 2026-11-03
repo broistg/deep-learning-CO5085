@@ -17,3 +17,8 @@ Code in `a2lib/`, plan in `plan.json` (20 runs = 12 LR-sweep + 8 full), configs 
 3. Main runs unlock automatically.
 
 Tests (torch-free): `PYTHONPATH=.:A1:A2 python -m unittest discover -s A2/tests`.
+
+## After the runs
+- `python -m a2lib.collect results` copies result files and confusion matrices from the store into `A2/results/runs/` (commit them); `python -m a2lib.collect weights --out release/` fetches the final weights.
+- `python -m a2lib.analyze --results A2/results --out A2/results` regenerates the tables, figures and `summary.json` (no GPU needed). Class names: `python -m a2lib.analyze names --objectinfo <ADEChallengeData2016>/objectInfo150.csv --out A2/class_names.json` once.
+- Store maintenance (uses `A2_STORE`): `python -m a2lib.store_cli stats | ls | squash`. `squash` refuses while any worker holds a live lock; stop the workers first.
