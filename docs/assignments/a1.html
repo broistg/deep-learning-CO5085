@@ -76,12 +76,15 @@
         href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/A1/notebooks/A1.ipynb"
         target="_blank" rel="noopener noreferrer"><span class="ui-icon icon-notebook" aria-hidden="true"></span> Mở bằng
         Colab</a>
+      <a class="link-btn" href="https://github.com/broistg/deep-learning-CO5085/releases/tag/weights-v1" target="_blank"
+        rel="noopener noreferrer"><span class="ui-icon icon-package" aria-hidden="true"></span> Trọng số (Release
+        weights-v1)</a>
       <a class="link-btn" href="#protocol"><span class="ui-icon icon-clipboard" aria-hidden="true"></span> Quy trình
         thực nghiệm</a>
       <a class="link-btn" href="#training-plan"><span class="ui-icon icon-flask" aria-hidden="true"></span> Kế hoạch
         huấn luyện</a>
-      <a class="link-btn" href="#benchmarks"><span class="ui-icon icon-chart" aria-hidden="true"></span> Bảng kết quả dự
-        kiến</a>
+      <a class="link-btn" href="#benchmarks"><span class="ui-icon icon-chart" aria-hidden="true"></span> Bảng kết
+        quả</a>
       <a class="link-btn" href="#discussion"><span class="ui-icon icon-lightbulb" aria-hidden="true"></span> Thảo luận
         &amp; Phân tích</a>
       <a class="link-btn" href="#reproducibility"><span class="ui-icon icon-refresh" aria-hidden="true"></span> Tái lập
@@ -90,9 +93,9 @@
         khảo</a>
     </div>
 
-    <!-- Status Banner: Work In Progress -->
+    <!-- Status Banner -->
     <div class="status-banner">
-      <div class="status-banner-icon"><span class="ui-icon icon-pin" aria-hidden="true"></span></div>
+      <div class="status-banner-icon"><span class="ui-icon icon-check" aria-hidden="true"></span></div>
       <div class="status-banner-content">
         <h4>Bài tập lớn A1 (Chiếm 30% coursework) · Hạn A1.2: 09/11/2026 <span class="badge badge-done">Đã hoàn thành
             thực nghiệm</span></h4>
@@ -104,34 +107,6 @@
           điểm) đến từ việc dùng chung learning rate: với LR riêng, freeze một phần đạt 85,69 ± 0,17 % so với 86,03 ±
           0,14 % của full fine-tuning (5 seed mỗi bên): còn thấp hơn 0,34 điểm. Chi tiết ở các mục 04–05 và trong báo
           cáo PDF.</p>
-      </div>
-    </div>
-
-    <!-- SUB-TASK NAVIGATION -->
-    <div class="overview-grid">
-      <div class="overview-card">
-        <div class="overview-icon"><span class="ui-icon icon-folder" aria-hidden="true"></span></div>
-        <div>
-          <div class="overview-title">Mốc A1.1: Tập dữ liệu và quy trình</div>
-          <div class="overview-sub"><strong>Hạn: 26/10/2026 (W8)</strong> · Khóa tập ảnh lớn, mô tả split/augmentation,
-            liệt kê CNN/ViT sẽ dùng, kế hoạch pretrain &amp; freeze (chưa cần số liệu cuối).</div>
-        </div>
-      </div>
-      <div class="overview-card">
-        <div class="overview-icon"><span class="ui-icon icon-settings" aria-hidden="true"></span></div>
-        <div>
-          <div class="overview-title">Mốc A1.2: So sánh cuối cùng</div>
-          <div class="overview-sub"><strong>Hạn: 09/11/2026 (W10)</strong> · Đủ thí nghiệm CNN vs Transformer,
-            from-scratch vs pretrained, 3 chế độ freeze, bảng + biểu đồ, thảo luận, code tái lập được.</div>
-        </div>
-      </div>
-      <div class="overview-card">
-        <div class="overview-icon"><span class="ui-icon icon-globe" aria-hidden="true"></span></div>
-        <div>
-          <div class="overview-title">Khung trang Web</div>
-          <div class="overview-sub"><strong>Hạn: 19/10/2026 (W7)</strong> · Hoàn thiện khung landing page GitHub Pages
-            cho toàn bộ nhóm và mục A1.</div>
-        </div>
       </div>
     </div>
 
@@ -208,7 +183,7 @@
                     phần đến từ sự gần gũi về miền dữ liệu; đây là một hạn chế được nêu ở Mục 05.</li>
                   <li>Các lớp cân bằng tuyệt đối (mỗi lớp 1,000 ảnh), nên so sánh không bị nhiễu bởi mất cân bằng lớp.
                   </li>
-                  <li>Cạnh dài tối đa 512 px: phù hợp đầu vào 224×224, chi phí tải và tiền xử lý thấp trên Colab.</li>
+                  <li>Cạnh dài tối đa 512 px: phù hợp đầu vào 224×224, chi phí tải và tiền xử lý thấp.</li>
                   <li>Tập test do tác giả rà soát nhãn thủ công nên đánh giá đáng tin cậy; tập train có nhiễu nhãn tự
                     nhiên
                     tạo bối cảnh thực tế cho phần phân tích lỗi.</li>
@@ -599,9 +574,9 @@
           ViT hội tụ hoàn toàn; đây là hạn chế được nêu ở Mục 05.</li>
       </ul>
 
-      <p><strong>Các thí nghiệm bổ sung</strong> (sắp theo thứ tự ưu tiên; chi phí tính bằng GPU-giờ Tesla T4 trên Colab
-        miễn phí,
-        ước tính từ tốc độ đo end-to-end):</p>
+      <p><strong>Kế hoạch ban đầu</strong> (lập trước khi chạy, sắp theo thứ tự ưu tiên; chi phí ước tính bằng GPU-giờ
+        Tesla T4 từ tốc độ đo end-to-end). Thực tế toàn bộ các lần chạy được thực hiện trên Kaggle (2 GPU T4 chạy song
+        song) với kho lưu trữ chung trên Hugging Face; tất cả các mức, kể cả các mức mở rộng, đều đã chạy xong:</p>
       <div class="results-table-wrapper">
         <table class="results-table" aria-label="Experiment budget">
           <thead>
@@ -660,13 +635,10 @@
         </table>
       </div>
       <p>
-        Tổng phần cam kết khoảng <strong>24.6 GPU-giờ</strong> (dự trù thêm ~25% cho khởi động lại phiên và lỗi, khoảng
-        30 giờ thực tế).
-        Các mức mở rộng chỉ chạy khi còn hạn mức Colab, theo đúng thứ tự trên; mỗi mức độc lập nên việc dừng sớm vẫn cho
-        báo cáo hoàn chỉnh. Số liệu thời gian/bộ nhớ so sánh giữa các kiến trúc lấy từ một lần đo kiểm soát trên một
-        loại GPU duy nhất
-        (xem Mục 04), vì thời gian chạy thực trên Colab bị giới hạn bởi bộ nạp dữ liệu trên 2 nhân CPU và GPU Colab có
-        thể khác nhau giữa các phiên.
+        Tổng phần cam kết khoảng <strong>24.6 GPU-giờ</strong> (dự trù ban đầu thêm ~25% cho khởi động lại phiên và
+        lỗi).
+        Số liệu thời gian/bộ nhớ so sánh giữa các kiến trúc lấy từ một lần đo kiểm soát trên một loại GPU duy nhất
+        (xem Mục 04), vì thời gian chạy thực bị giới hạn bởi bộ nạp dữ liệu và có thể khác nhau giữa các phiên.
       </p>
     </div>
 
@@ -678,9 +650,9 @@
       </div>
       <p>
         Bảng so sánh chéo giữa CNN và Vision Transformer dưới tất cả các chế độ: From-scratch vs Pretrained, và 3 kiểu
-        đóng băng (Backbone Frozen, Partial Freeze, Full Fine-tuning). Số liệu sẽ được cập nhật ở mốc A1.2
-        (mean ± std trên 3 seed cho các cấu hình pretrained; scratch 1 seed). Kết quả được tách thành ba bảng: độ chính
-        xác, chi phí huấn luyện và chi phí suy luận.
+        đóng băng (Backbone Frozen, Partial Freeze, Full Fine-tuning).
+        Số liệu là mean ± std (độ lệch chuẩn mẫu) trên 3 seed cho các cấu hình pretrained; From-scratch chỉ có 1 seed.
+        Kết quả được tách thành ba bảng: độ chính xác, chi phí huấn luyện và chi phí suy luận.
       </p>
 
       <h3>Bảng 4a: Độ chính xác (tập test, 25,250 ảnh)</h3>
@@ -704,80 +676,80 @@
               <td>ResNet-50</td>
               <td>From-scratch</td>
               <td>Random Init</td>
-              <td>100%</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
+              <td>100,0%</td>
+              <td>74,61</td>
+              <td>92,83</td>
+              <td>74,19</td>
             </tr>
             <tr>
               <td><span class="badge badge-cnn">CNN</span></td>
               <td>ResNet-50</td>
               <td>Linear Probing (Backbone Frozen)</td>
               <td>ImageNet Pretrained</td>
-              <td>0.9% (Head only)</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
+              <td>0,9%</td>
+              <td>69,25 ± 0,24</td>
+              <td>90,42 ± 0,10</td>
+              <td>68,85 ± 0,25</td>
             </tr>
             <tr>
               <td><span class="badge badge-cnn">CNN</span></td>
               <td>ResNet-50</td>
-              <td>Partial Freeze (layer4 + head)</td>
+              <td>Partial Freeze (layer4 + đầu ra)</td>
               <td>ImageNet Pretrained</td>
-              <td>64.0%</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
+              <td>64,0%</td>
+              <td>84,09 ± 0,08</td>
+              <td>96,63 ± 0,06</td>
+              <td>84,06 ± 0,08</td>
             </tr>
             <tr>
               <td><span class="badge badge-cnn">CNN</span></td>
               <td>ResNet-50</td>
               <td>Full Fine-tuning</td>
               <td>ImageNet Pretrained</td>
-              <td>100%</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
+              <td>100,0%</td>
+              <td>85,99 ± 0,07</td>
+              <td>97,16 ± 0,04</td>
+              <td>85,95 ± 0,06</td>
             </tr>
             <tr>
               <td><span class="badge badge-vit">Transformer</span></td>
               <td>DeiT-S</td>
               <td>From-scratch</td>
               <td>Random Init</td>
-              <td>100%</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
+              <td>100,0%</td>
+              <td>34,72</td>
+              <td>63,49</td>
+              <td>31,94</td>
             </tr>
             <tr>
               <td><span class="badge badge-vit">Transformer</span></td>
               <td>DeiT-S</td>
               <td>Linear Probing (Backbone Frozen)</td>
               <td>ImageNet Pretrained</td>
-              <td>0.2% (Head only)</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
+              <td>0,2%</td>
+              <td>70,12 ± 0,11</td>
+              <td>90,79 ± 0,04</td>
+              <td>69,82 ± 0,14</td>
             </tr>
             <tr>
               <td><span class="badge badge-vit">Transformer</span></td>
               <td>DeiT-S</td>
-              <td>Partial Freeze (block 7–12 + head)</td>
+              <td>Partial Freeze (block 7–12 + đầu ra)</td>
               <td>ImageNet Pretrained</td>
-              <td>49.2%</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
+              <td>49,2%</td>
+              <td>88,27 ± 0,11</td>
+              <td>97,89 ± 0,03</td>
+              <td>88,26 ± 0,11</td>
             </tr>
             <tr>
               <td><span class="badge badge-vit">Transformer</span></td>
               <td>DeiT-S</td>
               <td>Full Fine-tuning</td>
               <td>ImageNet Pretrained</td>
-              <td>100%</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
+              <td>100,0%</td>
+              <td>87,73 ± 0,13</td>
+              <td>97,63 ± 0,07</td>
+              <td>87,71 ± 0,13</td>
             </tr>
           </tbody>
         </table>
@@ -793,7 +765,7 @@
               <th>Tham số trainable (M / %)</th>
               <th>Epoch</th>
               <th>Thời gian/epoch, chỉ GPU (s)</th>
-              <th>Thời gian/epoch, đo thực trên Colab (phút)</th>
+              <th>Thời gian/epoch, đo thực trên Kaggle (phút)</th>
               <th>Tổng thời gian huấn luyện (giờ)</th>
               <th>Peak GPU memory khi huấn luyện (MB)</th>
             </tr>
@@ -802,82 +774,82 @@
             <tr>
               <td>ResNet-50</td>
               <td>From-scratch</td>
-              <td>23.71 / 100%</td>
+              <td>23,71 / 100,0%</td>
               <td>40</td>
-              <td>205.0</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>3,206</td>
+              <td>192,9</td>
+              <td>4,7</td>
+              <td>3,15</td>
+              <td>3&nbsp;161</td>
             </tr>
             <tr>
               <td>ResNet-50</td>
               <td>Linear probing</td>
-              <td>0.21 / 0.9%</td>
+              <td>0,21 / 0,9%</td>
               <td>10</td>
-              <td>70.8</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>517</td>
+              <td>70,5</td>
+              <td>4,5</td>
+              <td>0,78</td>
+              <td>470</td>
             </tr>
             <tr>
               <td>ResNet-50</td>
-              <td>Partial freeze</td>
-              <td>15.17 / 64.0%</td>
+              <td>Freeze một phần</td>
+              <td>15,17 / 64,0%</td>
               <td>10</td>
-              <td>87.6</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>692</td>
+              <td>86,4</td>
+              <td>4,9</td>
+              <td>0,79</td>
+              <td>646</td>
             </tr>
             <tr>
               <td>ResNet-50</td>
               <td>Full fine-tuning</td>
-              <td>23.71 / 100%</td>
+              <td>23,71 / 100,0%</td>
               <td>10</td>
-              <td>205.0</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>3,206</td>
+              <td>195,0</td>
+              <td>5,2</td>
+              <td>0,82</td>
+              <td>3&nbsp;161</td>
             </tr>
             <tr>
               <td>DeiT-S</td>
               <td>From-scratch</td>
-              <td>21.70 / 100%</td>
+              <td>21,70 / 100,0%</td>
               <td>40</td>
-              <td>197.3</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>2,550</td>
+              <td>191,0</td>
+              <td>5,1</td>
+              <td>3,40</td>
+              <td>2&nbsp;502</td>
             </tr>
             <tr>
               <td>DeiT-S</td>
               <td>Linear probing</td>
-              <td>0.04 / 0.2%</td>
+              <td>0,04 / 0,2%</td>
               <td>10</td>
-              <td>60.0</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>333</td>
+              <td>58,3</td>
+              <td>4,9</td>
+              <td>0,79</td>
+              <td>287</td>
             </tr>
             <tr>
               <td>DeiT-S</td>
-              <td>Partial freeze</td>
-              <td>10.69 / 49.2%</td>
+              <td>Freeze một phần</td>
+              <td>10,69 / 49,2%</td>
               <td>10</td>
-              <td>126.1</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>1,383</td>
+              <td>122,8</td>
+              <td>4,7</td>
+              <td>0,79</td>
+              <td>1&nbsp;336</td>
             </tr>
             <tr>
               <td>DeiT-S</td>
               <td>Full fine-tuning</td>
-              <td>21.70 / 100%</td>
+              <td>21,70 / 100,0%</td>
               <td>10</td>
-              <td>197.3</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>2,550</td>
+              <td>194,4</td>
+              <td>4,8</td>
+              <td>0,83</td>
+              <td>2&nbsp;502</td>
             </tr>
           </tbody>
         </table>
@@ -887,14 +859,13 @@
         batch 64, AMP fp16, AdamW,
         batch tổng hợp đặt sẵn trên GPU (không có bộ nạp dữ liệu), một loại GPU duy nhất trong cùng một phiên; đây là
         cột dùng để so sánh các kiến trúc
-        và chế độ freeze. <em>Thời gian/epoch, đo thực trên Colab</em> là thời gian thực của mỗi epoch trong lần huấn
-        luyện thật (huấn luyện + validation),
-        bị giới hạn bởi bộ nạp dữ liệu trên 2 nhân CPU nên các chế độ freeze gần như không nhanh hơn trên cột này; ghi
-        kèm loại GPU của phiên.
+        và chế độ freeze. <em>Thời gian/epoch, đo thực trên Kaggle</em> là thời gian thực của mỗi epoch trong lần huấn
+        luyện thật (huấn luyện + validation, hai tiến trình chạy song song trên hai GPU T4),
+        bị giới hạn bởi bộ nạp dữ liệu trên CPU nên các chế độ freeze gần như không nhanh hơn trên cột này.
         <em>Tổng thời gian huấn luyện</em> = tổng thời gian các epoch, không tính thời gian chờ giữa các phiên hoặc khởi
         động lại.
-        <em>Peak GPU memory</em> = <code>torch.cuda.max_memory_allocated</code> (trọng số, activation, gradient và trạng
-        thái optimizer).
+        <em>Peak GPU memory</em> = <code>torch.cuda.max_memory_allocated</code> trong lần đo huấn luyện có kiểm soát
+        (trọng số, activation, gradient và trạng thái optimizer; không gồm validation).
       </p>
 
       <h3>Bảng 4c: Chi phí suy luận (chỉ phụ thuộc kiến trúc)</h3>
@@ -913,35 +884,35 @@
           <tbody>
             <tr>
               <td>ResNet-50</td>
-              <td>23.71</td>
-              <td>4.087</td>
-              <td>950.7</td>
-              <td>7.21 / 8.63</td>
-              <td>170 / 871</td>
+              <td>23,71</td>
+              <td>4,110</td>
+              <td>1&nbsp;031,8</td>
+              <td>7,23 / 8,42</td>
+              <td>117 / 822</td>
             </tr>
             <tr>
               <td>DeiT-S</td>
-              <td>21.70</td>
-              <td>4.599</td>
-              <td>1,102.8</td>
-              <td>14.47 / 19.64</td>
-              <td>152 / 518</td>
+              <td>21,70</td>
+              <td>4,250</td>
+              <td>1&nbsp;156,0</td>
+              <td>7,09 / 8,53</td>
+              <td>106 / 472</td>
             </tr>
             <tr>
               <td>ConvNeXt-T (mở rộng)</td>
-              <td>27.90</td>
-              <td>4.455</td>
-              <td>658.7</td>
-              <td>14.08 / 18.26</td>
-              <td>183 / 1,278</td>
+              <td>27,90</td>
+              <td>4,470</td>
+              <td>678,7</td>
+              <td>8,09 / 9,31</td>
+              <td>136 / 1&nbsp;231</td>
             </tr>
             <tr>
               <td>Swin-T (mở rộng)</td>
-              <td>27.60</td>
-              <td>4.490</td>
-              <td>444.9</td>
-              <td>23.59 / 29.03</td>
-              <td>187 / 1,766</td>
+              <td>27,60</td>
+              <td>4,509</td>
+              <td>452,1</td>
+              <td>13,23 / 15,07</td>
+              <td>140 / 1&nbsp;719</td>
             </tr>
           </tbody>
         </table>
@@ -950,20 +921,47 @@
         <strong>Cách đo.</strong> AMP fp16, <code>torch.inference_mode</code>, batch 1 và 128, đồng bộ CUDA quanh mỗi
         lần gọi; latency là median (và p95) thời gian của một lần
         gọi, throughput = batch / latency median. GMACs theo quy ước ở Mục 02. Tất cả số liệu chi phí được đo bằng cùng
-        một script (<code>cost_bench.py</code>), cùng một phiên trên Tesla T4 (PyTorch 2.11.0+cu130, timm 1.0.30). Đây
-        là lần đo thứ hai (cùng phiên có cross-check bằng fvcore); lần đo thứ nhất cho kết quả lệch tới khoảng 7% (ví dụ
-        latency batch 1 của DeiT-S 13.51 ms so với 14.47 ms), nên chênh lệch giữa hai mô hình nhỏ hơn mức này (ví dụ
-        DeiT-S và ConvNeXt-T ở batch 1) không được coi là có ý nghĩa. Số liệu ở bảng này và các cột “chỉ GPU”,
-        trainable, peak memory của Bảng 4b là kết quả đo thật; các ô còn lại sẽ được điền sau khi chạy huấn luyện.
-        Latency batch 1 bị chi phối bởi chi phí khởi chạy kernel (ResNet-50 có GMACs xấp xỉ DeiT-S nhưng latency batch 1
-        khoảng một nửa), nên không tỷ lệ với GMACs; ở batch lớn, throughput phản ánh tải tính toán rõ hơn. Số liệu
-        from-scratch dùng cùng chi phí mỗi bước với full fine-tuning.
+        một script (<code>cost_bench.py</code>) trên Tesla T4 (PyTorch 2.11.0+cu128, timm 1.0.30).
+        Latency batch 1 bị chi phối bởi chi phí khởi chạy kernel nên không tỷ lệ với GMACs; ở batch lớn, throughput phản
+        ánh tải tính toán rõ hơn. Ở suy luận ResNet-50 và DeiT-S gần như tương đương (7,2 và 7,1 ms ở batch 1),
+        trong khi Swin-T chậm hơn rõ (13,2 ms) dù GMACs xấp xỉ nhau. Số liệu from-scratch dùng cùng chi phí mỗi bước với
+        full fine-tuning.
       </p>
 
       <figure class="report-figure">
-        <img src="../assets/placeholder-figure.svg" alt="Fine-tuning curves comparison" loading="lazy">
-        <figcaption>Hình 1.2: Biểu đồ so sánh độ chính xác và tốc độ thích ứng giữa các chiến lược huấn luyện
-          (From-scratch, Freeze, Partial Freeze, Full Fine-tuning).</figcaption>
+        <img src="../assets/a1/pareto.png" alt="Độ chính xác so với chi phí GPU" loading="lazy">
+        <figcaption>Hình 1.2: Độ chính xác (test) so với thời gian GPU mỗi epoch của các cấu hình, cho thấy đường đánh
+          đổi chi phí và độ chính xác (freeze một phần của DeiT-S nằm ở phía tốt nhất).</figcaption>
+      </figure>
+
+      <h3>Kết quả chính và thí nghiệm bổ sung</h3>
+      <ul>
+        <li><strong>Pretraining là yếu tố quan trọng nhất:</strong> +11,4 điểm với ResNet-50 (74,61 → 85,99 %) và +53,0
+          điểm với DeiT-S (34,72 → 87,73 %) ở 100 % dữ liệu; khoảng cách còn lớn hơn khi dữ liệu ít (ablation 10 / 25 /
+          50 %). Huấn luyện DeiT-S từ đầu 100 epoch đạt 67,52 % (so với 34,72 % ở 40 epoch), vẫn thấp hơn nhiều so với
+          pretrained.</li>
+        <li><strong>Freeze:</strong> freeze một phần của DeiT-S cao hơn full fine-tuning (88,27 ± 0,11 so với 87,73 ±
+          0,13 %) với khoảng 63 % thời gian GPU và 53 % bộ nhớ; kết quả này bền với việc đổi learning rate. Ở ResNet-50,
+          freeze một phần thấp hơn full fine-tuning 1,9 điểm ở LR của giao thức (84,09 so với 85,99 %), nhưng khi có LR
+          riêng (2,7·10<sup>-3</sup>) đạt 85,69 ± 0,17 % so với 86,03 ± 0,14 % của full fine-tuning (5 seed mỗi bên),
+          tức khoảng cách thu hẹp còn 0,34 điểm; chênh lệch còn lại nhỏ nhưng có ý nghĩa thống kê (Welch p ≈ 0,009, chưa
+          hiệu chỉnh đa so sánh). Linear probing rẻ nhất nhưng thấp hơn khoảng 17 điểm.</li>
+        <li><strong>CNN và Transformer:</strong> với pretraining, DeiT-S vượt ResNet-50 trong giao thức, nhưng khoảng
+          cách phụ thuộc vào công thức huấn luyện và learning rate; cặp mở rộng ConvNeXt-T / Swin-T ngang nhau (≈ 88,9
+          %). Không có pretraining thì CNN tốt hơn rõ.</li>
+        <li><strong>Hiệu chỉnh độ tin cậy:</strong> mọi mô hình đều thiếu tự tin (ECE cao nhất 23,9 % với ResNet-50 full
+          fine-tuning); thí nghiệm bổ sung cho thấy nguyên nhân chính là Mixup/CutMix cộng label smoothing (ECE 23,9 →
+          9,7 → 2,7 % khi lần lượt bỏ từng thành phần).</li>
+        <li><strong>Các lần chạy bổ sung</strong> (sau khi đã biết kết quả giao thức; quy tắc quyết định được cố định
+          trong mã trước khi chạy và kết quả giao thức không bị thay): quét thêm learning rate, bỏ Mixup/CutMix và label
+          smoothing, layer-wise LR decay (+0,24 điểm, bằng chứng yếu), độ bền vững trên 3 seed (full fine-tuning kém bền
+          nhất trước nhiễu Gauss ở cả ba seed). Chi tiết và số liệu đầy đủ nằm ở Chương 6–7 và các phụ lục của báo cáo
+          PDF.</li>
+      </ul>
+      <figure class="report-figure">
+        <img src="../assets/a1/ablation.png" alt="Ablation theo kích thước dữ liệu" loading="lazy">
+        <figcaption>Hình 1.3: Ablation theo kích thước dữ liệu huấn luyện (from-scratch và full fine-tuning), cho thấy
+          khi nào ViT cần pretraining.</figcaption>
       </figure>
     </div>
 
@@ -1018,15 +1016,17 @@
           liệu.</li>
         <li><strong>Recipe pretrain khác nhau</strong> giữa trọng số CNN và Transformer (Mục 02), nên khác biệt giữa hai
           họ không hoàn toàn quy được cho kiến trúc.</li>
-        <li><strong>From-scratch 40 epoch</strong> có thể chưa đủ cho ViT; đối chứng 100 epoch (mở rộng 2) chỉ chạy nếu
-          còn tài nguyên.</li>
+        <li><strong>From-scratch 40 epoch</strong> chưa đủ cho ViT (DeiT-S: 34,72 % ở 40 epoch, 67,52 % ở 100 epoch),
+          nên khoảng cách from-scratch giữa hai họ một phần là do thời gian huấn luyện; from-scratch và ablation chỉ có
+          1 seed.</li>
         <li><strong>Công thức augmentation cố định, không tinh chỉnh:</strong> RandAugment nhẹ (30% biên độ) kết hợp
           Mixup/CutMix áp dụng cho mọi batch có thể là điều chuẩn hóa quá mạnh cho lịch huấn luyện ngắn, nhất là khi
           fine-tune 10 epoch hoặc train từ đầu 40 epoch.</li>
         <li><strong>Quét LR ngắn</strong> (3 epoch, 20% dữ liệu) và một tập dữ liệu duy nhất; nhiễu nhãn ở tập train.
         </li>
-        <li><strong>Phần cứng Colab</strong> không đồng nhất giữa các phiên; vì vậy số liệu chi phí được đo kiểm soát
-          trên một GPU.</li>
+        <li><strong>Phần cứng</strong> có thể khác nhau giữa các phiên; vì vậy số liệu chi phí được đo kiểm soát trên
+          một GPU. Các thí nghiệm bổ sung chỉ có 1 seed (trừ cặp ResNet-50 freeze một phần ở LR riêng / full
+          fine-tuning, 5 seed mỗi bên) và được chạy sau khi đã thấy kết quả giao thức.</li>
       </ul>
     </div>
 
@@ -1058,16 +1058,16 @@
               <td>Tải Food-101 bằng torchvision, resize cạnh ngắn 256 bằng script của repo, chia theo
                 <code>split.json</code> đã commit (kiểm tra SHA-256 và số ảnh khi khởi động)
               </td>
-              <td>Khôi phục bản đã resize từ một dataset Kaggle riêng của nhóm (không phân phối công khai); cùng
-                mã, cùng kết quả</td>
+              <td>Bản đã resize được lưu trong kho Hugging Face riêng của nhóm (<code>dl4dl/a1-store</code>, không phân
+                phối công khai); cùng mã, cùng kết quả</td>
             </tr>
             <tr>
               <td>Huấn luyện</td>
               <td>Mỗi lần chạy một file cấu hình YAML đã commit, chạy bằng lệnh CLI; có chế độ smoke test nhỏ (dưới 10
                 phút trên một GPU bất kỳ)</td>
-              <td>Hàng đợi chạy trên Kaggle (hai GPU T4, mỗi GPU một worker độc lập), checkpoint lưu cục bộ mỗi epoch và
-                đẩy định kỳ lên một kho Hugging Face riêng dùng chung; khóa theo từng run, tự động tiếp tục khi mất
-                phiên (đã kiểm tra: khôi phục RNG cho kết quả trùng khớp từng bit trên mô hình thử)</td>
+              <td>Hàng đợi chạy trên Kaggle (hai GPU T4, mỗi GPU một tiến trình), lưu checkpoint nguyên tử vào kho
+                Hugging Face dùng chung, tự động tiếp tục khi mất phiên (đã kiểm tra: khôi phục RNG cho kết quả trùng
+                khớp từng bit trên mô hình thử)</td>
             </tr>
             <tr>
               <td>Trọng số pretrained</td>
@@ -1079,7 +1079,8 @@
               <td>File <code>results/*.json</code> (số liệu, đường cong, cấu hình, môi trường) trong repo; bảng và hình
                 được sinh lại từ JSON bằng notebook; trọng số cuối và logits đăng trên GitHub Release kèm checksum, có
                 lệnh đánh giá lại để tái hiện số liệu test trong vài phút</td>
-              <td>Checkpoint và log trung gian nằm trên kho Hugging Face riêng của nhóm (không phải sản phẩm nộp)</td>
+              <td>Checkpoint và log trung gian nằm trong kho Hugging Face (<code>dl4dl/a1-store</code>, đã squash lịch
+                sử; không phải sản phẩm nộp)</td>
             </tr>
           </tbody>
         </table>
@@ -1089,31 +1090,22 @@
           <code>requirements.txt</code>). Cấu hình khoa học (mô hình, chế độ, epoch, LR, seed, augmentation) nằm trong
           YAML được commit; đường dẫn và tham số máy (thư mục dữ liệu, số worker) đi qua biến môi trường/tham số CLI.
         </li>
-        <li>Huấn luyện lại toàn bộ cần khoảng 25 GPU-giờ T4. Sai khác giữa các lần chạy được ước lượng từ 3 seed và nêu
-          trong báo cáo; kết quả không bảo đảm trùng từng bit giữa các loại GPU khác nhau.</li>
+        <li>Huấn luyện lại toàn bộ giao thức cần khoảng 25 GPU-giờ T4 (chi tiết ngân sách thực tế ở Chương 5 của báo
+          cáo). Sai khác giữa các lần chạy được ước lượng từ 3 seed và nêu trong báo cáo; kết quả không bảo đảm trùng
+          từng bit giữa các loại GPU khác nhau.</li>
         <li>Mã dùng chung nằm trong một package cài được ở thư mục gốc repo (<code>pip install -e .</code>); thí nghiệm
           là notebook mỏng gọi vào package và các script <code>python -m</code>.</li>
-        <li>Trước khi nộp A1.2, nhóm thực hiện kiểm tra “fresh clone”: mở notebook tái lập trên một runtime Colab mới,
-          không có
-          dữ liệu cache hay kho Hugging Face, rồi chỉ làm theo README để sinh lại bảng và hình, đánh giá lại các trọng
-          số đã phát hành.
-        </li>
-        <li><strong>Notebook tái lập</strong>
-          (<a
+        <li><strong>Notebook tái lập:</strong> <a
             href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/A1/notebooks/A1.ipynb"
-            target="_blank" rel="noopener noreferrer">mở bằng Colab</a>) là notebook mỏng, không chứa logic, có ba chế
-          độ
-          chọn bằng biến <code>MODE</code>: <code>load</code> (CPU miễn phí, vài phút) sinh lại mọi bảng, hình và các
-          phân
-          tích hiệu chỉnh/ensemble/lỗi từ <code>A1/results/*.json</code> và logits đã phát hành, rồi kiểm tra các bảng
-          trùng
-          từng byte với báo cáo; <code>evaluate</code> (GPU, khoảng 40 phút gồm cả dữ liệu) tải trọng số đã phát hành
-          của
-          8 lần chạy lõi và đánh giá lại trên 25.250 ảnh test; <code>rerun</code> (GPU) huấn luyện lại các lần chạy được
-          chọn
-          (mặc định ResNet-50 linear probing) từ cấu hình đã commit và so sánh với kết quả đã công bố. Toàn bộ 77 lần
-          chạy
-          (khoảng 25 GPU-giờ) không được lặp lại trong notebook.</li>
+            target="_blank" rel="noopener noreferrer">A1/notebooks/A1.ipynb</a> có ba chế độ: <code>load</code> (nạp các
+          JSON đã lưu, sinh lại bảng và hình, không cần GPU), <code>evaluate</code> (tải trọng số từ Release và đánh giá
+          lại trên tập test) và <code>rerun</code> (huấn luyện lại). Nhóm đã kiểm tra chế độ <code>load</code> bằng
+          “fresh clone” trên một runtime Colab mới, không có dữ liệu cache.</li>
+        <li>Trọng số và logits kiểm thử: <a
+            href="https://github.com/broistg/deep-learning-CO5085/releases/tag/weights-v1" target="_blank"
+            rel="noopener noreferrer">GitHub Release weights-v1</a> (mã băm SHA-256 trong
+          <code>common/release_manifest.json</code>).
+        </li>
         <li>Mã nguồn: <a href="https://github.com/broistg/deep-learning-CO5085/tree/main/A1" target="_blank"
             rel="noopener noreferrer">thư mục A1 trên GitHub</a>.</li>
       </ul>
