@@ -37,5 +37,19 @@
   "at_edge": false,
   "extend_to": null,
   "extended": false
+ },
+ "segformer_b0|pretrained": {
+  "lr": 0.00036,
+  "val_top1": 0.10572448536072855,
+  "val_nll": -0.6639496153207859,
+  "grid": [
+   3e-05,
+   6e-05,
+   0.00012,
+   0.00036
+  ],
+  "at_edge": true,
+  "extend_to": null,
+  "extended": true
  }
 }
