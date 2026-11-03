@@ -950,6 +950,24 @@
    "needs_lr": false
   },
   {
+   "run_id": "dg_m_resnet50_full_lr9e-4_s3",
+   "stage": 6,
+   "kind": "diag",
+   "owner": "dat",
+   "est_hours": 0.71,
+   "config": "configs/dg_m_resnet50_full_lr9e-4_s3.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "dg_m_resnet50_full_lr9e-4_s4",
+   "stage": 6,
+   "kind": "diag",
+   "owner": "ly",
+   "est_hours": 0.71,
+   "config": "configs/dg_m_resnet50_full_lr9e-4_s4.yaml",
+   "needs_lr": false
+  },
+  {
    "run_id": "dg_m_resnet50_head_lr3e-2",
    "stage": 6,
    "kind": "diag",
@@ -983,6 +1001,24 @@
    "owner": "ly",
    "est_hours": 0.597,
    "config": "configs/dg_m_resnet50_partial_lr3e-3_s2.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "dg_m_resnet50_partial_lr3e-3_s3",
+   "stage": 6,
+   "kind": "diag",
+   "owner": "dat",
+   "est_hours": 0.597,
+   "config": "configs/dg_m_resnet50_partial_lr3e-3_s3.yaml",
+   "needs_lr": false
+  },
+  {
+   "run_id": "dg_m_resnet50_partial_lr3e-3_s4",
+   "stage": 6,
+   "kind": "diag",
+   "owner": "ly",
+   "est_hours": 0.597,
+   "config": "configs/dg_m_resnet50_partial_lr3e-3_s4.yaml",
    "needs_lr": false
   },
   {
