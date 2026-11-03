@@ -1,6 +1,6 @@
-"""Where things live (A2). Same shared Hugging Face store as A1 (run ids are prefixed `a2_`, so they cannot clash), own local folder.
+"""Where things live (A2). Own shared Hugging Face store (`dl4dl/a2-store`, separate from A1's final store), own local folder.
 
-A2_STORE : 'hf:<org>/<repo>' or a folder (tests). Falls back to A1_STORE, so the Kaggle secrets/env of A1 keep working.
+A2_STORE : 'hf:<org>/<repo>' or a folder (tests). Falls back to A1_STORE only for local tests.
 A2_LOCAL : fast local disk of the session (default /kaggle/temp/a2_local, else /tmp/a2_local): extracted ADE20K and working checkpoints.
 """
 import os

@@ -11,6 +11,7 @@ Code in `a2lib/`, plan in `plan.json` (20 runs = 12 LR-sweep + 8 full), configs 
 - **Seeds:** main runs seed 0 for all four (model, init) pairs; seeds 1-2 for the two pretrained models.
 
 ## How to run
+0. Once: create the private Hugging Face repo `dl4dl/a2-store` (type: model) in the `dl4dl` organisation, then `A1_STORE=hf:dl4dl/a2-store python -m a1lib.store init`. Both members' tokens need write access.
 1. Smoke test: `notebooks/kaggle_worker_a2.ipynb` with `RUN_SMOKE = True` (cells 1-4).
 2. Sweep runs (`a2_sw_*`) first. Then ONE person runs `python -m a2lib.plan choose-lr`, commits `A2/results/lr_choice_a2.json` (if an EDGE is reported: run the printed `extend` command, commit, both `git pull`).
 3. Main runs unlock automatically.
