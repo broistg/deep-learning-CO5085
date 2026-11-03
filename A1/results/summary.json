@@ -1,5 +1,5 @@
 {
- "n_runs": 109,
+ "n_runs": 113,
  "kinds": {
   "sweep": 47,
   "main": 8,
@@ -7,7 +7,7 @@
   "ablation": 12,
   "stretch": 9,
   "diag_sweep": 10,
-  "diag": 11
+  "diag": 15
  },
  "main": {
   "ConvNeXt-T|full": {

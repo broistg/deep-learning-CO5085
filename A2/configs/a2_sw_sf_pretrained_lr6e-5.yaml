@@ -1,0 +1,49 @@
+run_id: a2_sw_sf_pretrained_lr6e-5
+model: segformer_b0
+pretrained: true
+epochs: 3
+seed: 0
+kind: sweep
+data_fraction: 0.2
+lr_peak: 6.0e-05
+batch_size: 16
+micro_batch: 16
+optimizer: adamw
+weight_decay: 0.01
+betas:
+- 0.9
+- 0.999
+momentum: 0.9
+head_lr_mult: 10.0
+poly_power: 1.0
+min_lr: 0.0
+warmup_frac: 0.0625
+warmup_start_frac: 1.0e-06
+aux_weight: 0.0
+amp: fp16
+workers: 2
+num_classes: 150
+augmentation:
+  scale:
+  - 2048
+  - 512
+  ratio_range:
+  - 0.5
+  - 2.0
+  crop: 512
+  cat_max_ratio: 0.75
+  flip_p: 0.5
+  photometric: true
+  mean:
+  - 123.675
+  - 116.28
+  - 103.53
+  std:
+  - 58.395
+  - 57.12
+  - 57.375
+  eval_scale:
+  - 2048
+  - 512
+split_sha256_16: af0a2b48189c8707
+notes: 'LR sweep (pretrained): 3 epochs on 20% of train, seed 0, dev set only'

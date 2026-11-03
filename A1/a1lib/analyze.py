@@ -294,7 +294,9 @@ def table_diag(runs):
         for r in mine:
             rid = r["run_id"]
             if rid.startswith("dg_m_"):
-                lab = f"{MODE[r['config']['mode']]}, LR {_lr_tex(float(r['config']['lr_peak']))} (độ nhạy, seed {r['config']['seed']})"
+                same_lr = float(r["config"]["lr_peak"]) == float(runs[f"m_{SHORT[model]}_{r['config']['mode']}_s0"]["config"]["lr_peak"]) if f"m_{SHORT[model]}_{r['config']['mode']}_s0" in runs else False
+                what = "LR giao thức, thêm seed" if same_lr else "độ nhạy"   # same LR as the protocol run of that mode = just an extra seed
+                lab = f"{MODE[r['config']['mode']]}, LR {_lr_tex(float(r['config']['lr_peak']))} ({what}, seed {r['config']['seed']})"
             else:
                 lab = DIAG_LABEL.get(rid.rsplit("_", 1)[-1], rid)
             rows.append(line(lab, r))

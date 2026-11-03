@@ -10,10 +10,11 @@ requires-python = ">=3.10"
 dependencies = []
 
 [tool.setuptools]
-packages = ["common", "a1lib", "e1lib", "e2lib"]
+packages = ["common", "a1lib", "a2lib", "e1lib", "e2lib"]
 
 [tool.setuptools.package-dir]
 common = "common"
 a1lib = "A1/a1lib"
 e1lib = "E1/e1lib"
 e2lib = "E2/e2lib"
+a2lib = "A2/a2lib"

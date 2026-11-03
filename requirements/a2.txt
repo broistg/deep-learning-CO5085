@@ -1,0 +1,4 @@
+-r base.txt
+transformers>=4.44
+huggingface_hub>=0.24
+scipy>=1.11

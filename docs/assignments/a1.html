@@ -26,7 +26,8 @@
   <header>
     <a class="logo" href="../index.html"><span>CO5085:</span> Deep Learning &amp; Its Applications in Computer
       Vision</a>
-    <a class="back-btn" href="../index.html#assignments"><span class="ui-icon icon-arrow-left" aria-hidden="true"></span> Về trang tổng quan</a>
+    <a class="back-btn" href="../index.html#assignments"><span class="ui-icon icon-arrow-left"
+        aria-hidden="true"></span> Về trang tổng quan</a>
   </header>
 
   <div class="page-container">
@@ -61,7 +62,7 @@
       </div>
       <div class="meta-item">
         <span class="meta-label">Trạng thái</span>
-        <span class="meta-value"><span class="badge badge-wip">A1.1 · Khóa chủ đề</span></span>
+        <span class="meta-value"><span class="badge badge-done">Đã hoàn thành thực nghiệm</span></span>
       </div>
     </div>
 
@@ -69,25 +70,40 @@
     <div class="quick-links">
       <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085/tree/main/A1" target="_blank"
         rel="noopener noreferrer"><span class="ui-icon icon-external" aria-hidden="true"></span> Mã nguồn A1</a>
-      <a class="link-btn primary" href="../reports/assignment1.pdf" target="_blank" rel="noopener noreferrer"><span class="ui-icon icon-file" aria-hidden="true"></span> Báo cáo PDF A1</a>
-      <a class="link-btn" href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/A1/notebooks/A1.ipynb" target="_blank" rel="noopener noreferrer"><span class="ui-icon icon-notebook" aria-hidden="true"></span> Mở bằng Colab</a>
-      <a class="link-btn" href="#protocol"><span class="ui-icon icon-clipboard" aria-hidden="true"></span> Quy trình thực nghiệm</a>
-      <a class="link-btn" href="#training-plan"><span class="ui-icon icon-flask" aria-hidden="true"></span> Kế hoạch huấn luyện</a>
-      <a class="link-btn" href="#benchmarks"><span class="ui-icon icon-chart" aria-hidden="true"></span> Bảng kết quả dự kiến</a>
-      <a class="link-btn" href="#discussion"><span class="ui-icon icon-lightbulb" aria-hidden="true"></span> Thảo luận &amp; Phân tích</a>
-      <a class="link-btn" href="#reproducibility"><span class="ui-icon icon-refresh" aria-hidden="true"></span> Tái lập thí nghiệm</a>
-      <a class="link-btn" href="#references"><span class="ui-icon icon-library" aria-hidden="true"></span> Tài liệu tham khảo</a>
+      <a class="link-btn primary" href="../reports/assignment1.pdf" target="_blank" rel="noopener noreferrer"><span
+          class="ui-icon icon-file" aria-hidden="true"></span> Báo cáo PDF A1</a>
+      <a class="link-btn"
+        href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/A1/notebooks/A1.ipynb"
+        target="_blank" rel="noopener noreferrer"><span class="ui-icon icon-notebook" aria-hidden="true"></span> Mở bằng
+        Colab</a>
+      <a class="link-btn" href="#protocol"><span class="ui-icon icon-clipboard" aria-hidden="true"></span> Quy trình
+        thực nghiệm</a>
+      <a class="link-btn" href="#training-plan"><span class="ui-icon icon-flask" aria-hidden="true"></span> Kế hoạch
+        huấn luyện</a>
+      <a class="link-btn" href="#benchmarks"><span class="ui-icon icon-chart" aria-hidden="true"></span> Bảng kết quả dự
+        kiến</a>
+      <a class="link-btn" href="#discussion"><span class="ui-icon icon-lightbulb" aria-hidden="true"></span> Thảo luận
+        &amp; Phân tích</a>
+      <a class="link-btn" href="#reproducibility"><span class="ui-icon icon-refresh" aria-hidden="true"></span> Tái lập
+        thí nghiệm</a>
+      <a class="link-btn" href="#references"><span class="ui-icon icon-library" aria-hidden="true"></span> Tài liệu tham
+        khảo</a>
     </div>
 
     <!-- Status Banner: Work In Progress -->
-    <div class="status-banner wip">
+    <div class="status-banner">
       <div class="status-banner-icon"><span class="ui-icon icon-pin" aria-hidden="true"></span></div>
       <div class="status-banner-content">
-        <h4>Bài tập lớn A1 (chiếm 30% điểm bài tập) <span class="badge badge-wip">Đang thực hiện</span></h4>
+        <h4>Bài tập lớn A1 (Chiếm 30% coursework) · Hạn A1.2: 09/11/2026 <span class="badge badge-done">Đã hoàn thành
+            thực nghiệm</span></h4>
         <p>
-          So sánh CNN và Vision Transformer trên tập dữ liệu ảnh lớn với các chế độ huấn luyện: From-scratch vs.
-          Pretrained, và 3 kiểu đóng băng (Freeze toàn bộ, Freeze một phần, Tinh chỉnh toàn bộ).
-        </p>
+          Đã chạy xong toàn bộ giao thức (88 lần chạy) cùng các thí nghiệm bổ sung trên Food-101. <strong>Kết quả
+            chính:</strong> pretraining là yếu tố quyết định (ResNet-50 74,61 % → 85,99 %; DeiT-S 34,72 % → 87,73 % khi
+          fine-tune); với pretraining, freeze một phần của DeiT-S đạt cao nhất (88,27 ± 0,11 %) với chi phí GPU chỉ
+          khoảng 63 % full fine-tuning; ở ResNet-50, phần lớn khoảng cách giữa freeze một phần và full fine-tuning (1,9
+          điểm) đến từ việc dùng chung learning rate: với LR riêng, freeze một phần đạt 85,69 ± 0,17 % so với 86,03 ±
+          0,14 % của full fine-tuning (5 seed mỗi bên): còn thấp hơn 0,34 điểm. Chi tiết ở các mục 04–05 và trong báo
+          cáo PDF.</p>
       </div>
     </div>
 
@@ -255,7 +271,8 @@
       </div>
 
       <figure class="report-figure">
-        <img src="../assets/placeholder-sample.svg" alt="Ảnh mẫu tập dữ liệu lớn (Large Dataset Samples)" loading="lazy">
+        <img src="../assets/placeholder-sample.svg" alt="Ảnh mẫu tập dữ liệu lớn (Large Dataset Samples)"
+          loading="lazy">
         <figcaption>Hình 1.1: Mẫu ảnh từ tập dữ liệu lớn với các kỹ thuật tăng cường dữ liệu (Data Augmentation).
         </figcaption>
       </figure>
@@ -1048,7 +1065,9 @@
               <td>Huấn luyện</td>
               <td>Mỗi lần chạy một file cấu hình YAML đã commit, chạy bằng lệnh CLI; có chế độ smoke test nhỏ (dưới 10
                 phút trên một GPU bất kỳ)</td>
-              <td>Hàng đợi chạy trên Kaggle (hai GPU T4, mỗi GPU một worker độc lập), checkpoint lưu cục bộ mỗi epoch và đẩy định kỳ lên một kho Hugging Face riêng dùng chung; khóa theo từng run, tự động tiếp tục khi mất phiên (đã kiểm tra: khôi phục RNG cho kết quả trùng khớp từng bit trên mô hình thử)</td>
+              <td>Hàng đợi chạy trên Kaggle (hai GPU T4, mỗi GPU một worker độc lập), checkpoint lưu cục bộ mỗi epoch và
+                đẩy định kỳ lên một kho Hugging Face riêng dùng chung; khóa theo từng run, tự động tiếp tục khi mất
+                phiên (đã kiểm tra: khôi phục RNG cho kết quả trùng khớp từng bit trên mô hình thử)</td>
             </tr>
             <tr>
               <td>Trọng số pretrained</td>
@@ -1074,17 +1093,26 @@
           trong báo cáo; kết quả không bảo đảm trùng từng bit giữa các loại GPU khác nhau.</li>
         <li>Mã dùng chung nằm trong một package cài được ở thư mục gốc repo (<code>pip install -e .</code>); thí nghiệm
           là notebook mỏng gọi vào package và các script <code>python -m</code>.</li>
-        <li>Trước khi nộp A1.2, nhóm thực hiện kiểm tra “fresh clone”: mở notebook tái lập trên một runtime Colab mới, không có
-          dữ liệu cache hay kho Hugging Face, rồi chỉ làm theo README để sinh lại bảng và hình, đánh giá lại các trọng số đã phát hành.
+        <li>Trước khi nộp A1.2, nhóm thực hiện kiểm tra “fresh clone”: mở notebook tái lập trên một runtime Colab mới,
+          không có
+          dữ liệu cache hay kho Hugging Face, rồi chỉ làm theo README để sinh lại bảng và hình, đánh giá lại các trọng
+          số đã phát hành.
         </li>
         <li><strong>Notebook tái lập</strong>
-          (<a href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/A1/notebooks/A1.ipynb"
-            target="_blank" rel="noopener noreferrer">mở bằng Colab</a>) là notebook mỏng, không chứa logic, có ba chế độ
-          chọn bằng biến <code>MODE</code>: <code>load</code> (CPU miễn phí, vài phút) sinh lại mọi bảng, hình và các phân
-          tích hiệu chỉnh/ensemble/lỗi từ <code>A1/results/*.json</code> và logits đã phát hành, rồi kiểm tra các bảng trùng
-          từng byte với báo cáo; <code>evaluate</code> (GPU, khoảng 40 phút gồm cả dữ liệu) tải trọng số đã phát hành của
-          8 lần chạy lõi và đánh giá lại trên 25.250 ảnh test; <code>rerun</code> (GPU) huấn luyện lại các lần chạy được chọn
-          (mặc định ResNet-50 linear probing) từ cấu hình đã commit và so sánh với kết quả đã công bố. Toàn bộ 77 lần chạy
+          (<a
+            href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/A1/notebooks/A1.ipynb"
+            target="_blank" rel="noopener noreferrer">mở bằng Colab</a>) là notebook mỏng, không chứa logic, có ba chế
+          độ
+          chọn bằng biến <code>MODE</code>: <code>load</code> (CPU miễn phí, vài phút) sinh lại mọi bảng, hình và các
+          phân
+          tích hiệu chỉnh/ensemble/lỗi từ <code>A1/results/*.json</code> và logits đã phát hành, rồi kiểm tra các bảng
+          trùng
+          từng byte với báo cáo; <code>evaluate</code> (GPU, khoảng 40 phút gồm cả dữ liệu) tải trọng số đã phát hành
+          của
+          8 lần chạy lõi và đánh giá lại trên 25.250 ảnh test; <code>rerun</code> (GPU) huấn luyện lại các lần chạy được
+          chọn
+          (mặc định ResNet-50 linear probing) từ cấu hình đã commit và so sánh với kết quả đã công bố. Toàn bộ 77 lần
+          chạy
           (khoảng 25 GPU-giờ) không được lặp lại trong notebook.</li>
         <li>Mã nguồn: <a href="https://github.com/broistg/deep-learning-CO5085/tree/main/A1" target="_blank"
             rel="noopener noreferrer">thư mục A1 trên GitHub</a>.</li>
