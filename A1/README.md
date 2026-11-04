@@ -31,7 +31,7 @@ Recipe: AdamW, 224 px, batch 64, fp16 AMP, linear warmup (5%) + cosine to 1%, Ra
 `A1/notebooks/A1.ipynb` (Colab badge inside) has three modes; all logic is in `a1lib` and `common`:
 - `load` (CPU, minutes): regenerates every table and figure of the report from `A1/results/*.json` + the released logits (`a1_logits.zip`) with `python -m a1lib.analyze --out A1/regenerated`, and asserts that the tables equal the committed (= reported) ones.
 - `evaluate` (GPU, about 40 min including the data): downloads the released weights of the 8 core runs and re-evaluates them on the 25,250 test images (`python -m a1lib.evaluate --all-core`).
-- `rerun` (GPU): retrains selected runs (default: ResNet-50 linear probing) from their committed configs into a local folder store and compares with the published numbers; same GPU type gives the same numbers, other GPUs agree within the seed spread. The whole experiment (77 runs) is about 25 GPU-hours.
+- `rerun` (GPU): retrains selected runs (default: ResNet-50 linear probing) from their committed configs into a local folder store and compares with the published numbers; same GPU type gives the same numbers, other GPUs agree within the seed spread. The whole experiment (88 protocol runs plus 25 follow-up runs = 113 runs) took about 64 GPU-hours of Kaggle T4 session time (52 h for the 88 protocol runs; the original budget for the committed part alone was 24.6 h, the stretch runs about 20 h more).
 
 After the runs finish, the coordinator prepares the committed material once:
 1. `python -m a1lib.collect results` (store -> `A1/results/*.json`), `python -m a1lib.collect bundle --out release` (store -> zips)
@@ -40,7 +40,7 @@ After the runs finish, the coordinator prepares the committed material once:
 4. `python common/pack_release.py --only a1`, create or extend the Release, commit `common/release_manifest.json`
 
 ## Status of the code
-The torch-dependent modules were written without a GPU in the authoring sandbox. Pure-Python parts are unit-tested; the trainer has been checked only for syntax. **Run the smoke test on Kaggle before the first real run** (notebook cell). The store backends (folder, locks, squash) and per-sample seeding are unit-tested; the Hugging Face backend must be confirmed by the first real session.
+All 113 runs of A1 were trained with this code on Kaggle (2 x T4) through the Hugging Face store; the published numbers come from it. The pure-Python parts, the store backends (folder, locks, squash) and the per-sample seeding are covered by `python -m unittest discover -s A1/tests`. For a new account or a code change, run the smoke test cell of `kaggle_worker.ipynb` first.
 
 ## AI-use declaration
 Claude (Anthropic) assisted in writing this code, the experiment plan and the protocol. The authors reviewed it and are responsible for it.

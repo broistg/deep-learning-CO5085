@@ -104,7 +104,7 @@
             chính:</strong> pretraining là yếu tố quyết định (ResNet-50 74,61 % → 85,99 %; DeiT-S 34,72 % → 87,73 % khi
           fine-tune); với pretraining, freeze một phần của DeiT-S đạt cao nhất (88,27 ± 0,11 %) với chi phí GPU chỉ
           khoảng 63 % full fine-tuning; ở ResNet-50, phần lớn khoảng cách giữa freeze một phần và full fine-tuning (1,9
-          điểm) đến từ việc dùng chung learning rate: với LR riêng, freeze một phần đạt 85,69 ± 0,17 % so với 86,03 ±
+          điểm) đến từ việc dùng chung learning rate: với LR riêng, freeze một phần đạt 85,69 ± 0,16 % so với 86,03 ±
           0,14 % của full fine-tuning (5 seed mỗi bên): còn thấp hơn 0,34 điểm. Chi tiết ở các mục 04–05 và trong báo
           cáo PDF.</p>
       </div>
@@ -943,7 +943,7 @@
         <li><strong>Freeze:</strong> freeze một phần của DeiT-S cao hơn full fine-tuning (88,27 ± 0,11 so với 87,73 ±
           0,13 %) với khoảng 63 % thời gian GPU và 53 % bộ nhớ; kết quả này bền với việc đổi learning rate. Ở ResNet-50,
           freeze một phần thấp hơn full fine-tuning 1,9 điểm ở LR của giao thức (84,09 so với 85,99 %), nhưng khi có LR
-          riêng (2,7·10<sup>-3</sup>) đạt 85,69 ± 0,17 % so với 86,03 ± 0,14 % của full fine-tuning (5 seed mỗi bên),
+          riêng (2,7·10<sup>-3</sup>) đạt 85,69 ± 0,16 % so với 86,03 ± 0,14 % của full fine-tuning (5 seed mỗi bên),
           tức khoảng cách thu hẹp còn 0,34 điểm; chênh lệch còn lại nhỏ nhưng có ý nghĩa thống kê (Welch p ≈ 0,009, chưa
           hiệu chỉnh đa so sánh). Linear probing rẻ nhất nhưng thấp hơn khoảng 17 điểm.</li>
         <li><strong>CNN và Transformer:</strong> với pretraining, DeiT-S vượt ResNet-50 trong giao thức, nhưng khoảng
@@ -1090,7 +1090,7 @@
           <code>requirements.txt</code>). Cấu hình khoa học (mô hình, chế độ, epoch, LR, seed, augmentation) nằm trong
           YAML được commit; đường dẫn và tham số máy (thư mục dữ liệu, số worker) đi qua biến môi trường/tham số CLI.
         </li>
-        <li>Huấn luyện lại toàn bộ giao thức cần khoảng 25 GPU-giờ T4 (chi tiết ngân sách thực tế ở Chương 5 của báo
+        <li>Huấn luyện lại toàn bộ giao thức (88 lần chạy) cần khoảng 52 GPU-giờ T4 (khoảng 64 giờ cùng 25 lần chạy bổ sung; ngân sách dự trù ban đầu cho phần cam kết là 24,6 giờ) (chi tiết ngân sách thực tế ở Chương 5 của báo
           cáo). Sai khác giữa các lần chạy được ước lượng từ 3 seed và nêu trong báo cáo; kết quả không bảo đảm trùng
           từng bit giữa các loại GPU khác nhau.</li>
         <li>Mã dùng chung nằm trong một package cài được ở thư mục gốc repo (<code>pip install -e .</code>); thí nghiệm
