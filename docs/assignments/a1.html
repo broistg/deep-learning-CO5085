@@ -54,7 +54,7 @@
       </div>
       <div class="meta-item">
         <span class="meta-label">Thành viên phụ trách</span>
-        <span class="meta-value">Lê Tiến Đạt · Nguyễn Lê Thảo Ly</span>
+        <span class="meta-value">Lê Tiến Đạt</span>
       </div>
       <div class="meta-item">
         <span class="meta-label">Giảng viên hướng dẫn</span>
@@ -245,12 +245,27 @@
         </table>
       </div>
 
-      <figure class="report-figure">
-        <img src="../assets/placeholder-sample.svg" alt="Ảnh mẫu tập dữ liệu lớn (Large Dataset Samples)"
-          loading="lazy">
-        <figcaption>Hình 1.1: Mẫu ảnh từ tập dữ liệu lớn với các kỹ thuật tăng cường dữ liệu (Data Augmentation).
-        </figcaption>
-      </figure>
+      <p>
+        <strong>Phân tích khám phá (EDA).</strong> Kiểm tra tự động xác nhận 101 lớp, các tập rời nhau và mỗi lớp có
+        đúng 700 / 50 / 250 ảnh. Trên mẫu ngẫu nhiên 2.000 ảnh của bản Food-101 gốc (seed 42, chưa resize), cạnh ngắn
+        có trung vị 512 px, cạnh dài lớn nhất là 512 px, tỷ lệ khung hình có trung vị 1,0 (ảnh vuông), phân vị 95 là
+        1,56, và chỉ 0,1 % ảnh có cạnh ngắn dưới 256 px. Hình dưới là mẫu ảnh huấn luyện của sáu lớp được chọn theo quy
+        tắc cố định (lớp thứ 0, 17, 34, 51, 68, 85) và năm lần augmentation của cùng một ảnh. Đây là các ảnh minh họa cỡ
+        nhỏ; nhóm không phân phối ảnh gốc hay cache.
+      </p>
+      <div class="figure-grid">
+        <figure class="report-figure">
+          <img src="../assets/a1/eda_samples.png" alt="Mẫu ảnh huấn luyện Food-101 của sáu lớp" loading="lazy">
+          <figcaption>Hình 1.1: Mẫu ảnh huấn luyện Food-101 (sáu lớp, sáu ảnh mỗi lớp). Ảnh thứ hai của lớp apple pie là
+            ảnh chụp các máy tính bảng đang phát video, một ví dụ về nhiễu nhãn.</figcaption>
+        </figure>
+        <figure class="report-figure">
+          <img src="../assets/a1/eda_augment.png" alt="Ảnh gốc và năm lần augmentation" loading="lazy">
+          <figcaption>Hình 1.1b: Ảnh gốc (cột đầu) và năm lần augmentation (RandomResizedCrop, lật ngang, RandAugment)
+            của
+            cùng một ảnh.</figcaption>
+        </figure>
+      </div>
     </div>
 
     <!-- SECTION 02: MODELS TO COMPARE -->
@@ -262,8 +277,7 @@
       <p>
         Hai họ kiến trúc được so sánh ở cùng quy mô tham số và chi phí tính toán, đều dùng trọng số pretrained
         ImageNet-1k từ thư viện
-        <code>timm</code> [7] (cùng dữ liệu pretrain). Cặp 1 là cam kết; cặp 2 là mở rộng, chạy nếu còn tài nguyên tính
-        toán.
+        <code>timm</code> [7] (cùng dữ liệu pretrain). Cặp 1 là phần cam kết; cặp 2 là phần mở rộng và đã được chạy.
         Chi phí tính toán được báo cáo bằng <strong>GMACs</strong> (1 MAC = 1 phép nhân-cộng), đo bằng <em>một</em> công
         cụ và <em>một</em> quy ước cho cả bốn kiến trúc: <code>fvcore</code> (<code>FlopCountAnalysis</code>), một lượt
         forward với đầu vào 1×3×224×224 và
@@ -343,7 +357,7 @@
         các trọng số
         pretrained của hai họ được huấn luyện bằng các công thức khác nhau (ví dụ ResNet-50 “a1” dùng recipe huấn luyện
         mạnh [3]),
-        nên một phần khác biệt có thể đến từ recipe pretrain; nhóm sẽ nêu rõ điều này khi thảo luận.
+        nên một phần khác biệt có thể đến từ recipe pretrain; nhóm nêu rõ điều này ở phần thảo luận.
       </p>
     </div>
 
@@ -975,7 +989,7 @@
         <h2>Thảo luận chuyên sâu &amp; Phân tích lỗi</h2>
       </div>
       <p>
-        Các nội dung phân tích bắt buộc theo yêu cầu đặc tả (Specs Mục 4 &amp; 7.1.2):
+        Các nội dung phân tích theo yêu cầu đặc tả (Specs Mục 4 &amp; 7.1.2), kèm kết quả ở cuối mục này:
       </p>
       <ul>
         <li><strong>Khi nào chiến lược Freeze có lợi?</strong> Đánh đổi giữa chi phí tính toán, nguy cơ overfitting khi
@@ -1007,12 +1021,39 @@
           ViT trên khoảng 12 ảnh chọn trước (cả hai đúng, chỉ CNN sai, chỉ ViT sai), dùng như minh họa định tính cho
           phần phân tích lỗi, không phải bằng chứng định lượng.</li>
       </ul>
+      <p><strong>Kết quả phân tích lỗi và phân tích bổ sung:</strong></p>
+      <ul>
+        <li><strong>Lớp khó và nhãn nhiễu:</strong> steak, pork chop, huevos rancheros, apple pie, filet mignon và foie
+          gras đều dưới khoảng 76 % ở cả hai mô hình; độ chính xác theo lớp của ResNet-50 và DeiT-S tương quan 0,95, nên
+          khó khăn chủ yếu đến từ dữ liệu. Các cặp nhầm nhiều nhất là các món gần nhau (filet mignon / steak, chocolate
+          cake / chocolate mousse, beef tartare / tuna tartare). Độ chính xác trên chính tập train chỉ 88,8 %
+          (ResNet-50)
+          và 91,3 % (DeiT-S); trong 200 ảnh train có loss cao nhất của mỗi mô hình, 74 ảnh trùng nhau và 47 ảnh được cả
+          hai mô hình dự đoán cùng một lớp khác nhãn, dấu hiệu của nhãn sai.</li>
+        <li><strong>CNN so với ViT:</strong> hai mô hình sai ở cùng các lớp khó nhưng không sai ở cùng các ảnh: chỉ
+          2.152
+          trong 4.440 ảnh mà ít nhất một mô hình sai là lỗi chung (Jaccard 0,48).</li>
+        <li><strong>Ensemble:</strong> ResNet-50 + DeiT-S đạt 88,91 %, hơn mô hình đơn tốt nhất 1,03 điểm, tương đương
+          mức
+          tăng của ensemble ba seed cùng kiến trúc (+1,0 đến +1,2 điểm); ensemble 3 + 3 seed đạt 89,57 %. Nhóm không
+          tách
+          được đa dạng giữa hai họ khỏi đa dạng giữa các seed.</li>
+        <li><strong>Hiệu chỉnh:</strong> mọi mô hình đều thiếu tự tin (nhiệt độ khớp 0,58–0,80); temperature scaling đưa
+          ECE
+          của các mô hình full fine-tuning xuống 1,6–2,2 % mà không đổi độ chính xác.</li>
+        <li><strong>Độ bền vững:</strong> full fine-tuning kém bền nhất trước nhiễu Gauss, nén JPEG và giảm tương phản ở
+          cả
+          hai kiến trúc; nhóm không kiểm tra nguyên nhân.</li>
+        <li><strong>Diễn giải:</strong> các bản đồ Grad-CAM trên 12 ảnh chọn trước chỉ là minh họa định tính, không
+          chứng
+          minh quan hệ nhân quả.</li>
+      </ul>
       <p>
         <strong>Về mất cân bằng lớp:</strong> Food-101 cân bằng tuyệt đối (700 / 50 / 250 ảnh mỗi lớp trong split của
         nhóm), nên không dùng
         reweighting, oversampling hay focal loss. Vấn đề thực tế là nhiễu nhãn ở tập train, đã nêu ở Mục 01.
       </p>
-      <p><strong>Hạn chế đã biết (sẽ được nêu lại trong báo cáo):</strong></p>
+      <p><strong>Hạn chế đã biết (cũng được nêu trong báo cáo):</strong></p>
       <ul>
         <li><strong>Chưa kiểm chứng trùng lặp với dữ liệu pretrain:</strong> nhóm không kiểm tra độc lập sự trùng lặp ở
           cấp ảnh giữa Food-101 và ImageNet-1k, nên lợi thế của pretrain có thể một phần phản ánh sự gần gũi miền dữ
