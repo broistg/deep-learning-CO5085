@@ -265,16 +265,18 @@
         <code>timm</code> [7] (cùng dữ liệu pretrain). Cặp 1 là cam kết; cặp 2 là mở rộng, chạy nếu còn tài nguyên tính
         toán.
         Chi phí tính toán được báo cáo bằng <strong>GMACs</strong> (1 MAC = 1 phép nhân-cộng), đo bằng <em>một</em> công
-        cụ và <em>một</em>
-        quy ước cho cả bốn kiến trúc: <code>torch.utils.flop_counter.FlopCounterMode</code>, một lượt forward với đầu
-        vào 1×3×224×224 và
-        đầu ra 101 lớp, tắt fused attention để các phép nhân ma trận của attention được đếm; chỉ đếm phép nhân ma
-        trận/tích chập
-        (không đếm element-wise, softmax, chuẩn hóa); FlopCounterMode tính 1 MAC = 2 FLOPs nên GMACs = GFLOPs/2. Đối
-        chiếu bằng
-        <code>fvcore</code> cho 4.111 / 4.608 / 4.470 / 4.509 GMACs (ResNet-50 / DeiT-S / ConvNeXt-T / Swin-T), cao hơn
-        0.2–0.6% so với FlopCounterMode (có thể do fvcore đếm thêm một số phép chuẩn hóa và pooling). Các con số “FLOPs”
-        trong bài báo gốc thực chất là MACs, và chỉ dùng để kiểm tra thô, không thay thế kết quả đo.
+        cụ và <em>một</em> quy ước cho cả bốn kiến trúc: <code>fvcore</code> (<code>FlopCountAnalysis</code>), một lượt
+        forward với đầu vào 1×3×224×224 và
+        đầu ra 101 lớp, trong cùng lần chạy <code>cost_bench.py</code> với các số đo chi phí khác (Tesla T4;
+        <code>results/cost_infer.json</code>);
+        chỉ đếm phép nhân ma trận/tích chập (không đếm element-wise, softmax, chuẩn hóa).
+        <strong>Lưu ý về DeiT-S:</strong> <code>fvcore</code> không đếm các phép nhân ma trận của attention khi
+        attention được hợp nhất
+        (<code>scaled_dot_product_attention</code>); ước tính giải tích phần này là 2×197²×384×12 ≈ 0,36 GMACs, nên giá
+        trị 4.250 của DeiT-S thấp hơn
+        khoảng 0,36 so với khi đếm cả attention (khoảng 4,61). Nhóm giữ số đo của <code>cost_bench.py</code> làm số
+        chính và nêu rõ hạn chế này.
+        Các con số “FLOPs” trong bài báo gốc thực chất là MACs, và chỉ dùng để kiểm tra thô, không thay thế kết quả đo.
       </p>
 
       <div class="models-grid">
@@ -288,7 +290,7 @@
           </div>
           <div class="model-meta">
             <div><span class="meta-label">Số tham số</span><span class="meta-val">23.7M (đầu ra 101 lớp)</span></div>
-            <div><span class="meta-label">GMACs</span><span class="meta-val">4.087</span></div>
+            <div><span class="meta-label">GMACs</span><span class="meta-val">4.110</span></div>
           </div>
         </div>
 
@@ -301,7 +303,7 @@
           </div>
           <div class="model-meta">
             <div><span class="meta-label">Số tham số</span><span class="meta-val">21.7M (đầu ra 101 lớp)</span></div>
-            <div><span class="meta-label">GMACs</span><span class="meta-val">4.599</span></div>
+            <div><span class="meta-label">GMACs</span><span class="meta-val">4.250</span></div>
           </div>
         </div>
 
@@ -315,7 +317,7 @@
           </div>
           <div class="model-meta">
             <div><span class="meta-label">Số tham số</span><span class="meta-val">27.9M (đầu ra 101 lớp)</span></div>
-            <div><span class="meta-label">GMACs</span><span class="meta-val">4.455</span></div>
+            <div><span class="meta-label">GMACs</span><span class="meta-val">4.470</span></div>
           </div>
         </div>
 
@@ -329,7 +331,7 @@
           </div>
           <div class="model-meta">
             <div><span class="meta-label">Số tham số</span><span class="meta-val">27.6M (đầu ra 101 lớp)</span></div>
-            <div><span class="meta-label">GMACs</span><span class="meta-val">4.490</span></div>
+            <div><span class="meta-label">GMACs</span><span class="meta-val">4.509</span></div>
           </div>
         </div>
       </div>
@@ -1090,7 +1092,8 @@
           <code>requirements.txt</code>). Cấu hình khoa học (mô hình, chế độ, epoch, LR, seed, augmentation) nằm trong
           YAML được commit; đường dẫn và tham số máy (thư mục dữ liệu, số worker) đi qua biến môi trường/tham số CLI.
         </li>
-        <li>Huấn luyện lại toàn bộ giao thức (88 lần chạy) cần khoảng 52 GPU-giờ T4 (khoảng 64 giờ cùng 25 lần chạy bổ sung; ngân sách dự trù ban đầu cho phần cam kết là 24,6 giờ) (chi tiết ngân sách thực tế ở Chương 5 của báo
+        <li>Huấn luyện lại toàn bộ giao thức (88 lần chạy) cần khoảng 52 GPU-giờ T4 (khoảng 64 giờ cùng 25 lần chạy bổ
+          sung; ngân sách dự trù ban đầu cho phần cam kết là 24,6 giờ) (chi tiết ngân sách thực tế ở Chương 5 của báo
           cáo). Sai khác giữa các lần chạy được ước lượng từ 3 seed và nêu trong báo cáo; kết quả không bảo đảm trùng
           từng bit giữa các loại GPU khác nhau.</li>
         <li>Mã dùng chung nằm trong một package cài được ở thư mục gốc repo (<code>pip install -e .</code>); thí nghiệm

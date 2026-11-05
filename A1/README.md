@@ -22,7 +22,7 @@ Team workflow: **TEAM_PROTOCOL.md**. Layout: `A1/a1lib/` (A1-only package), `com
 
 Environment variables: `A1_STORE` (`hf:<org>/<repo>` or a folder), `HF_TOKEN` (Kaggle secret), `A1_LOCAL` (default `/kaggle/temp/a1_local`), `A1_PUSH_EVERY_MIN` (45), `A1_DATA_SRC` (dataset folder, default: search `/kaggle/input`).
 
-Environment: Kaggle notebooks (2 x T4), Python 3.12+, torch 2.x, timm 1.0.30. torch/torchvision are preinstalled and deliberately not listed in the requirements files.
+Environment: Kaggle notebooks (2 x T4) and Colab (T4). Tested versions: Python 3.13, torch 2.11.0, torchvision 0.26.0, timm 1.0.30 (the report, Chapter 8, refers to this line). torch/torchvision are preinstalled and deliberately not listed in the requirements files.
 
 ## Reproducibility
 Recipe: AdamW, 224 px, batch 64, fp16 AMP, linear warmup (5%) + cosine to 1%, RandAugment(2, 9) + Mixup/CutMix + label smoothing 0.1 (applied once, inside timm `Mixup`), seeds 0/1/2, final epoch reported. Every run stores its config hash, split hash (`75ed81bfe380c089`), library versions and GPU in `result.json`.
