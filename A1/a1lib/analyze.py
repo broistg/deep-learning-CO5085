@@ -511,8 +511,10 @@ def analysis_errors(runs, art, names, out, figdir, summ):
     fig, ax = plt.subplots(figsize=(4.2, 4.0))
     ax.scatter(100 * ca[ok], 100 * cb[ok], s=14, color="#2a78d6", alpha=0.8)
     ax.plot([40, 100], [40, 100], color="#8a8984", lw=0.8, ls="--")
-    for i in hard[:4]:
-        ax.annotate(nm(i), (100 * ca[i], 100 * cb[i]), fontsize=7, xytext=(3, 3), textcoords="offset points")
+    offs = [(5, -9), (6, 6), (-6, 9), (7, -3)]  # staggered so neighbouring labels do not overlap
+    for k, i in enumerate(hard[:4]):
+        ax.annotate(nm(i), (100 * ca[i], 100 * cb[i]), fontsize=7, xytext=offs[k], textcoords="offset points",
+                    ha="right" if offs[k][0] < 0 else "left", arrowprops={"arrowstyle": "-", "lw": 0.5, "color": "#8a8984"})
     ax.set_xlabel("ResNet-50: độ chính xác theo lớp (%)")
     ax.set_ylabel("DeiT-S: độ chính xác theo lớp (%)")
     save_fig(fig, figdir, "perclass")
