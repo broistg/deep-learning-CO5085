@@ -270,12 +270,12 @@
         đầu ra 101 lớp, trong cùng lần chạy <code>cost_bench.py</code> với các số đo chi phí khác (Tesla T4;
         <code>results/cost_infer.json</code>);
         chỉ đếm phép nhân ma trận/tích chập (không đếm element-wise, softmax, chuẩn hóa).
-        <strong>Lưu ý về DeiT-S:</strong> <code>fvcore</code> không đếm các phép nhân ma trận của attention khi
-        attention được hợp nhất
-        (<code>scaled_dot_product_attention</code>); ước tính giải tích phần này là 2×197²×384×12 ≈ 0,36 GMACs, nên giá
-        trị 4.250 của DeiT-S thấp hơn
-        khoảng 0,36 so với khi đếm cả attention (khoảng 4,61). Nhóm giữ số đo của <code>cost_bench.py</code> làm số
-        chính và nêu rõ hạn chế này.
+        Vì <code>fvcore</code> bỏ qua các phép nhân ma trận của attention khi attention được hợp nhất
+        (<code>scaled_dot_product_attention</code>), nhóm tắt fused attention của <code>timm</code> khi đo GMACs
+        (<code>python -m a1lib.cost_bench --gmacs-only</code>) để mọi phép nhân ma trận của attention được đếm; độ trễ,
+        thông lượng và bộ nhớ vẫn đo với cấu hình suy luận mặc định. Phần attention của DeiT-S khoảng 0,36 GMACs, khớp
+        với ước tính giải tích 2×197²×384×12. Kết quả: ResNet-50 và DeiT-S chênh khoảng 12%, Swin-T thấp hơn DeiT-S
+        khoảng 2%.
         Các con số “FLOPs” trong bài báo gốc thực chất là MACs, và chỉ dùng để kiểm tra thô, không thay thế kết quả đo.
       </p>
 
@@ -303,7 +303,7 @@
           </div>
           <div class="model-meta">
             <div><span class="meta-label">Số tham số</span><span class="meta-val">21.7M (đầu ra 101 lớp)</span></div>
-            <div><span class="meta-label">GMACs</span><span class="meta-val">4.250</span></div>
+            <div><span class="meta-label">GMACs</span><span class="meta-val">4.608</span></div>
           </div>
         </div>
 
@@ -895,7 +895,7 @@
             <tr>
               <td>DeiT-S</td>
               <td>21,70</td>
-              <td>4,250</td>
+              <td>4,608</td>
               <td>1&nbsp;156,0</td>
               <td>7,09 / 8,53</td>
               <td>106 / 472</td>
@@ -926,7 +926,8 @@
         một script (<code>cost_bench.py</code>) trên Tesla T4 (PyTorch 2.11.0+cu128, timm 1.0.30).
         Latency batch 1 bị chi phối bởi chi phí khởi chạy kernel nên không tỷ lệ với GMACs; ở batch lớn, throughput phản
         ánh tải tính toán rõ hơn. Ở suy luận ResNet-50 và DeiT-S gần như tương đương (7,2 và 7,1 ms ở batch 1),
-        trong khi Swin-T chậm hơn rõ (13,2 ms) dù GMACs xấp xỉ nhau. Số liệu from-scratch dùng cùng chi phí mỗi bước với
+        trong khi Swin-T chậm hơn rõ (13,2 ms) dù GMACs thấp hơn DeiT-S khoảng 2%. Số liệu from-scratch dùng cùng chi
+        phí mỗi bước với
         full fine-tuning.
       </p>
 

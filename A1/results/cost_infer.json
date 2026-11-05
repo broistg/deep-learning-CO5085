@@ -3,7 +3,8 @@
   "gpu": "Tesla T4",
   "torch": "2.11.0+cu128",
   "timm": "1.0.30",
-  "date": "2026-11-01 01:54"
+  "date": "2026-11-01 01:54",
+  "gmacs_note": "fvcore, fused attention off, timm 1.0.30, 2026-11-05 05:14"
  },
  "resnet50": {
   "params_M": 23.714981,
@@ -16,7 +17,7 @@
  },
  "deit_s": {
   "params_M": 21.704549,
-  "gmacs": 4.250329344,
+  "gmacs": 4.607993088,
   "lat1_median_ms": 7.089700999927118,
   "lat1_p95_ms": 8.533680000027744,
   "mem_b1_mb": 106.32373046875,
