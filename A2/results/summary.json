@@ -1,0 +1,112 @@
+{
+ "n_runs": 21,
+ "n_full": 8,
+ "seed_stats": {
+  "segformer": [
+   32.74508997846938,
+   32.88990865938155,
+   32.84637875136091
+  ],
+  "deeplab": [
+   27.666471059930174,
+   29.06481187792311,
+   28.36302790870247
+  ],
+  "gap_pts": 4.4623555142187,
+  "welch_t": 10.992638994325205,
+  "df": 2.0451714117987816,
+  "p": 0.007552898750528788,
+  "n": [
+   3,
+   3
+  ]
+ },
+ "pretrain_gain": {
+  "segformer_b0": {
+   "pretrained_seed0": 32.74508997846938,
+   "scratch_seed0": 12.255789171167795,
+   "gain_pts": 20.489300807301586
+  },
+  "deeplabv3p_mnv2": {
+   "pretrained_seed0": 27.666471059930174,
+   "scratch_seed0": 18.611257375120474,
+   "gain_pts": 9.0552136848097
+  }
+ },
+ "lr_choice": {
+  "segformer_b0|scratch": {
+   "lr": 0.0006,
+   "val_top1": 0.017449948892053747,
+   "val_nll": -0.38750947016805165,
+   "grid": [
+    0.0002,
+    0.0006,
+    0.0018
+   ],
+   "at_edge": false,
+   "extend_to": null,
+   "extended": false
+  },
+  "deeplabv3p_mnv2|pretrained": {
+   "lr": 0.01,
+   "val_top1": 0.07702794007605734,
+   "val_nll": -0.6349520610938922,
+   "grid": [
+    0.005,
+    0.01,
+    0.02
+   ],
+   "at_edge": false,
+   "extend_to": null,
+   "extended": false
+  },
+  "deeplabv3p_mnv2|scratch": {
+   "lr": 0.03,
+   "val_top1": 0.03411905434175345,
+   "val_nll": -0.4982308757063564,
+   "grid": [
+    0.01,
+    0.03,
+    0.1
+   ],
+   "at_edge": false,
+   "extend_to": null,
+   "extended": false
+  },
+  "segformer_b0|pretrained": {
+   "lr": 0.00036,
+   "val_top1": 0.10572448536072855,
+   "val_nll": -0.6639496153207859,
+   "grid": [
+    3e-05,
+    6e-05,
+    0.00012,
+    0.00036
+   ],
+   "at_edge": true,
+   "extend_to": null,
+   "extended": true
+  }
+ },
+ "freq_groups": {
+  "frequent": {
+   "segformer": 46.1486115546549,
+   "deeplab": 44.87007324819973,
+   "pixel_share": 0.9211450682897244
+  },
+  "middle": {
+   "segformer": 31.283974584703607,
+   "deeplab": 26.605891705575807,
+   "pixel_share": 0.05803610451291784
+  },
+  "rare": {
+   "segformer": 20.802683796049646,
+   "deeplab": 11.523448226014985,
+   "pixel_share": 0.020818827197357812
+  }
+ },
+ "n_classes_nan": {
+  "segformer": 0,
+  "deeplab": 0
+ }
+}
