@@ -112,11 +112,37 @@ def bench_infer(name):
     return out
 
 
+def gmacs_only(out, models):
+    """Re-measure GMACs only (fused attention OFF, so fvcore sees the attention matmuls) and merge
+    them into an existing cost_infer.json. Latency/memory/throughput are left untouched."""
+    import timm
+    from timm.layers import set_fused_attn
+    from fvcore.nn import FlopCountAnalysis
+    set_fused_attn(False)
+    f = Path(out) / "cost_infer.json"
+    infer = json.loads(f.read_text(encoding="utf8"))
+    for name in models:
+        m = make_model(TIMM[name], False).eval()
+        with torch.no_grad():
+            fa = FlopCountAnalysis(m, torch.randn(1, 3, 224, 224))
+            fa.unsupported_ops_warnings(False)
+            fa.uncalled_modules_warnings(False)
+            g = fa.total() / 1e9
+        log(f"gmacs {name:10s} old={infer[name].get('gmacs')} new={g:.3f}")
+        infer[name]["gmacs"] = g
+    infer.setdefault("env", {})["gmacs_note"] = f"fvcore, fused attention off, timm {timm.__version__}, {time.strftime('%Y-%m-%d %H:%M')}"
+    f.write_text(json.dumps(infer, indent=1), encoding="utf8")
+    log("updated gmacs in", f)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", default=str(A1 / "results"))
     ap.add_argument("--models", default="resnet50,deit_s,convnext_t,swin_t")
+    ap.add_argument("--gmacs-only", action="store_true", help="only refresh GMACs (fused attention off) in cost_infer.json; CPU is enough")
     a = ap.parse_args(argv)
+    if a.gmacs_only:
+        return gmacs_only(a.out, a.models.split(","))
     assert torch.cuda.is_available(), "needs a GPU"
     import timm
     env = {"gpu": torch.cuda.get_device_name(0), "torch": torch.__version__, "timm": timm.__version__, "date": time.strftime("%Y-%m-%d %H:%M")}

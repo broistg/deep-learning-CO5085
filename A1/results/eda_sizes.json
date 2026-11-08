@@ -1,0 +1,9 @@
+{
+ "n": 2000,
+ "short_median": 512.0,
+ "long_max": 512,
+ "long_median": 512.0,
+ "aspect_median": 1.0,
+ "aspect_p95": 1.5569470602495006,
+ "short_below_256_pct": 0.1
+}

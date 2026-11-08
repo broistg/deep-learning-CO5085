@@ -511,8 +511,10 @@ def analysis_errors(runs, art, names, out, figdir, summ):
     fig, ax = plt.subplots(figsize=(4.2, 4.0))
     ax.scatter(100 * ca[ok], 100 * cb[ok], s=14, color="#2a78d6", alpha=0.8)
     ax.plot([40, 100], [40, 100], color="#8a8984", lw=0.8, ls="--")
-    for i in hard[:4]:
-        ax.annotate(nm(i), (100 * ca[i], 100 * cb[i]), fontsize=7, xytext=(3, 3), textcoords="offset points")
+    offs = [(5, -9), (6, 6), (-6, 9), (7, -3)]  # staggered so neighbouring labels do not overlap
+    for k, i in enumerate(hard[:4]):
+        ax.annotate(nm(i), (100 * ca[i], 100 * cb[i]), fontsize=7, xytext=offs[k], textcoords="offset points",
+                    ha="right" if offs[k][0] < 0 else "left", arrowprops={"arrowstyle": "-", "lw": 0.5, "color": "#8a8984"})
     ax.set_xlabel("ResNet-50: độ chính xác theo lớp (%)")
     ax.set_ylabel("DeiT-S: độ chính xác theo lớp (%)")
     save_fig(fig, figdir, "perclass")
@@ -589,15 +591,33 @@ def fig_ablation(data, out):
 
 
 def fig_pareto(g, gpu, out):
-    fig, ax = plt.subplots(figsize=(4.8, 3.4))
+    """Test top-1 against the controlled GPU-only training time per epoch (cost_gpu.json), which is the comparison the report makes.
+    The real wall-clock hours are loader-bound (about the same for every freeze mode) and are in Table 'Chi phí huấn luyện'."""
+    from matplotlib.lines import Line2D
+    marker = {"scratch": "s", "head": "^", "partial": "D", "full": "o"}
+    fig, ax = plt.subplots(figsize=(5.4, 3.6))
+    archs, have = [], False
     for (a, m), rs in g.items():
-        r = rs[0]
-        x = np.mean([hours(r) for r in rs])
-        ax.scatter(x, 100 * np.mean([r["final"]["test"]["top1"] for r in rs]), s=34, color=ARCH_COLOR[a], marker={"scratch": "s", "head": "^", "partial": "D", "full": "o"}[m])
-        ax.annotate(MODE[m].split()[0], (x, 100 * np.mean([r["final"]["test"]["top1"] for r in rs])), fontsize=6.5, xytext=(3, 3), textcoords="offset points")
+        c = rs[0]["config"]
+        x = gpu.get(f"{SHORT[c['model']]}|{m}")
+        if x is None:
+            continue
+        have = True
+        archs.append(a)
+        ax.scatter(x, 100 * np.mean([r["final"]["test"]["top1"] for r in rs]), s=38, color=ARCH_COLOR[a], marker=marker[m], zorder=3)
+    if not have:
+        plt.close(fig)
+        return
     ax.set_xscale("log")
-    ax.set_xlabel("thời gian huấn luyện thực (giờ, Kaggle)")
+    from matplotlib.ticker import NullFormatter
+    ax.set_xticks([60, 100, 200, 400])
+    ax.set_xticklabels(["60", "100", "200", "400"])
+    ax.xaxis.set_minor_formatter(NullFormatter())
+    ax.set_xlabel("thời gian huấn luyện mỗi epoch, chỉ GPU (giây, Tesla T4)")
     ax.set_ylabel("test top-1 (%)")
+    handles = [Line2D([], [], marker="o", ls="", color=ARCH_COLOR[a_], label=a_) for a_ in ARCH_COLOR if a_ in archs]
+    handles += [Line2D([], [], marker=marker[m_], ls="", color="#555555", label=MODE[m_]) for m_ in ("scratch", "head", "partial", "full")]
+    ax.legend(handles=handles, frameon=False, fontsize=6.5, ncol=2, loc="lower left")
     save_fig(fig, out, "pareto")
 
 

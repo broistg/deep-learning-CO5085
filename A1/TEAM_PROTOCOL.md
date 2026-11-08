@@ -1,6 +1,6 @@
 # A1 team protocol: running the full experiment on two Kaggle accounts
 
-Goal: finish every run of the locked plan (`plan.json`, 77 configs: 36 LR-sweep, 8 core, 12 seed, 12 ablation, 9 stretch; about 25 GPU-hours committed, about 20 more with the stretch runs) with two people, free Kaggle GPUs, no lost work, and numbers that are identical in kind no matter who trained them.
+Goal: finish every run of the locked plan (`plan.json`, 77 configs: 36 LR-sweep, 8 core, 12 seed, 12 ablation, 9 stretch; estimated before the runs: about 25 GPU-hours for the committed part, about 20 more with the stretch runs; measured at the end: 31 h for the committed part including the LR extensions, 21 h for the stretch runs, 52 h in total for the 88 protocol runs and 64 h with the 25 follow-up runs of section 13) with two people, free Kaggle GPUs, no lost work, and numbers that are identical in kind no matter who trained them.
 
 Measured on Kaggle (2 x T4, 4 vCPU): ResNet-50 is about 20 % slower than on a Colab T4, DeiT-S about the same; the input pipeline tops out near 740 img/s per machine; one independent worker per GPU scales 100 %. Quota: 30 GPU-hours per account per week, counted in wall-clock session time (both GPUs together cost the same as one).
 
@@ -75,7 +75,7 @@ Confirm the deadlines with the course page before relying on this table.
 | Goal | When |
 |---|---|
 | setup, smoke test, sweep, `choose-lr` | first 2 sessions |
-| core + seeds (about 8.7 GPU-h per person) | next |
+| core + seeds (estimated about 8.7 GPU-h per person; measured 21 h in total, about 10.5 per person) | next |
 | ablation, analyses on saved logits | after that |
 | cutoff to start new runs; stretch only if everything above is complete | about 4 days before the deadline |
 | write-up, website, Release | last 3 days |
@@ -88,7 +88,7 @@ Claude was used to write and review this code and protocol. Each member must be 
 
 ## 13. Follow-up experiments (after the 88 protocol runs)
 
-Added on top of the finished protocol; they never change `lr_choice.json`, the committed results or the Release weights. The decision rules are written in `a1lib/plan.py` (comment above `DIAG_SWEEP`) before any of these runs exists.
+25 runs, about 12 GPU-hours in total (10 short sweep points and 15 ten-epoch runs). Added on top of the finished protocol; they never change `lr_choice.json`, the committed results or the Release weights. The decision rules are written in `a1lib/plan.py` (comment above `DIAG_SWEEP`) before any of these runs exists.
 
 | Question | Runs | Cost |
 |---|---|---|
@@ -97,10 +97,12 @@ Added on top of the finished protocol; they never change `lr_choice.json`, the c
 | Is under-confidence caused by Mixup/CutMix or label smoothing? | 10 epochs full fine-tuning x {no Mixup, no Mixup and no smoothing} x 2 models | ~3.3 h |
 | Does full fine-tuning damage the early ViT blocks? | DeiT-S full, layer-wise LR decay 0.75 | ~0.8 h |
 | Is ResNet-50 full fragile to noise on every seed? | robustness on seeds 1 and 2 (post-hoc, no training) | ~30 min |
+| Sensitivity runs at the new LRs (rule of step 2): ResNet-50 head, full and partial, DeiT-S partial | 4 runs, 10 epochs, seed 0 | ~3 h |
+| Does the ResNet-50 partial-vs-full result hold over seeds? (added because it changes the answer to RQ1; seed count fixed before running) | partial at its own LR, seeds 1-4, and full at the protocol LR, seeds 3-4 (5 seeds per side with the protocol seeds 0-2) | ~4.5 h |
 
 Steps (coordinator once, then both members `git pull` and run the usual worker notebook; these runs have the highest stage numbers, so they come after everything else):
 
 1. `python -m a1lib.plan make-diag` (writes `configs/dg_*.yaml`, extends `plan.json`; idempotent) and commit both.
-2. When the `dg_sw_*` runs are done and collected: `python -m a1lib.analyze` prints `tab_diag_lr.tex`. If a new LR beats the chosen one by at least 0.5 points of validation top-1, add ONE 10-epoch sensitivity run: `python -m a1lib.plan add-diag --model resnet50 --mode full --lr 0.0027` (commit, pull, run). Do not edit `lr_choice.json` and do not rerun the protocol runs.
+2. When the `dg_sw_*` runs are done and collected: `python -m a1lib.analyze` prints `tab_diag_lr.tex`. If a new LR beats the chosen one by at least 0.5 points of validation top-1, add ONE 10-epoch sensitivity run per (model, mode): `python -m a1lib.plan add-diag --model resnet50 --mode full --lr 0.0027` (commit, pull, run). Do not edit `lr_choice.json` and do not rerun the protocol runs.
 3. Robustness on seeds 1 and 2 is part of the posthoc notebook (cells 3 and 5 use `--with-seeds`: 20 models in the one `posthoc_robustness.json`). Rerun the whole notebook ONLY after the protocol and follow-up runs are collected and `A1/results/*.json` is committed and pushed (the configs of `m_*_s1/s2` are read from the git checkout). To keep the committed cost numbers, skip cell 4 (cost benchmark) and do not copy `cost_*.json` into the repo again; robustness, Grad-CAM and top-loss are seeded and reproduce the committed seed-0 numbers (check that `posthoc_robustness.json` still gives 86,02 for ResNet-50 full). Download `a1_posthoc.zip` and replace `posthoc_robustness.json`.
 4. `collect results`, then `python -m a1lib.analyze` again: `tab_diag_lr.tex`, `tab_diag.tex` (test top-1, ECE, NLL against the protocol run) and `tab_robust_seeds.tex` (mean and std over 3 seeds; written when the robustness file holds seeds 1 and 2). Commit them with the new `results/dg_*.json`; their logits go into `a1_logits.zip`; their weights are not packed.
