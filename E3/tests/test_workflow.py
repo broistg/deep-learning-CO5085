@@ -7,6 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import numpy as np
 import torch
 
 from common.repro import config_hash
@@ -139,6 +140,12 @@ class TestWorkflow(unittest.TestCase):
             self.assertEqual(report["confusion_matrix"][0][1], 100)
             self.assertAlmostEqual(report["per_class_acc"]["airplane"], 0.99)
 
+    def test_diagnostics_selects_highest_test_accuracy(self):
+        configs = {cfg.run_id: cfg for cfg in plan.all_cfgs()}
+        runs = [result_for(configs["gru_patch4_s0"], 0.70, 0.68),
+                result_for(configs["gru_patch4_s2"], 0.69, 0.69)]
+        self.assertEqual(diagnostics.choose_run(runs)["run_id"], "gru_patch4_s2")
+
     def test_notebook_has_load_and_rerun_modes(self):
         notebook = json.loads((E3_DIR / "notebooks" / "E3.ipynb").read_text())
         self.assertEqual(notebook["nbformat"], 4)
@@ -166,9 +173,16 @@ class TestWorkflow(unittest.TestCase):
             self.assertTrue((figures / "curves_e3.pdf").is_file())
             matrix = [[0] * 10 for _ in range(10)]
             matrix[0][0] = 100
-            diagnostics.plot_confusion(matrix, figures)
+            diagnostics.plot_confusion(matrix, figures, run["config"], 0.8)
             self.assertTrue((figures / "confusion_e3.png").is_file())
             self.assertTrue((figures / "confusion_e3.pdf").is_file())
+            images = np.zeros((12, 32, 32, 3), dtype=np.uint8)
+            logits = torch.zeros(12, 10)
+            labels = torch.zeros(12, dtype=torch.long)
+            diagnostics.plot_error_grid(images, logits, labels, range(12),
+                                        "gru_patch4_s2", 0.6861, figures)
+            self.assertTrue((figures / "error_grid_gru_patch4.png").is_file())
+            self.assertTrue((figures / "error_grid_gru_patch4.pdf").is_file())
 
 
 if __name__ == "__main__":
