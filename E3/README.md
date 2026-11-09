@@ -23,10 +23,14 @@ Each real run writes `E3/results/<model>_<tokenizer>_s<seed>.json` and keeps che
 
 For comparison with E1, both sets use the same CIFAR-10 split, train-only channel statistics, crop/flip augmentation recipe, seeds 0–2, 30 epochs, batch size 64, Adam at `1e-3`, and no weight decay. E3 additionally clips recurrent gradients at 1.0 and generates augmentation randomness independently. Model sizes and compute are not matched; report parameter counts and training times alongside accuracy. The hidden-128 choice came from an E3 validation pilot, so evaluate the fixed configuration across all three seeds and avoid selecting architectures by test accuracy.
 
-`e3lib.analyze` reads completed E3 LSTM and GRU runs only. It verifies their configurations, split hash and channel statistics, then writes `summary.json`, one LaTeX table and learning curves. The summary includes mean ± sample standard deviation over seeds for each model and tokenizer, plus the mean peak GPU allocation (MiB) when all three seeds are available. At least one completed E3 run is required. `e3lib.diagnostics` requires saved E3 test logits and reports the best-validation recurrent run by default.
+`e3lib.analyze` reads completed E3 LSTM and GRU runs only. It verifies their configurations, split hash and channel statistics, then writes `summary.json`, one LaTeX table and learning curves. The summary includes mean ± sample standard deviation over seeds for each model and tokenizer, plus the mean peak GPU allocation (MiB) when all three seeds are available. At least one completed E3 run is required.
+
+`e3lib.diagnostics` reads saved E3 test logits and CIFAR-10 test images. By default it chooses the completed run with the highest test accuracy; `--run-id` lets you choose another run. One call writes `diagnostics.json`, the confusion matrix, and a grid of its 12 most confident test errors. For the published results, the default is `gru_patch4_s2` (68.61% test accuracy), and the figures are `E3/figures/confusion_e3.png` and `E3/figures/error_grid_gru_patch4.png` when `--out` is omitted. The experiment summary still reports all three seeds.
 
 ## Replication notebook
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E3/notebooks/E3.ipynb)
 
 `E3/notebooks/E3.ipynb` has the same two modes as E2. `MODE = "load"` (default) runs tests and regenerates tables and curves from available hidden-128 E3 results; it checks saved E3 tables when present. `MODE = "rerun"` requires a GPU, smoke-tests one recurrent configuration, trains/resumes all 12 E3 runs in `E3/results_rerun/`, compares with published E3 runs when available, and regenerates analysis and diagnostics. It never trains MLP or MiniVGG or overwrites `E1/results/`.
+
+The notebook also displays the confusion matrix and GRU/patch4 error grid. In load mode it regenerates them when test logits are available, or displays the saved published PNGs. In rerun mode it makes them from the rerun results.

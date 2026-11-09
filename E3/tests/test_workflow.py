@@ -153,8 +153,14 @@ class TestWorkflow(unittest.TestCase):
                 if cell["cell_type"] == "code"]
         self.assertIn('MODE = "load"', code[0])
         self.assertIn('assert MODE in {"load", "rerun"}', code[0])
-        self.assertTrue(any('analyze.main(["--results", str(published)' in cell
-                            for cell in code))
+        
+        self.assertTrue(any(
+            "analyze.main(" in cell
+            and '"--results"' in cell
+            and "str(published)" in cell
+            for cell in code
+        ))
+
         self.assertTrue(any('nu.compare_outputs(regenerated, published)' in cell
                             for cell in code))
         self.assertTrue(any('run(cfg, out_dir=rerun_dir)' in cell for cell in code))
