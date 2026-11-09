@@ -1,0 +1,230 @@
+{
+  "split_sha256_16": "7f11b9983ea0f6f8",
+  "e1_checkpoint": "final",
+  "runs": [
+    {
+      "experiment": "E1",
+      "label": "MLP",
+      "run_id": "mlp_s0",
+      "seed": 0,
+      "n_params": 199082,
+      "test_acc": 0.5138,
+      "test_loss": 1.3768252479553222
+    },
+    {
+      "experiment": "E1",
+      "label": "MLP",
+      "run_id": "mlp_s1",
+      "seed": 1,
+      "n_params": 199082,
+      "test_acc": 0.5093,
+      "test_loss": 1.3965203519821168
+    },
+    {
+      "experiment": "E1",
+      "label": "MLP",
+      "run_id": "mlp_s2",
+      "seed": 2,
+      "n_params": 199082,
+      "test_acc": 0.5121,
+      "test_loss": 1.3628050716400146
+    },
+    {
+      "experiment": "E1",
+      "label": "MiniVGG (CNN)",
+      "run_id": "minivgg_s0",
+      "seed": 0,
+      "n_params": 37338,
+      "test_acc": 0.7952,
+      "test_loss": 0.5934890141487121
+    },
+    {
+      "experiment": "E1",
+      "label": "MiniVGG (CNN)",
+      "run_id": "minivgg_s1",
+      "seed": 1,
+      "n_params": 37338,
+      "test_acc": 0.7991,
+      "test_loss": 0.5847660436630249
+    },
+    {
+      "experiment": "E1",
+      "label": "MiniVGG (CNN)",
+      "run_id": "minivgg_s2",
+      "seed": 2,
+      "n_params": 37338,
+      "test_acc": 0.7944,
+      "test_loss": 0.6028795822143554
+    },
+    {
+      "experiment": "E3",
+      "label": "LSTM / row",
+      "run_id": "lstm_row_s0",
+      "seed": 0,
+      "n_params": 106826,
+      "test_acc": 0.6421,
+      "test_loss": 1.03057958278656
+    },
+    {
+      "experiment": "E3",
+      "label": "LSTM / row",
+      "run_id": "lstm_row_s1",
+      "seed": 1,
+      "n_params": 106826,
+      "test_acc": 0.6375,
+      "test_loss": 1.0371529764175416
+    },
+    {
+      "experiment": "E3",
+      "label": "LSTM / row",
+      "run_id": "lstm_row_s2",
+      "seed": 2,
+      "n_params": 106826,
+      "test_acc": 0.6402,
+      "test_loss": 1.0297485570907592
+    },
+    {
+      "experiment": "E3",
+      "label": "LSTM / patch4",
+      "run_id": "lstm_patch4_s0",
+      "seed": 0,
+      "n_params": 103754,
+      "test_acc": 0.6594,
+      "test_loss": 0.9606721786499024
+    },
+    {
+      "experiment": "E3",
+      "label": "LSTM / patch4",
+      "run_id": "lstm_patch4_s1",
+      "seed": 1,
+      "n_params": 103754,
+      "test_acc": 0.6705,
+      "test_loss": 0.9528478399276733
+    },
+    {
+      "experiment": "E3",
+      "label": "LSTM / patch4",
+      "run_id": "lstm_patch4_s2",
+      "seed": 2,
+      "n_params": 103754,
+      "test_acc": 0.6754,
+      "test_loss": 0.92515745677948
+    },
+    {
+      "experiment": "E3",
+      "label": "GRU / row",
+      "run_id": "gru_row_s0",
+      "seed": 0,
+      "n_params": 81994,
+      "test_acc": 0.6438,
+      "test_loss": 1.0198779209136963
+    },
+    {
+      "experiment": "E3",
+      "label": "GRU / row",
+      "run_id": "gru_row_s1",
+      "seed": 1,
+      "n_params": 81994,
+      "test_acc": 0.6441,
+      "test_loss": 1.0198579809188844
+    },
+    {
+      "experiment": "E3",
+      "label": "GRU / row",
+      "run_id": "gru_row_s2",
+      "seed": 2,
+      "n_params": 81994,
+      "test_acc": 0.6512,
+      "test_loss": 0.9913642616271973
+    },
+    {
+      "experiment": "E3",
+      "label": "GRU / patch4",
+      "run_id": "gru_patch4_s0",
+      "seed": 0,
+      "n_params": 78922,
+      "test_acc": 0.6785,
+      "test_loss": 0.9162739236831665
+    },
+    {
+      "experiment": "E3",
+      "label": "GRU / patch4",
+      "run_id": "gru_patch4_s1",
+      "seed": 1,
+      "n_params": 78922,
+      "test_acc": 0.6709,
+      "test_loss": 0.9228058104515076
+    },
+    {
+      "experiment": "E3",
+      "label": "GRU / patch4",
+      "run_id": "gru_patch4_s2",
+      "seed": 2,
+      "n_params": 78922,
+      "test_acc": 0.6861,
+      "test_loss": 0.8958497585296631
+    }
+  ],
+  "groups": {
+    "MLP": {
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "n_params": 199082,
+      "test_acc_mean": 0.5117333333333333,
+      "test_acc_std": 0.0022722969289539307
+    },
+    "MiniVGG (CNN)": {
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "n_params": 37338,
+      "test_acc_mean": 0.7962333333333333,
+      "test_acc_std": 0.002514623895005656
+    },
+    "LSTM / row": {
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "n_params": 106826,
+      "test_acc_mean": 0.6399333333333334,
+      "test_acc_std": 0.0023115651263447994
+    },
+    "LSTM / patch4": {
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "n_params": 103754,
+      "test_acc_mean": 0.6684333333333333,
+      "test_acc_std": 0.008197763922761708
+    },
+    "GRU / row": {
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "n_params": 81994,
+      "test_acc_mean": 0.6463666666666666,
+      "test_acc_std": 0.0041884762543594805
+    },
+    "GRU / patch4": {
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "n_params": 78922,
+      "test_acc_mean": 0.6785000000000001,
+      "test_acc_std": 0.007599999999999996
+    }
+  }
+}

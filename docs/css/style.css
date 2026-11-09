@@ -1390,6 +1390,108 @@ footer a:hover,
   max-width: 100%;
 }
 
+/* E3 model cards pair each architecture with its diagram and settings. */
+.e3-report .token-shape {
+  white-space: nowrap;
+}
+
+.e3-report .e3-model-card .model-name {
+  font-size: clamp(22px, 3vw, 28px);
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.e3-report .e3-model-figure {
+  width: 100%;
+  max-width: 720px;
+  margin: 8px auto 12px;
+}
+
+.e3-report .e3-model-figure-overview {
+  max-width: 500px;
+}
+
+.e3-report .e3-model-figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.e3-report .e3-model-figure figcaption {
+  margin-top: 10px;
+  color: var(--ink3);
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.e3-report .e3-model-specs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 16px 24px;
+  padding-top: 18px;
+  margin: 8px 0 0;
+  border-top: 1px solid var(--border);
+}
+
+.e3-report .e3-model-specs dt {
+  color: var(--ink3);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.e3-report .e3-model-specs dd {
+  margin: 5px 0 0;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.e3-report .status-banner-content p + p {
+  margin-top: 8px;
+}
+
+.e3-report .e3-baseline-table td:first-child strong {
+  font-weight: 700;
+}
+
+.e3-report .e3-baseline-mlp td {
+  background: #F0EDE8;
+}
+
+.e3-report .e3-baseline-mlp td:first-child {
+  box-shadow: inset 3px 0 #A8A49F;
+}
+
+.e3-report .e3-baseline-mlp td:first-child strong {
+  color: #57534E;
+}
+
+.e3-report .e3-baseline-mlp:hover td {
+  background: #E7E3DE;
+}
+
+.e3-report .e3-baseline-cnn td {
+  background: #FFF0E6;
+}
+
+.e3-report .e3-baseline-cnn td:first-child {
+  box-shadow: inset 3px 0 var(--accent);
+}
+
+.e3-report .e3-baseline-cnn td:first-child strong {
+  color: #8F3B00;
+}
+
+.e3-report .e3-baseline-cnn:hover td {
+  background: #FCE4D2;
+}
+
+.e3-report .e3-wide-figure {
+  max-width: min(980px, 100%);
+}
+
 nav.main-nav a[aria-current="page"] {
   color: var(--accent);
   font-weight: 700;

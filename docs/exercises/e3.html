@@ -1,37 +1,22 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>E3: Mô hình chuỗi ảnh với LSTM / GRU · CO5085</title>
-
-  <!-- Fonts -->
+  <meta name="description" content="Báo cáo E3: phân loại ảnh CIFAR-10 bằng LSTM và GRU với Row và Patch4 tokenization.">
+  <title>E3: LSTM và GRU trên CIFAR-10 · CO5085</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap"
-    rel="stylesheet">
-
-  <!-- Favicon -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="../assets/favicon.png">
-
-  <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="../css/style.css?v=20261101-css-icons">
+  <link rel="stylesheet" href="../css/style.css?v=20261109-e3-status-baselines">
 </head>
-
 <body>
-
-  <!-- Sticky Header -->
   <header>
-    <a class="logo" href="../index.html"><span>CO5085:</span> Deep Learning &amp; Its Applications in Computer
-      Vision</a>
+    <a class="logo" href="../index.html"><span>CO5085:</span> Deep Learning &amp; Its Applications in Computer Vision</a>
     <a class="back-btn" href="../index.html#exercises"><span class="ui-icon icon-arrow-left" aria-hidden="true"></span> Về trang tổng quan</a>
   </header>
-
-  <main class="page-container report-page">
-
-    <!-- Sub-navigation: Sibling exercises -->
+  <main class="page-container report-page e3-report">
     <nav class="assignment-parts" aria-label="Điều hướng bài tập E">
       <span class="label">Bài tập ·</span>
       <a href="dataset.html">Dữ liệu E1–E3</a>
@@ -39,248 +24,180 @@
       <a href="e2.html">E2 · Self-Attention</a>
       <span class="current" aria-current="page">E3 · LSTM / GRU</span>
     </nav>
-
-    <!-- Page Hero Banner -->
-    <div class="page-tag">Bài tập E3 · Kế hoạch thực nghiệm</div>
-    <h1> LSTM / GRU <br><em>trên chuỗi ảnh</em></h1>
-
+    <div class="page-tag">Bài tập E3 · Chương 5 của báo cáo</div>
+    <h1>Phân loại ảnh với<br><em>LSTM và GRU</em></h1>
     <div class="page-meta">
-      <div class="meta-item">
-        <span class="meta-label">Môn học</span>
-        <span class="meta-value">CO5085</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Nhóm</span>
-        <span class="meta-value">DL4DL</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Thành viên phụ trách</span>
-        <span class="meta-value">Nguyễn Lê Thảo Ly</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Giảng viên hướng dẫn</span>
-        <span class="meta-value">TS. Lê Thành Sách và TS. Nguyễn Quốc Minh</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Trạng thái</span>
-        <span class="meta-value"><span class="badge badge-wip">Đang thực hiện...</span></span>
-      </div>
+      <div class="meta-item"><span class="meta-label">Môn học</span><span class="meta-value">CO5085</span></div>
+      <div class="meta-item"><span class="meta-label">Nhóm</span><span class="meta-value">DL4DL</span></div>
+      <div class="meta-item"><span class="meta-label">Dữ liệu</span><span class="meta-value">CIFAR-10 · 32 × 32 × 3</span></div>
+      <div class="meta-item"><span class="meta-label">Phụ trách</span><span class="meta-value">Nguyễn Lê Thảo Ly</span></div>
+      <div class="meta-item"><span class="meta-label">Giảng viên</span><span class="meta-value">TS. Lê Thành Sách · TS. Nguyễn Quốc Minh</span></div>
+      <div class="meta-item"><span class="meta-label">Trạng thái</span><span class="meta-value"><span class="badge badge-done">Đã hoàn thành</span></span></div>
     </div>
-
-    <!-- Quick Action Links -->
     <div class="quick-links">
-      <a class="link-btn primary" href="https://github.com/broistg/deep-learning-CO5085/tree/main/E3" target="_blank"
-        rel="noopener noreferrer"><span class="ui-icon icon-external" aria-hidden="true"></span> Mã nguồn E3</a>
-      <a class="link-btn primary" href="../reports/exercises.pdf" target="_blank" rel="noopener noreferrer"><span class="ui-icon icon-file" aria-hidden="true"></span> Báo cáo PDF · Chương 5</a>
-      <span class="link-btn pending" aria-disabled="true"><span class="ui-icon icon-notebook" aria-hidden="true"></span> Notebook (sắp có)</span>
+      <a class="link-btn primary" href="../reports/exercises.pdf#page=42" target="_blank" rel="noopener noreferrer"><span class="ui-icon icon-file" aria-hidden="true"></span> Báo cáo PDF · Chương 5</a>
+      <a class="link-btn primary" href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E3/notebooks/E3.ipynb" target="_blank" rel="noopener noreferrer"><span class="ui-icon icon-notebook" aria-hidden="true"></span> Mở bằng Colab</a>
+      <a class="link-btn" href="https://github.com/broistg/deep-learning-CO5085/tree/main/E3" target="_blank" rel="noopener noreferrer"><span class="ui-icon icon-external" aria-hidden="true"></span> Mã nguồn E3</a>
       <a class="link-btn" href="dataset.html"><span class="ui-icon icon-chart" aria-hidden="true"></span> Dataset E1–E3</a>
     </div>
-
-    <nav class="report-toc" aria-label="Mục lục trong trang"><strong>Trong trang</strong><a href="#scope">Mục tiêu</a><a href="#architectures">Kiến trúc</a><a href="#results">Kế hoạch kết quả</a></nav>
-    <!-- Trạng thái thực nghiệm -->
-    <div class="status-banner wip">
-      <div class="status-banner-icon"><span class="ui-icon icon-pin" aria-hidden="true"></span></div>
+    <nav class="report-toc" aria-label="Mục lục trong trang">
+      <strong>Trong trang</strong>
+      <a href="#tokenization">5.1 Tokenization</a>
+      <a href="#architecture">5.2 Kiến trúc</a>
+      <a href="#setup">5.3 Huấn luyện và đánh giá</a>
+      <a href="#results">5.4 Kết quả</a>
+      <a href="#errors">5.4.3 Phân tích lỗi</a>
+      <a href="#discussion">5.5 Thảo luận</a>
+      <a href="#reproduce">A Tái lập</a>
+    </nav>
+    <div class="status-banner">
+      <div class="status-banner-icon"><span class="ui-icon icon-check" aria-hidden="true"></span></div>
       <div class="status-banner-content">
-        <h4>Báo cáo đang thực hiện · Hạn nộp: 09/11/2026 (W10) <span class="badge badge-wip">Đang thực hiện</span></h4>
-        <p>
-          Bài tập này áp dụng mô hình tuần hoàn (LSTM, GRU) trên <strong>cùng tập ảnh nhỏ đã chọn ở E1 và E2</strong>,
-          biến đổi ảnh 2D thành chuỗi thời gian 1D và so sánh trực tiếp với baseline không hồi quy (MLP / CNN từ E1).
-        </p>
+        <h4>Đã hoàn tất thực nghiệm · Hạn nộp: 09/11/2026 (W10)</h4>
+        <p>12 lần huấn luyện (2 mô hình LSTM/GRU × 2 tokenizer Row/Patch4 × 3 seed, mỗi lần 30 epoch) đã chạy xong.</p>
+        <p><strong>Kết quả chính:</strong> GRU-Patch4 đạt test accuracy cao nhất trong E3 (<strong>67,85 ± 0,76%</strong>); Patch4 vượt Row 2,85 điểm với LSTM và 3,21 điểm với GRU; cả bốn cấu hình E3 vượt MLP (51,17%) nhưng vẫn thấp hơn MiniVGG (79,62%) từ E1.</p>
       </div>
     </div>
 
-    <!-- SECTION 01: PROBLEM SCOPE -->
-    <div class="section" id="scope">
-      <div class="section-header">
-        <span class="section-num">01</span>
-        <h2>Mục tiêu và biểu diễn ảnh thành chuỗi</h2>
-      </div>
-      <p>
-        Mục tiêu của bài tập là mô hình hóa hình ảnh dưới dạng chuỗi dữ liệu tuần tự và phân loại bằng các mạng nơ-ron
-        tuần hoàn (Recurrent Neural Networks), sau đó so sánh hiệu quả với các mô hình không hồi quy:
-      </p>
-      <ul>
-        <li><strong>Tập dữ liệu:</strong> Sử dụng cùng tập ảnh nhỏ đã thống nhất cho E1 và E2 (MNIST / Fashion-MNIST /
-          CIFAR-10) để bảo đảm tính đối chứng công bằng.</li>
-        <li><strong>Chiến lược tuần tự hóa ảnh (Image to Sequence):</strong> Thử nghiệm ít nhất hai cách biểu diễn hoặc
-          so sánh LSTM vs. GRU trên cùng một cách biểu diễn:
-          <ul>
-            <li><em>Quét theo hàng hoặc cột (Row/Column Scan):</em> Ví dụ với ảnh 28 × 28, mỗi hàng được xem là 1 bước
-              thời gian (Sequence Length = 28, Input Dim = 28).</li>
-            <li><em>Chuỗi patch/block:</em> Cắt ảnh thành các patch tuần tự theo hàng hoặc cột làm chuỗi vector.</li>
-            <li><em>Cách khác:</em> Mô tả chi tiết phương pháp chuyển đổi trong báo cáo.</li>
-          </ul>
-        </li>
-        <li><strong>Baseline không hồi quy:</strong> Sử dụng trực tiếp MLP và/hoặc CNN đã xây dựng từ E1 (dùng lại
-          checkpoint hoặc huấn luyện lại cùng split dữ liệu).</li>
-      </ul>
+    <section class="section" id="tokenization">
+      <div class="section-header"><span class="section-num">5.1</span><h2>Biểu diễn ảnh thành chuỗi</h2></div>
+      <p>LSTM và GRU nhận dữ liệu theo chuỗi, nên ảnh RGB 32 × 32 được chuyển thành dãy token trước khi phân loại. E3 so sánh hai cách biểu diễn trên cùng ảnh đầu vào. Cả hai ánh xạ token sang vector <strong>64 chiều</strong>, nhưng khác nhau về vùng ảnh mà mỗi token bao phủ và số bước mà recurrent cell phải xử lý.</p>
+      <div class="results-table-wrapper"><table class="results-table" aria-label="Hai cách tokenization của E3">
+        <thead><tr><th>Tokenizer</th><th>Số token</th><th>Đầu ra</th><th>Cách tạo token</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Row</strong></td><td>32</td><td class="token-shape">(B, 32, 64)</td><td>Mỗi hàng gồm 3 × 32 = 96 giá trị, chiếu tuyến tính xuống 64 chiều.</td></tr>
+          <tr><td><strong>Patch4</strong></td><td>64</td><td class="token-shape">(B, 64, 64)</td><td>Chia ảnh thành 64 vùng 4 × 4 không chồng lấn (48 giá trị/vùng), rồi chiếu sang 64 chiều bằng Conv2d với kernel và stride bằng 4.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Row đọc ảnh từ trên xuống: mỗi token là một hàng gồm toàn bộ 32 pixel theo chiều ngang. Patch4 đọc các vùng nhỏ theo thứ tự hàng trên lưới 8 × 8, nên chuỗi dài gấp đôi. So sánh này kiểm tra hiệu quả của hai cách biểu diễn ảnh thành chuỗi; vì vùng nhìn của token và độ dài chuỗi cùng thay đổi, kết quả chưa tách riêng tác động của từng yếu tố.</p>
+    </section>
 
-      <div class="overview-grid">
-        <div class="overview-card">
-          <div class="overview-icon"><span class="ui-icon icon-refresh" aria-hidden="true"></span></div>
-          <div>
-            <div class="overview-title">Cơ chế cổng</div>
-            <div class="overview-sub">LSTM (3 cổng: forget, input, output) và GRU (2 cổng: reset, update) kiểm
-              soát dòng thông tin qua từng hàng/bước quét ảnh.</div>
-          </div>
-        </div>
-        <div class="overview-card">
-          <div class="overview-icon"><span class="ui-icon icon-bolt" aria-hidden="true"></span></div>
-          <div>
-            <div class="overview-title">So sánh LSTM và GRU</div>
-            <div class="overview-sub">Đối chiếu tốc độ thực thi, khả năng lưu giữ phụ thuộc không gian/thời gian
-              và dung lượng tham số trên cùng cách biểu diễn.</div>
-          </div>
-        </div>
-        <div class="overview-card">
-          <div class="overview-icon"><span class="ui-icon icon-chart" aria-hidden="true"></span></div>
-          <div>
-            <div class="overview-title">So sánh với mô hình E1</div>
-            <div class="overview-sub">Đánh giá độ chính xác, số lượng tham số, và khả năng bắt phụ thuộc không
-              gian giữa RNN và mô hình CNN/MLP không hồi quy.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SECTION 02: PLANNED ARCHITECTURES -->
-    <div class="section" id="architectures">
-      <div class="section-header">
-        <span class="section-num">02</span>
-        <h2>Kiến trúc tuần hoàn và mô hình đối chứng</h2>
-      </div>
-
+    <section class="section" id="architecture">
+      <div class="section-header"><span class="section-num">5.2</span><h2>Kiến trúc LSTM và GRU</h2></div>
+      <p>Bốn cấu hình có cùng luồng xử lý: tokenizer tạo chuỗi vector 64 chiều, một recurrent layer đơn hướng đọc lần lượt từng token, rồi hidden state cuối đi qua lớp tuyến tính để tạo 10 logits. E3 dùng chính thứ tự token trong chuỗi, không thêm token <code>[CLS]</code> hoặc positional embedding riêng như E2. Chỉ recurrent cell (LSTM hoặc GRU) và tokenizer (Row hoặc Patch4) thay đổi.</p>
       <div class="models-grid">
-        <div class="model-card">
-          <div class="model-family">Mạng hồi quy (PyTorch)</div>
-          <div class="model-name">Bộ phân loại ảnh LSTM</div>
-          <div class="model-desc">
-            Sử dụng <code>nn.LSTM</code> nhận chuỗi các vector hàng/patch của ảnh. Hidden state cuối cùng (hoặc pooling)
-            đưa qua fully-connected classifier head để dự đoán nhãn.
-          </div>
-          <div class="model-meta">
-            <div><span class="meta-label">Cơ chế</span><span class="meta-val">Trạng thái ô và trạng thái ẩn</span></div>
-            <div><span class="meta-label">Dung lượng tham số</span><span class="meta-val">[Sẽ cập nhật]</span></div>
-          </div>
-        </div>
-
-        <div class="model-card">
-          <div class="model-family">Mạng hồi quy (PyTorch)</div>
-          <div class="model-name">Bộ phân loại ảnh GRU</div>
-          <div class="model-desc">
-            Sử dụng <code>nn.GRU</code> với cấu trúc gọn hơn (chỉ có reset và update gate), giúp giảm thời gian huấn
-            luyện trên chuỗi bước quét ảnh mà vẫn giữ được ngữ cảnh dài.
-          </div>
-          <div class="model-meta">
-            <div><span class="meta-label">Cơ chế</span><span class="meta-val">Hai cơ chế cổng</span></div>
-            <div><span class="meta-label">Dung lượng tham số</span><span class="meta-val">[Sẽ cập nhật]</span></div>
-          </div>
-        </div>
-
-        <div class="model-card">
-          <div class="model-family">Mô hình đối chứng không hồi quy (E1)</div>
-          <div class="model-name">Mô hình đối chứng CNN / MLP</div>
-          <div class="model-desc">
-            Mô hình CNN hoặc MLP từ bài tập E1 (cùng tập dữ liệu và split), làm hệ quy chiếu đánh giá ưu/nhược điểm của
-            cách tiếp cận tuần hoàn so với xử lý 2D song song.
-          </div>
-          <div class="model-meta">
-            <div><span class="meta-label">Nguồn</span><span class="meta-val">Checkpoint từ E1</span></div>
-            <div><span class="meta-label">Dung lượng tham số</span><span class="meta-val">[Từ E1]</span></div>
-          </div>
-        </div>
+        <article class="model-card e3-model-card">
+          <div class="model-family">Luồng xử lý chung</div>
+          <h3 class="model-name">Bộ phân loại many-to-one</h3>
+          <figure class="e3-model-figure e3-model-figure-overview">
+            <a href="../assets/e3/many-to-one.svg" target="_blank" rel="noopener noreferrer" aria-label="Mở sơ đồ kiến trúc many-to-one kích thước đầy đủ"><img src="../assets/e3/many-to-one.svg" width="900" height="280" alt="Các token x1 đến xN lần lượt đi qua recurrent cell; hidden state cuối hN được đưa qua lớp Linear để tạo logits z" loading="lazy"></a>
+            <figcaption>Hình 5.1 · Luồng phân loại many-to-one, vẽ lại theo <a href="../reports/exercises.pdf#page=43" target="_blank" rel="noopener noreferrer">Hình 5.1 trong báo cáo E3</a>.</figcaption>
+          </figure>
+          <p class="model-desc">Với Row, mỗi ảnh cho chuỗi 32 token; với Patch4, chuỗi gồm 64 token. Tại bước <em>t</em>, cell nhận token hiện tại và trạng thái từ bước trước. Sau bước cuối, vector ẩn <em>h<sub>N</sub></em> có 128 chiều được đưa qua <code>Linear(128, 10)</code> để tạo 10 logits cho các lớp CIFAR-10. Cả hai mô hình chỉ dùng trạng thái ẩn cuối để phân loại.</p>
+        </article>
+        <article class="model-card e3-model-card">
+          <div class="model-family">Recurrent cell · 3 cổng</div>
+          <h3 class="model-name">LSTM</h3>
+          <figure class="e3-model-figure">
+            <a href="../assets/e3/lstm-3.svg" target="_blank" rel="noopener noreferrer" aria-label="Mở sơ đồ LSTM cell kích thước đầy đủ"><img src="../assets/e3/lstm-3.svg" width="552" height="285" alt="LSTM cell với forget gate, input gate, output gate và đường truyền cell state" loading="lazy"></a>
+            <figcaption>Hình 5.2 · Cấu trúc một ô LSTM. Nguồn hình và giải thích: <a href="https://en.d2l.ai/chapter_recurrent-modern/lstm.html" target="_blank" rel="noopener noreferrer">Dive into Deep Learning · LSTM</a>.</figcaption>
+          </figure>
+          <p class="model-desc">Ở mỗi token, <code>nn.LSTM</code> cập nhật hai vector 128 chiều: <em>cell state</em> <em>c<sub>t</sub></em> và <em>hidden state</em> <em>h<sub>t</sub></em>. Forget gate quyết định phần bộ nhớ cũ được giữ lại; input gate chọn lượng nội dung ứng viên được thêm vào; output gate quyết định phần bộ nhớ nào xuất ra hidden state. Nhờ đường truyền cell state, thông tin từ những token đầu có thể tiếp tục ảnh hưởng đến các bước sau. Đầu phân loại dùng <em>h<sub>N</sub></em>, không dùng trực tiếp <em>c<sub>N</sub></em>.</p>
+          <dl class="e3-model-specs">
+            <div><dt>Tokenizer</dt><dd>Row / Patch4</dd></div>
+            <div><dt>Số bước chuỗi</dt><dd>32 / 64</dd></div>
+            <div><dt>input_size</dt><dd>64</dd></div>
+            <div><dt>hidden_size</dt><dd>128</dd></div>
+            <div><dt>num_layers</dt><dd>1</dd></div>
+            <div><dt>bidirectional</dt><dd>False</dd></div>
+            <div><dt>batch_first</dt><dd>True</dd></div>
+          </dl>
+        </article>
+        <article class="model-card e3-model-card">
+          <div class="model-family">Recurrent cell · 2 cổng</div>
+          <h3 class="model-name">GRU</h3>
+          <figure class="e3-model-figure">
+            <a href="../assets/e3/gru-3.svg" target="_blank" rel="noopener noreferrer" aria-label="Mở sơ đồ GRU cell kích thước đầy đủ"><img src="../assets/e3/gru-3.svg" width="552" height="277" alt="GRU cell với reset gate, update gate và hidden state ứng viên" loading="lazy"></a>
+            <figcaption>Hình 5.3 · Cấu trúc một ô GRU. Nguồn hình và giải thích: <a href="https://en.d2l.ai/chapter_recurrent-modern/gru.html" target="_blank" rel="noopener noreferrer">Dive into Deep Learning · GRU</a>.</figcaption>
+          </figure>
+          <p class="model-desc"><code>nn.GRU</code> chỉ duy trì hidden state <em>h<sub>t</sub></em>, không có cell state riêng. Reset gate điều chỉnh mức độ dùng hidden state cũ khi tạo trạng thái ứng viên; update gate trộn trạng thái ứng viên với hidden state trước đó. Sau token cuối, <em>h<sub>N</sub></em> được đưa vào cùng kiểu đầu phân loại 10 lớp như LSTM. Việc dùng hai cổng giúp GRU có ít tham số hơn LSTM khi giữ nguyên input size và hidden size.</p>
+          <dl class="e3-model-specs">
+            <div><dt>Tokenizer</dt><dd>Row / Patch4</dd></div>
+            <div><dt>Số bước chuỗi</dt><dd>32 / 64</dd></div>
+            <div><dt>input_size</dt><dd>64</dd></div>
+            <div><dt>hidden_size</dt><dd>128</dd></div>
+            <div><dt>num_layers</dt><dd>1</dd></div>
+            <div><dt>bidirectional</dt><dd>False</dd></div>
+            <div><dt>batch_first</dt><dd>True</dd></div>
+          </dl>
+        </article>
       </div>
-    </div>
+    </section>
 
-    <!-- SECTION 03: PLACEHOLDER RESULTS -->
-    <div class="section" id="results">
-      <div class="section-header">
-        <span class="section-num">03</span>
-        <h2>Kế hoạch đối chiếu kết quả</h2>
-      </div>
-      <p>
-        Bảng theo dõi các chỉ số thực nghiệm đối chiếu giữa các mô hình tuần hoàn (LSTM, GRU) và baseline không hồi quy
-        từ E1:
-      </p>
+    <section class="section" id="setup">
+      <div class="section-header"><span class="section-num">5.3</span><h2>Cấu hình thực nghiệm</h2></div>
+      <p>Cả bốn tổ hợp LSTM/GRU × Row/Patch4 dùng chung phép chia CIFAR-10 và cấu hình tối ưu. Mỗi tổ hợp được huấn luyện với seed 0, 1, 2, tổng cộng 12 lần chạy. Phép tăng cường ảnh chỉ áp dụng cho tập train; validation và test dùng ảnh đã chuẩn hóa mà không crop hoặc lật.</p>
+      <div class="results-table-wrapper"><table class="results-table" aria-label="Cấu hình thực nghiệm E3">
+        <thead><tr><th>Thành phần</th><th>Giá trị</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Dữ liệu</strong></td><td style="white-space:nowrap">CIFAR-10: 45 000 train / 5 000 validation (500 ảnh/lớp, seed 42) / 10 000 test; chuẩn hóa theo train</td></tr>
+          <tr><td><strong>Mô hình</strong></td><td style="white-space:nowrap">LSTM hoặc GRU, 1 lớp đơn hướng; Row (32 token) / Patch4 (64 token); embed_dim 64, hidden_size 128</td></tr>
+          <tr><td><strong>Tối ưu</strong></td><td style="white-space:nowrap">Adam, lr cố định 1e−3, weight decay 0, Cross-Entropy, cắt gradient norm 1,0, FP32</td></tr>
+          <tr><td><strong>Huấn luyện</strong></td><td style="white-space:nowrap">30 epoch, batch 64 (đánh giá 500), random crop (pad 4) + lật ngang trên train, seed 0 / 1 / 2</td></tr>
+          <tr><td><strong>Báo cáo</strong></td><td style="white-space:nowrap">Trọng số epoch cuối; test accuracy trung bình ± độ lệch chuẩn mẫu trên 3 seed; baseline MLP/MiniVGG từ E1</td></tr>
+        </tbody>
+      </table></div>
+      <p>Chỉ số chính là accuracy trên 10.000 ảnh test từ <strong>trọng số epoch 30</strong>. Validation accuracy được ghi sau mỗi epoch để theo dõi quá trình học, không dùng để chọn checkpoint tốt nhất. Bảng kết quả ghi trung bình ± độ lệch chuẩn mẫu của ba seed; số tham số là tổng tham số có thể học của toàn bộ tokenizer, recurrent layer và đầu phân loại. MLP và MiniVGG được dùng lại từ E1, không huấn luyện lại trong E3.</p>
+    </section>
 
-      <div class="results-table-wrapper">
-        <table class="results-table" aria-label="Kế hoạch so sánh kết quả chuỗi ảnh">
-          <thead>
-            <tr>
-              <th>Mô hình</th>
-              <th>Cách biểu diễn chuỗi ảnh</th>
-              <th>Độ dài chuỗi (T) × Kích thước đặc trưng (D)</th>
-              <th>Số tham số</th>
-              <th>Độ chính xác kiểm thử (%)</th>
-              <th>Thời gian chạy (giây/epoch)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Baseline MLP (từ E1)</strong></td>
-              <td>Vector phẳng (Flatten 1D)</td>
-              <td>1 × (H·W·C)</td>
-              <td>199 082</td>
-              <td>51,17 ± 0,23</td>
-              <td>8,5</td>
-            </tr>
-            <tr>
-              <td><strong>Baseline MiniVGG (từ E1)</strong></td>
-              <td>Không gian 2D nguyên bản</td>
-              <td>H × W × C</td>
-              <td>37 338</td>
-              <td>79,62 ± 0,26</td>
-              <td>9,5</td>
-            </tr>
-            <tr>
-              <td><strong>LSTM theo hàng</strong></td>
-              <td>Mỗi hàng pixel là 1 bước thời gian</td>
-              <td>H bước × (W·C)</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>—</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td><strong>GRU theo hàng</strong></td>
-              <td>Mỗi hàng pixel là 1 bước thời gian</td>
-              <td>H bước × (W·C)</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>—</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td><strong>LSTM theo chuỗi patch</strong></td>
-              <td>Dãy patch theo thứ tự hàng/cột</td>
-              <td>N_patches × D_patch</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>—</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td><strong>GRU theo chuỗi patch</strong></td>
-              <td>Dãy patch theo thứ tự hàng/cột</td>
-              <td>N_patches × D_patch</td>
-              <td>[Sẽ cập nhật]</td>
-              <td>—</td>
-              <td>—</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p>Hai dòng MLP và MiniVGG lấy từ Bảng 3.2 của báo cáo E1: độ chính xác kiểm thử tại epoch cuối là
-        trung bình ± độ lệch chuẩn mẫu trên ba seed; thời gian là trung bình của thời gian trung vị mỗi epoch.</p>
-    </div>
+    <section class="section" id="results">
+      <div class="section-header"><span class="section-num">5.4</span><h2>Kết quả thực nghiệm</h2></div>
+      <h3>5.4.1 · Bốn cấu hình LSTM / GRU</h3>
+      <p>Bảng dưới tổng hợp test accuracy sau 30 epoch, số tham số, thời gian huấn luyện và bộ nhớ GPU của bốn cấu hình. Mỗi giá trị accuracy là trung bình ± độ lệch chuẩn mẫu trên ba seed. Thời gian của một lần chạy là trung vị số giây/epoch trong 30 epoch; bảng ghi trung bình ± độ lệch chuẩn của ba trung vị đó. Bộ nhớ GPU là trung bình của ba giá trị đỉnh, ghi theo đơn vị MB như báo cáo.</p>
+      <div class="results-table-wrapper"><table class="results-table" aria-label="Kết quả bốn cấu hình LSTM và GRU">
+        <thead><tr><th>Cấu hình</th><th>Test accuracy (%)</th><th>Số tham số</th><th>Giây / epoch</th><th>GPU đỉnh (MB)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>LSTM-Row</strong></td><td>63,99 ± 0,23</td><td>106.826</td><td>8,11 ± 0,26</td><td>255,69</td></tr>
+          <tr><td><strong>LSTM-Patch4</strong></td><td>66,84 ± 0,82</td><td>103.754</td><td>8,03 ± 0,06</td><td>313,54</td></tr>
+          <tr><td><strong>GRU-Row</strong></td><td>64,64 ± 0,42</td><td>81.994</td><td>7,83 ± 0,18</td><td>245,25</td></tr>
+          <tr><td><strong>GRU-Patch4</strong></td><td class="highlight">67,85 ± 0,76</td><td>78.922</td><td>7,92 ± 0,07</td><td>296,12</td></tr>
+        </tbody>
+      </table></div>
+      <p><strong>Đổi recurrent cell.</strong> Với cùng tokenizer, GRU cao hơn LSTM 0,65 điểm phần trăm trên Row và 1,01 điểm trên Patch4. GRU cũng ít hơn LSTM 24.832 tham số ở mỗi cặp, có thời gian và bộ nhớ GPU đỉnh thấp hơn trong các lần chạy này. Chênh lệch accuracy nhỏ và chỉ có ba seed, nên chưa đủ cơ sở khẳng định GRU luôn tốt hơn LSTM.</p>
+      <p><strong>Đổi cách tạo token.</strong> Patch4 tăng test accuracy 2,85 điểm với LSTM và 3,21 điểm với GRU so với Row. Đổi lại, bộ nhớ đỉnh tăng từ 255,69 lên 313,54 MB ở LSTM và từ 245,25 lên 296,12 MB ở GRU. Chuỗi Patch4 dài gấp đôi, nhưng thời gian mỗi epoch không tăng rõ trong phép đo này. GRU-Patch4 đạt accuracy trung bình cao nhất (67,85%) và có ít tham số nhất (78.922) trong bốn cấu hình.</p>
+      <figure class="report-figure e3-wide-figure"><a href="../assets/e3/curves.png" target="_blank" rel="noopener noreferrer" aria-label="Mở đường cong học tập E3"><img src="../assets/e3/curves.png" alt="Training loss giảm và validation accuracy tăng qua 30 epoch của LSTM và GRU với Row và Patch4" loading="lazy"></a><figcaption>Hình 5.4 · Training loss và validation accuracy qua 30 epoch; đường trung bình và vùng ± độ lệch chuẩn của ba seed.</figcaption></figure>
+      <p><strong>Diễn biến huấn luyện.</strong> Training loss giảm ở cả bốn cấu hình. Validation accuracy nhìn chung tăng, có dao động giữa các epoch; hai đường Patch4 thường cao hơn đường Row tương ứng. Không thấy dấu hiệu overfitting nghiêm trọng trong 30 epoch, nhưng validation accuracy vẫn có xu hướng tăng ở cuối quá trình, nên chưa thể kết luận các mô hình đã hội tụ hoàn toàn. Đường cong validation dùng để mô tả quá trình học, còn kết quả chính trong bảng được lấy ở epoch cuối.</p>
 
+      <h3>5.4.2 · So sánh với baseline E1</h3>
+      <p>MLP và MiniVGG là hai baseline đã huấn luyện ở E1. Bảng đối chiếu accuracy trên cùng tập test CIFAR-10, đều từ trọng số epoch cuối và đều là trung bình ± độ lệch chuẩn mẫu trên ba seed. E1 và E3 dùng cùng phép chia dữ liệu, quy tắc tăng cường ảnh, batch 64, Adam với learning rate 1e−3 và 30 epoch; E3 còn cắt gradient của mô hình hồi quy, và quá trình lấy mẫu tăng cường ảnh được tạo độc lập.</p>
+      <div class="results-table-wrapper"><table class="results-table e3-baseline-table" aria-label="So sánh E3 với baseline MLP và MiniVGG">
+        <thead><tr><th>Mô hình</th><th>Test accuracy (%)</th><th>Số tham số</th></tr></thead>
+        <tbody>
+          <tr class="e3-baseline-row e3-baseline-mlp"><td><strong>MLP (E1)</strong></td><td>51,17 ± 0,23</td><td>199.082</td></tr>
+          <tr class="e3-baseline-row e3-baseline-cnn"><td><strong>MiniVGG (E1)</strong></td><td class="highlight">79,62 ± 0,25</td><td>37.338</td></tr>
+          <tr><td><strong>LSTM-Row</strong></td><td>63,99 ± 0,23</td><td>106.826</td></tr>
+          <tr><td><strong>LSTM-Patch4</strong></td><td>66,84 ± 0,82</td><td>103.754</td></tr>
+          <tr><td><strong>GRU-Row</strong></td><td>64,64 ± 0,42</td><td>81.994</td></tr>
+          <tr><td><strong>GRU-Patch4</strong></td><td>67,85 ± 0,76</td><td>78.922</td></tr>
+        </tbody>
+      </table></div>
+      <p>Cả bốn mô hình hồi quy vượt MLP từ 12,82 đến 16,68 điểm phần trăm. GRU-Patch4 đạt 67,85% với 78.922 tham số, so với 51,17% và 199.082 tham số của MLP. MiniVGG đạt 79,62%, cao hơn GRU-Patch4 11,77 điểm dù chỉ có 37.338 tham số. Kết quả phù hợp với khả năng khai thác cấu trúc không gian cục bộ của tích chập trên ảnh tĩnh; thí nghiệm này không cô lập riêng hiệu ứng của kiến trúc vì kích thước mô hình và một số chi tiết huấn luyện E1/E3 không hoàn toàn giống nhau. Thời gian và bộ nhớ GPU chỉ đối chiếu trong nhóm E3 được đo cùng điều kiện.</p>
+    </section>
+
+    <section class="section" id="errors">
+      <div class="section-header"><span class="section-num">5.4.3</span><h2>Phân tích lỗi · GRU-Patch4, seed 2</h2></div>
+      <p>GRU-Patch4 đứng đầu E3 theo accuracy trung bình ba seed. Để xem mô hình sai ở đâu, hai hình dưới dùng <strong>trọng số epoch cuối của seed 2</strong>, lần chạy có test accuracy cao nhất trong E3 (<strong>68,61%</strong>). Đây là một lần chạy cụ thể, không đại diện cho giá trị trung bình 67,85% trong bảng.</p>
+      <figure class="report-figure"><a href="../assets/e3/confusion.png" target="_blank" rel="noopener noreferrer" aria-label="Mở ma trận nhầm lẫn GRU-Patch4"><img src="../assets/e3/confusion.png" alt="Ma trận nhầm lẫn GRU-Patch4 seed 2; bird thấp nhất 52%, automobile, frog và ship khoảng 80%" loading="lazy"></a><figcaption>Hình 5.5 · Ma trận nhầm lẫn trên 10.000 ảnh test CIFAR-10, chuẩn hóa theo từng lớp thực.</figcaption></figure>
+      <p>Trong ma trận, <strong>hàng là nhãn thực, cột là nhãn dự đoán</strong>; mỗi hàng được chuẩn hóa về 100% và ô trên đường chéo là tỷ lệ nhận đúng của lớp đó. Automobile, frog và ship đều khoảng 80%; bird thấp nhất ở 52%, còn cat và dog cùng 58%. Các lỗi lớn gồm dog → cat (24%), cat → dog (15%), deer → frog (11%), airplane → ship (10%) và nhầm hai chiều automobile ↔ truck (9–10%).</p>
+      <figure class="report-figure e3-wide-figure"><a href="../assets/e3/errors.png" target="_blank" rel="noopener noreferrer" aria-label="Mở lưới ảnh dự đoán sai GRU-Patch4"><img src="../assets/e3/errors.png" alt="Mười hai ảnh CIFAR-10 dự đoán sai với độ tin cậy cao nhất của GRU-Patch4 seed 2, kèm nhãn thực và nhãn dự đoán" loading="lazy"></a><figcaption>Hình 5.6 · Mười hai ảnh dự đoán sai có độ tin cậy cao nhất, kèm nhãn thực, nhãn dự đoán và xác suất.</figcaption></figure>
+      <p>Lưới ảnh chọn 12 lỗi có xác suất dự đoán cao nhất của chính checkpoint này, phần lớn được hiển thị ở mức 99–100% sau làm tròn. Có các cặp dễ lẫn về hình dạng hoặc bối cảnh như automobile/truck, airplane/ship và horse/deer; một số ảnh bird bị gán nhãn airplane. Những ví dụ này cho thấy mô hình có thể rất tự tin khi sai, nhưng chỉ là ví dụ được chọn theo độ tin cậy, không đo tần suất lỗi của toàn bộ tập test. Ma trận nhầm lẫn ở trên mới cho biết mức độ phổ biến theo từng lớp.</p>
+    </section>
+
+    <section class="section" id="discussion">
+      <div class="section-header"><span class="section-num">5.5</span><h2>Nhận xét và thảo luận</h2></div>
+      <p><strong>Recurrent cell.</strong> GRU có ít hơn LSTM 24.832 tham số khi giữ nguyên tokenizer, input size và hidden size. Trong phép đo E3, GRU cũng nhanh hơn và dùng ít bộ nhớ GPU đỉnh hơn. Accuracy cao hơn 0,65 điểm với Row và 1,01 điểm với Patch4, nhưng ba seed chưa đủ để kết luận ưu thế nhỏ này ổn định trên các lần chạy khác.</p>
+      <p><strong>Biểu diễn ảnh thành chuỗi.</strong> Patch4 tăng accuracy ở cả LSTM và GRU, lần lượt 2,85 và 3,21 điểm so với Row, đồng thời tăng bộ nhớ GPU đỉnh. Hai tokenizer còn khác nhau về vùng ảnh trong mỗi token và độ dài chuỗi, nên không thể quy toàn bộ mức tăng cho riêng tính cục bộ hoặc số bước. Recurrent cell đọc các token theo thứ tự không gian quy ước trên ảnh; CIFAR-10 là ảnh tĩnh, vì vậy đây là quan hệ giữa các vùng ảnh, không phải phụ thuộc thời gian thực.</p>
+      <p><strong>Đối chiếu E1.</strong> MLP trải phẳng ảnh, LSTM/GRU tích lũy thông tin qua chuỗi token, còn MiniVGG học đặc trưng không gian bằng tích chập. Trong thiết lập được khảo sát, cả bốn mô hình E3 vượt MLP nhưng vẫn thấp hơn MiniVGG ít nhất 11,77 điểm phần trăm. Số tham số của MiniVGG cũng thấp hơn, cho thấy số tham số tự nó không giải thích được kết quả. Accuracy trên CIFAR-10 không đo trực tiếp khả năng học phụ thuộc dài hạn của LSTM hoặc GRU.</p>
+      <p><strong>Hạn chế.</strong> (i) Mỗi cấu hình chỉ được huấn luyện với ba seed, nên việc đánh giá độ ổn định còn hạn chế. (ii) Các mô hình sử dụng chung siêu tham số và chỉ được huấn luyện trong 30 epoch, chưa tối ưu riêng cho từng kiến trúc. (iii) Thực nghiệm chỉ được thực hiện trên CIFAR-10, chưa đánh giá trên các tập dữ liệu hoặc chuỗi có phụ thuộc thời gian thực. (iv) Chưa có thí nghiệm đối chứng nhằm tách riêng ảnh hưởng của thứ tự token khỏi ảnh hưởng của cách biểu diễn ảnh. (v) Thời gian huấn luyện và bộ nhớ GPU chỉ được đo trên một môi trường phần cứng, nên chie có giá trị so sánh ở mức tương đối.</p>
+    </section>
+
+    <section class="section" id="reproduce">
+      <div class="section-header"><span class="section-num">A</span><h2>Tái lập và khai báo sử dụng AI</h2></div>
+      <p><strong>Mã nguồn và kết quả.</strong> Mã, cấu hình và 12 tệp JSON kết quả nằm trong <a href="https://github.com/broistg/deep-learning-CO5085/tree/main/E3" target="_blank" rel="noopener noreferrer">E3/</a>. Chạy từ gốc repository với <code>PYTHONPATH=.:E3</code>: kiểm thử bằng <code>python -m unittest discover -s E3/tests -v</code>, chạy toàn bộ bằng <code>python -m e3lib.plan</code>, tạo lại bảng và đường cong bằng <code>python -m e3lib.analyze --out E3/regenerated</code>, rồi tạo ma trận nhầm lẫn và lưới lỗi bằng <code>python -m e3lib.diagnostics --out E3/regenerated</code>. Lệnh chạy chi tiết và điều kiện tái lập có trong <a href="https://github.com/broistg/deep-learning-CO5085/blob/main/E3/README.md" target="_blank" rel="noopener noreferrer">E3/README.md</a>.</p>
+      <p><strong>Notebook tái lập.</strong> <a href="https://colab.research.google.com/github/broistg/deep-learning-CO5085/blob/main/E3/notebooks/E3.ipynb" target="_blank" rel="noopener noreferrer">E3/notebooks/E3.ipynb</a> có hai chế độ chọn bằng <code>MODE</code>. <code>"load"</code> (mặc định) đọc các kết quả đã lưu, tạo lại bảng và hình, rồi so với số liệu đã công bố; khi có test logits, notebook tạo lại cả hình phân tích lỗi. <code>"rerun"</code> cần GPU, huấn luyện hoặc tiếp tục 12 lần chạy E3 trong <code>E3/results_rerun/</code>. Trọng số cuối và test logits của các lần chạy nằm ở <code>E3/artifacts/</code>; notebook có thể tải <code>e3_artifacts.zip</code> từ GitHub Release <code>weights-v1</code> và kiểm tra SHA-256 theo manifest. Baseline MLP/MiniVGG lấy từ E1, không huấn luyện lại trong notebook E3.</p>
+      <p><strong>Khai báo sử dụng công cụ AI.</strong> Theo <a href="../reports/exercises.pdf#page=58" target="_blank" rel="noopener noreferrer">Phụ lục A.3 của báo cáo</a>, nhóm lên ý tưởng và tự viết bản gốc của mã; ChatGPT/Claude hỗ trợ cải thiện, rà soát mã, xây dựng kiểm thử và bản nháp báo cáo. Nhóm tự chạy thí nghiệm, đối chiếu số liệu với kết quả gốc và chịu trách nhiệm về nội dung.</p>
+    </section>
   </main>
-
-  <!-- Footer -->
-  <footer>
-    CO5085 · Báo cáo E3 · Nhóm DL4DL · HCMUT &nbsp;·&nbsp;
-    <a href="../index.html">Trang chủ</a> &nbsp;·&nbsp; <a href="dataset.html">Dataset E1–E3</a>
-    &nbsp;·&nbsp;
-    <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">Kho GitHub</a>
-  </footer>
-
+  <footer>CO5085 · Báo cáo E3 · Nhóm DL4DL · HCMUT &nbsp;·&nbsp; <a href="../index.html">Trang chủ</a> &nbsp;·&nbsp; <a href="dataset.html">Dataset E1–E3</a> &nbsp;·&nbsp; <a href="https://github.com/broistg/deep-learning-CO5085" target="_blank" rel="noopener noreferrer">Kho GitHub</a></footer>
 </body>
-
 </html>
