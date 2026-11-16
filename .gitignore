@@ -1,18 +1,21 @@
-# Byte-compiled / optimized / DLL files
+# Python caches and package metadata
 **/__pycache__/
-*.egg-info/
 *.py[cod]
 *$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
-# Virtual Environments
+# Virtual environments
 **/.venv/
 **/env/
 **/venv/
 
-# Jupyter Notebook Checkpoints
+# Notebook checkpoints
 .ipynb_checkpoints/
 
-# Datasets and Weights
+# Local datasets, weights, and release downloads
 **/data/
 **/datasets/
 **/checkpoints/
@@ -29,11 +32,12 @@ release_assets/
 *.bin
 *.h5
 
-# Logs & Metrics
+# Experiment scratch files; keep published JSON/NPZ/PDF/CSV outputs
 **/wandb/
 **/runs/
 *.log
 **/figures/*.png
+**/results/*.tex
 
 # OS generated files
 .DS_Store
@@ -41,6 +45,3 @@ Thumbs.db
 
 # Secrets
 .env
-
-# Others
-*.tex

@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="280" viewBox="0 0 900 280" role="img" aria-labelledby="title description">
+  <title id="title">Bộ phân loại ảnh many-to-one bằng RNN</title>
+  <desc id="description">Các token x1, x2 đến xN đi lần lượt qua các ô RNN. Trạng thái ẩn cuối hN được đưa vào lớp Linear để tạo logits z.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M 0 1 L 8 5 L 0 9" fill="none" stroke="#514d47" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <g fill="none" stroke="#514d47" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)">
+    <path d="M 69 112 H 103"/>
+    <path d="M 241 112 H 301"/>
+    <path d="M 439 112 H 457"/>
+    <path d="M 521 112 H 549"/>
+    <path d="M 687 112 H 733"/>
+    <path d="M 175 207 V 151"/>
+    <path d="M 373 207 V 151"/>
+    <path d="M 621 207 V 151"/>
+    <path d="M 795 151 V 210"/>
+  </g>
+
+  <g fill="#FFF0E6" stroke="#C5440A" stroke-width="2.5">
+    <rect x="109" y="78" width="132" height="68" rx="12"/>
+    <rect x="307" y="78" width="132" height="68" rx="12"/>
+    <rect x="555" y="78" width="132" height="68" rx="12"/>
+  </g>
+  <rect x="739" y="78" width="112" height="68" rx="12" fill="#E8F4FD" stroke="#0C548C" stroke-width="2.5"/>
+
+  <g font-family="Arial, Helvetica, sans-serif" fill="#1A1814" text-anchor="middle">
+    <g font-size="26" font-weight="700" dominant-baseline="middle">
+      <text x="175" y="112">RNN</text>
+      <text x="373" y="112">RNN</text>
+      <text x="621" y="112">RNN</text>
+      <text x="795" y="112" font-size="23">Linear</text>
+    </g>
+    <g font-size="25">
+      <text x="35" y="120">h₀</text>
+      <text x="274" y="71">h₁</text>
+      <text x="463" y="71">h₂</text>
+      <text x="712" y="71">hₙ</text>
+      <text x="175" y="242">x₁</text>
+      <text x="373" y="242">x₂</text>
+      <text x="621" y="242">xₙ</text>
+      <text x="795" y="246" font-weight="700">z</text>
+    </g>
+    <text x="489" y="120" font-size="32" letter-spacing="3">···</text>
+  </g>
+</svg>

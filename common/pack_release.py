@@ -6,6 +6,7 @@
 What goes in (kept small so that free Colab can download it in a minute):
   E1: E1/artifacts/<run>/model_final.pt, model_best_val_loss.pt   -> e1_artifacts.zip
   E2: E2/artifacts/<run>/logits_test.pt, model_final.pt           -> e2_artifacts.zip
+  E3: E3/artifacts/<run>/logits_test.pt, model_final.pt      -> e3_artifacts.zip
   A1: A1/artifacts/<run>/logits_{val,test}.npz (all runs)         -> a1_logits.zip
       A1/artifacts/<run>/model_final.pt, in three zips (each below GitHub's 2 GiB per-asset limit):
         core (m_*_s0), seeds (m_*_s1, m_*_s2), extra (ablation ab_* and stretch x_*)  -> a1_weights_core.zip, a1_weights_seeds.zip, a1_weights_extra.zip
@@ -31,6 +32,8 @@ ASSETS = {   # name: (folder, files, optional predicate on the run folder name)
     "a1_weights_core.zip": ("A1/artifacts", ("model_final.pt",), lambda n: re.fullmatch(r"m_.*_s0", n) is not None),
     "a1_weights_seeds.zip": ("A1/artifacts", ("model_final.pt",), lambda n: re.fullmatch(r"m_.*_s[12]", n) is not None),
     "a1_weights_extra.zip": ("A1/artifacts", ("model_final.pt",), lambda n: n.startswith(("ab_", "x_"))),
+    "e3_artifacts.zip": ( "E3/artifacts", ("logits_test.pt", "model_final.pt")),
+
 }
 OUT = ROOT / "release_assets"   # git-ignored
 

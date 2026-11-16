@@ -31,6 +31,11 @@
    "sha256": "a8aa3ffa3209ce71dc148b83a0c200d9f76e6d5d34256fb01d66b76f343583ee",
    "bytes": 2067429827,
    "files": 21
+  },
+  "e3_artifacts.zip": {
+   "sha256": "1436fc82b36271216980a00284576a9b6563203e4b7e85a0a4b68f56f4980f4a",
+   "bytes": 8709786,
+   "files": 24
   }
  }
 }

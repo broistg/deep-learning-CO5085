@@ -85,6 +85,15 @@ class TestSteps(unittest.TestCase):
 
 
 class TestRunLifecycle(unittest.TestCase):
+    
+    def setUp(self):
+        # Lifecycle tests use synthetic CPU datasets.
+        cuda_patcher = patch.object(
+            torch.cuda, "is_available", return_value=False
+        )
+        cuda_patcher.start()
+        self.addCleanup(cuda_patcher.stop)
+
 
     def test_cli_only_accepts_recurrent_models(self):
         with self.assertRaisesRegex(ValueError, "Unknown model"):
