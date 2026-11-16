@@ -10,6 +10,7 @@ Everything marked 'seed 0 only' (scratch runs) has no variance estimate and is r
 import argparse
 import csv
 import json
+import re
 from pathlib import Path
 
 import numpy as np
@@ -76,7 +77,7 @@ def names_from_objectinfo(csv_path):
     """objectInfo150.csv (Idx, Ratio, Train, Val, Name) -> list of 150 first names (the part before the first comma)."""
     names = []
     with open(csv_path, encoding="utf8") as f:
-        for row in csv.DictReader(f):
+        for row in csv.DictReader(f, delimiter="\t"):
             names.append(row["Name"].split(";")[0].split(",")[0].strip())
     assert len(names) == N_CLASSES, len(names)
     return names
@@ -251,6 +252,17 @@ def figures(runs, gs, pc, fg, out):
     fig.tight_layout()
     fig.savefig(out / "freq_groups.png", dpi=160)
     plt.close(fig)
+    # 5) pixel frequency of the 150 classes in the test set (from the confusion matrices' ground-truth row sums)
+    fs = np.sort(pc["freq"] / pc["freq"].sum())[::-1]
+    fig, ax = plt.subplots(figsize=(7, 3.2))
+    ax.bar(np.arange(N_CLASSES), 100 * fs, width=1.0, color="#555555")
+    ax.set_yscale("log")
+    ax.set_xlabel("class rank by pixel frequency (0 = most frequent)")
+    ax.set_ylabel("share of labelled pixels (%)")
+    ax.set_title("ADE20K test set: class frequency")
+    fig.tight_layout()
+    fig.savefig(out / "class_freq.png", dpi=160)
+    plt.close(fig)
 
 
 # ---------------------------------------------------------------------------------------------------------------- main
@@ -272,7 +284,7 @@ def run(results, out, names_path=None):
     else:
         fg = None
     for name, text in tabs.items():
-        (out / name).write_text(text + "\n", encoding="utf8")
+        (out / name).write_text(re.sub(r"\s*\\\\\s*$", "", text) + "\n", encoding="utf8")   # bodies for \input, no trailing \\ (same as A1)
     figures(runs, gs, pc, fg, out / "figures")
     write_json(out / "summary.json", summary)
     print(f"{len(runs)} runs ({summary['n_full']} full); wrote {', '.join(tabs)} + summary.json; figures in {out / 'figures'}")
